@@ -1,0 +1,23 @@
+import React from 'react';
+import { db } from '@/lib/db';
+import { ProductForm } from '@/components/admin/ProductForm';
+
+export const revalidate = 0;
+export const dynamic = 'force-dynamic';
+
+export default async function NewProductPage() {
+  const categories = await db.category.findMany({});
+
+  return (
+    <div className="space-y-6">
+      <div className="pb-4 border-b border-slate-800">
+        <h1 className="text-3xl font-extrabold text-white">Thêm Sản phẩm Mới</h1>
+        <p className="text-xs text-slate-400 mt-1">
+          Điền đầy đủ thông tin chi tiết sản phẩm để đăng bán lên website
+        </p>
+      </div>
+
+      <ProductForm categories={categories} />
+    </div>
+  );
+}
