@@ -17,9 +17,10 @@ import {
   LogOut,
 } from 'lucide-react';
 
+import { HeaderSearch } from './HeaderSearch';
+
 export function Header() {
   const router = useRouter();
-  const [searchQuery, setSearchQuery] = useState('');
   const [mounted, setMounted] = useState(false);
   const getTotalItems = useCart((state) => state.getTotalItems);
   const { user, logout } = useAuth();
@@ -30,13 +31,6 @@ export function Header() {
 
   const totalItems = mounted ? getTotalItems() : 0;
   const currentUser = mounted ? user : null;
-
-  const handleSearchSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    if (searchQuery.trim()) {
-      router.push(`/search?q=${encodeURIComponent(searchQuery.trim())}`);
-    }
-  };
 
   const handleLogout = () => {
     logout();
@@ -60,20 +54,8 @@ export function Header() {
           </span>
         </Link>
 
-        {/* Search Bar */}
-        <form
-          onSubmit={handleSearchSubmit}
-          className="flex-1 max-w-md hidden sm:flex items-center relative"
-        >
-          <input
-            type="text"
-            placeholder="Search products... (SSR Demo)"
-            value={searchQuery}
-            onChange={(e) => setSearchQuery(e.target.value)}
-            className="w-full bg-slate-900 border border-slate-800 rounded-full py-1.5 pl-9 pr-4 text-xs text-slate-200 placeholder-slate-500 focus:outline-none focus:border-indigo-500 transition-colors"
-          />
-          <Search className="w-4 h-4 text-slate-500 absolute left-3 pointer-events-none" />
-        </form>
+        {/* Search Bar with Live Suggestions */}
+        <HeaderSearch />
 
         {/* Navigation Links */}
         <nav className="flex items-center gap-1 sm:gap-2">

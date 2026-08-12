@@ -38,8 +38,13 @@ export default async function ProductDetailPage({ params }: ProductDetailPagePro
     notFound();
   }
 
-  const images: string[] = JSON.parse(product.images || '[]');
-  if (images.length === 0) {
+  let images: string[] = [];
+  try {
+    images = JSON.parse(product.images || '[]');
+  } catch {
+    images = [];
+  }
+  if (images.length === 0 && product.thumbnail) {
     images.push(product.thumbnail);
   }
 
