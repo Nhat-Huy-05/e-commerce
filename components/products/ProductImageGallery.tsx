@@ -25,7 +25,7 @@ export function ProductImageGallery({ images, productName }: ProductImageGallery
   return (
     <div className="space-y-4">
       {/* Main Image */}
-      <div className="w-full aspect-square rounded-2xl overflow-hidden bg-slate-950 border border-slate-800">
+      <div className="w-full aspect-square rounded-2xl overflow-hidden bg-slate-100 border border-slate-200 shadow-xs">
         <img
           src={imgErrors[selectedImg] ? FALLBACK_IMAGE : selectedImg}
           alt={productName}
@@ -44,10 +44,10 @@ export function ProductImageGallery({ images, productName }: ProductImageGallery
                 key={idx}
                 type="button"
                 onClick={() => setSelectedImg(img)}
-                className={`aspect-square rounded-xl overflow-hidden bg-slate-950 border transition-all cursor-pointer ${
+                className={`aspect-square rounded-xl overflow-hidden bg-slate-100 border transition-all cursor-pointer ${
                   selectedImg === img
-                    ? 'border-indigo-500 ring-2 ring-indigo-500/20'
-                    : 'border-slate-800 hover:border-slate-700'
+                    ? 'border-indigo-600 ring-2 ring-indigo-500/20'
+                    : 'border-slate-200 hover:border-slate-300'
                 }`}
               >
                 <img

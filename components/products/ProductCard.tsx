@@ -29,9 +29,9 @@ export function ProductCard({ product }: ProductCardProps) {
     : null;
 
   return (
-    <div className="group relative flex flex-col bg-slate-900/60 border border-slate-800 rounded-2xl overflow-hidden shadow-lg transition-all duration-300 hover:border-slate-700 hover:shadow-2xl">
+    <div className="group relative flex flex-col bg-white border border-slate-200 rounded-2xl overflow-hidden shadow-xs hover:shadow-xl hover:border-indigo-300 transition-all duration-300">
       {/* Image container */}
-      <Link href={`/products/${product.slug}`} className="block relative w-full aspect-square overflow-hidden bg-slate-950">
+      <Link href={`/products/${product.slug}`} className="block relative w-full aspect-square overflow-hidden bg-slate-50 border-b border-slate-100">
         <img
           src={imgSrc}
           alt={product.name}
@@ -39,12 +39,12 @@ export function ProductCard({ product }: ProductCardProps) {
           className="w-full h-full object-cover object-center group-hover:scale-105 transition-transform duration-500"
         />
         {product.isFeatured && (
-          <span className="absolute top-3 left-3 bg-gradient-to-r from-amber-500 to-orange-500 text-slate-950 font-bold text-[10px] uppercase tracking-widest px-2.5 py-1 rounded-full shadow-md">
+          <span className="absolute top-3 left-3 bg-amber-500 text-white font-bold text-[10px] uppercase tracking-widest px-2.5 py-1 rounded-full shadow-sm">
             Featured
           </span>
         )}
         {product.discountPrice && (
-          <span className="absolute top-3 right-3 bg-red-600 text-white font-bold text-xs px-2 py-0.5 rounded-md shadow-md">
+          <span className="absolute top-3 right-3 bg-red-600 text-white font-bold text-xs px-2 py-0.5 rounded-md shadow-sm">
             SALE
           </span>
         )}
@@ -52,34 +52,34 @@ export function ProductCard({ product }: ProductCardProps) {
 
       {/* Content */}
       <div className="flex flex-1 flex-col p-5">
-        <div className="flex items-center justify-between text-xs text-indigo-400 font-medium mb-1.5">
+        <div className="flex items-center justify-between text-xs text-indigo-600 font-semibold mb-1.5">
           <span>{product.category.name}</span>
-          <div className="flex items-center gap-1 text-amber-400 font-semibold">
+          <div className="flex items-center gap-1 text-amber-500 font-bold">
             <Star className="w-3.5 h-3.5 fill-current" />
             <span>{product.rating.toFixed(1)}</span>
-            <span className="text-slate-500 text-[11px]">({product.reviewCount})</span>
+            <span className="text-slate-400 font-normal text-[11px]">({product.reviewCount})</span>
           </div>
         </div>
 
-        <Link href={`/products/${product.slug}`} className="block group-hover:text-indigo-400 transition-colors">
-          <h3 className="text-base font-semibold text-slate-100 line-clamp-1">
+        <Link href={`/products/${product.slug}`} className="block group-hover:text-indigo-600 transition-colors">
+          <h3 className="text-base font-bold text-slate-900 line-clamp-1">
             {product.name}
           </h3>
         </Link>
 
-        <p className="mt-2 text-xs text-slate-400 line-clamp-2 leading-relaxed">
+        <p className="mt-2 text-xs text-slate-500 line-clamp-2 leading-relaxed">
           {product.description}
         </p>
 
-        <div className="mt-auto pt-4 flex items-center justify-between gap-2 border-t border-slate-800/80">
+        <div className="mt-auto pt-4 flex items-center justify-between gap-2 border-t border-slate-100">
           <div className="flex flex-col">
             {formattedDiscount ? (
               <>
-                <span className="text-lg font-bold text-emerald-400">{formattedDiscount}</span>
-                <span className="text-xs text-slate-500 line-through">{formattedPrice}</span>
+                <span className="text-lg font-extrabold text-emerald-600">{formattedDiscount}</span>
+                <span className="text-xs text-slate-400 line-through">{formattedPrice}</span>
               </>
             ) : (
-              <span className="text-lg font-bold text-slate-100">{formattedPrice}</span>
+              <span className="text-lg font-extrabold text-slate-900">{formattedPrice}</span>
             )}
           </div>
 

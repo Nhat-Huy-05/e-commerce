@@ -22,14 +22,16 @@ import { HeaderSearch } from './HeaderSearch';
 export function Header() {
   const router = useRouter();
   const [mounted, setMounted] = useState(false);
-  const getTotalItems = useCart((state) => state.getTotalItems);
+  const cartItems = useCart((state) => state.items);
   const { user, logout } = useAuth();
 
   useEffect(() => {
     setMounted(true);
   }, []);
 
-  const totalItems = mounted ? getTotalItems() : 0;
+  const totalItems = mounted
+    ? cartItems.reduce((sum, item) => sum + item.quantity, 0)
+    : 0;
   const currentUser = mounted ? user : null;
 
   const handleLogout = () => {
@@ -39,17 +41,17 @@ export function Header() {
   };
 
   return (
-    <header className="sticky top-0 z-50 w-full border-b border-slate-800 bg-slate-950/80 backdrop-blur-md">
+    <header className="sticky top-0 z-50 w-full border-b border-slate-200 bg-white/90 backdrop-blur-md shadow-xs">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between gap-4">
         {/* Brand logo */}
-        <Link href="/" className="flex items-center gap-2 font-bold text-lg text-slate-100 group shrink-0">
-          <div className="w-8 h-8 rounded-lg bg-gradient-to-tr from-indigo-500 to-purple-600 flex items-center justify-center text-white shadow-md group-hover:scale-105 transition-transform">
+        <Link href="/" className="flex items-center gap-2 font-bold text-lg text-slate-900 group shrink-0">
+          <div className="w-8 h-8 rounded-lg bg-indigo-600 flex items-center justify-center text-white shadow-md group-hover:scale-105 transition-transform">
             <Store className="w-5 h-5" />
           </div>
-          <span className="bg-gradient-to-r from-slate-100 to-slate-400 bg-clip-text text-transparent">
+          <span className="font-extrabold text-slate-900">
             NextCommerce
           </span>
-          <span className="text-[10px] uppercase font-mono px-1.5 py-0.5 rounded bg-indigo-500/20 text-indigo-400 border border-indigo-500/30">
+          <span className="text-[10px] uppercase font-mono px-1.5 py-0.5 rounded bg-indigo-50 text-indigo-700 border border-indigo-200">
             Thesis
           </span>
         </Link>
@@ -61,14 +63,14 @@ export function Header() {
         <nav className="flex items-center gap-1 sm:gap-2">
           <Link
             href="/"
-            className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-medium text-slate-300 hover:text-white hover:bg-slate-900 transition-colors"
+            className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-medium text-slate-600 hover:text-slate-900 hover:bg-slate-100 transition-colors"
           >
             <Home className="w-4 h-4" />
             <span className="hidden md:inline">Home</span>
           </Link>
           <Link
             href="/products"
-            className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-medium text-slate-300 hover:text-white hover:bg-slate-900 transition-colors"
+            className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-medium text-slate-600 hover:text-slate-900 hover:bg-slate-100 transition-colors"
           >
             <Package className="w-4 h-4" />
             <span className="hidden md:inline">Products</span>
@@ -78,7 +80,7 @@ export function Header() {
           {currentUser?.role === 'admin' && (
             <Link
               href="/admin/products"
-              className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-semibold text-purple-400 bg-purple-950/40 hover:bg-purple-900/60 border border-purple-800/50 transition-colors"
+              className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-semibold text-purple-700 bg-purple-50 hover:bg-purple-100 border border-purple-200 transition-colors"
             >
               <ShieldCheck className="w-4 h-4" />
               <span className="hidden md:inline">Admin Panel</span>
@@ -90,15 +92,15 @@ export function Header() {
             <div className="flex items-center gap-1.5">
               <Link
                 href="/profile"
-                className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-medium text-slate-200 bg-slate-900 border border-slate-800 hover:bg-slate-800 transition-colors"
+                className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-medium text-slate-800 bg-slate-100 border border-slate-200 hover:bg-slate-200 transition-colors"
               >
-                <User className="w-3.5 h-3.5 text-indigo-400" />
+                <User className="w-3.5 h-3.5 text-indigo-600" />
                 <span className="max-w-[100px] truncate">{currentUser.name}</span>
                 <span
                   className={`text-[9px] uppercase px-1.5 py-0.2 rounded font-mono font-bold ${
                     currentUser.role === 'admin'
-                      ? 'bg-purple-500/20 text-purple-300'
-                      : 'bg-emerald-500/20 text-emerald-300'
+                      ? 'bg-purple-100 text-purple-700'
+                      : 'bg-emerald-100 text-emerald-700'
                   }`}
                 >
                   {currentUser.role}
@@ -106,7 +108,7 @@ export function Header() {
               </Link>
               <button
                 onClick={handleLogout}
-                className="p-1.5 rounded-lg text-slate-400 hover:text-red-400 hover:bg-slate-900 transition-colors cursor-pointer"
+                className="p-1.5 rounded-lg text-slate-500 hover:text-red-600 hover:bg-red-50 transition-colors cursor-pointer"
                 title="Đăng xuất"
               >
                 <LogOut className="w-4 h-4" />
@@ -115,7 +117,7 @@ export function Header() {
           ) : (
             <Link
               href="/login"
-              className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-semibold text-white bg-indigo-600 hover:bg-indigo-500 transition-colors"
+              className="flex items-center gap-1.5 px-3.5 py-1.5 rounded-lg text-xs font-semibold text-white bg-indigo-600 hover:bg-indigo-700 shadow-sm transition-colors"
             >
               <LogIn className="w-4 h-4" />
               <span>Đăng nhập</span>
@@ -125,11 +127,11 @@ export function Header() {
           {/* Cart Icon */}
           <Link
             href="/cart"
-            className="relative flex items-center justify-center p-2 rounded-lg bg-indigo-600/10 text-indigo-400 hover:bg-indigo-600/20 border border-indigo-500/20 transition-colors ml-1"
+            className="relative flex items-center justify-center p-2 rounded-lg bg-indigo-50 text-indigo-600 hover:bg-indigo-100 border border-indigo-200 transition-colors ml-1"
           >
             <ShoppingBag className="w-5 h-5" />
             {totalItems > 0 && (
-              <span className="absolute -top-1.5 -right-1.5 bg-indigo-600 text-white font-bold text-[10px] w-5 h-5 rounded-full flex items-center justify-center shadow-lg border-2 border-slate-950">
+              <span className="absolute -top-1.5 -right-1.5 bg-indigo-600 text-white font-bold text-[10px] w-5 h-5 rounded-full flex items-center justify-center shadow border-2 border-white">
                 {totalItems}
               </span>
             )}

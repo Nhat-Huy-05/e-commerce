@@ -22,18 +22,14 @@
   - [3.3. Thiết kế Cơ sở dữ liệu](#33-thiết-kế-cơ-sở-dữ-liệu)
     - [3.3.1. Sơ đồ thực thể mối quan hệ (ERD Diagram)](#331-sơ-đồ-thực-thể-mối-quan-hệ-erd-diagram)
     - [3.3.2. Mã nguồn schema.prisma chi tiết và diễn giải](#332-mã-nguồn-schemaprisma-chi-tiết-và-diễn-giải)
-  - [3.4. Phân bổ chiến lược Rendering & Cấu trúc thư mục](#34-phân-bổ-chiến-lược-rendering--cấu-trúc-thư-mục)
-    - [3.4.1. Cấu trúc thư mục thực tế của dự án](#341-cấu-trúc-thư-mục-thực-tế-của-dự-án)
-    - [3.4.2. Bảng phân bổ Route & Chiến lược Rendering](#342-bảng-phân-bổ-route--chiến-lược-rendering)
 - [CHƯƠNG 4. CÀI ĐẶT VÀ TRIỂN KHAI ỨNG DỤNG](#chương-4-cài-đặt-và-triển-khai-ứng-dụng)
   - [4.1. Tổng quan giao diện và các Chức năng hệ thống](#41-tổng-quan-giao-diện-và-các-chức-năng-hệ-thống)
   - [4.2. Kịch bản Chạy Demo chi tiết](#42-kịch-bản-chạy-demo-chi-tiết)
     - [4.2.1. Luồng Khách hàng (User / Guest)](#421-luồng-khách-hàng-user--guest)
     - [4.2.2. Luồng Quản trị viên (Admin)](#422-luồng-quản-trị-viên-admin)
-- [CHƯƠNG 5. ĐÁNH GIÁ VÀ KẾT LUẬN](#chương-5-đánh-giá-và-kết-luận)
-  - [5.1. Đánh giá kết quả đạt được](#51-đánh-giá-kết-quả-đạt-được)
-  - [5.2. Hạn chế thực tế và Hướng phát triển tiếp theo](#52-hạn-chế-thực-tế-và-hướng-phát-triển-tiếp-theo)
-  - [5.3. Kết luận chung](#53-kết-luận-chung)
+- [CHƯƠNG 5. KẾT LUẬN VÀ HƯỚNG PHÁT TRIỂN](#chương-5-kết-luận-và-hướng-phát-triển)
+  - [5.1. Kết luận](#51-kết-luận)
+  - [5.2. Hướng phát triển](#52-hướng-phát-triển)
 - [TÀI LIỆU THAM KHẢO](#tài-liệu-tham-khảo)
 
 ---
@@ -840,76 +836,6 @@ model Review {
 
 ---
 
-### 3.4. Phân bổ chiến lược Rendering & Cấu trúc thư mục
-
-#### 3.4.1. Cấu trúc thư mục thực tế của dự án
-Ứng dụng được tổ chức theo chuẩn kiến trúc Next.js App Router:
-
-```text
-commerce/
-├── app/                        # Thư mục App Router chính
-│   ├── [page]/                 # Các trang nội dung tĩnh động
-│   ├── admin/                  # Phân hệ Quản trị Admin
-│   │   ├── layout.tsx          # Layout bọc bảo mật với AdminAuthGuard
-│   │   └── products/           # Quản lý sản phẩm (List, Create, Edit)
-│   ├── api/                    # API Route Handlers (REST APIs)
-│   │   ├── auth/               # APIs Đăng nhập, Đăng ký, Đăng xuất
-│   │   ├── categories/         # API lấy danh mục
-│   │   ├── orders/             # API xử lý đặt hàng & lấy lịch sử đơn
-│   │   ├── products/           # RESTful CRUD APIs Sản phẩm
-│   │   └── search/             # API tìm kiếm sản phẩm
-│   ├── cart/                   # Trang Giỏ hàng (CSR)
-│   ├── checkout/               # Trang Thanh toán (CSR)
-│   ├── login/ & register/      # Trang Xác thực người dùng (CSR)
-│   ├── orders/ & profile/      # Trang Lịch sử đơn hàng & Cá nhân (CSR)
-│   ├── product/ & products/    # Trang Danh sách & Chi tiết sản phẩm (SSG / ISR)
-│   ├── search/                 # Trang Tìm kiếm & Lọc sản phẩm (SSR)
-│   ├── globals.css             # Stylesheet toàn cục (TailwindCSS)
-│   ├── layout.tsx              # Root Layout (Header, Footer, Toast)
-│   └── page.tsx                # Trang chủ ứng dụng (SSG + ISR)
-├── components/                 # Tái sử dụng React Components
-│   ├── admin/                  # Admin Components (AdminAuthGuard, DeleteButton)
-│   ├── cart/                   # Cart Components (AddToCartButton, CartDrawer)
-│   ├── common/                 # RenderingBadge, HeroAuthSection, Navbar
-│   ├── products/               # ProductGrid, ProductCard, ImageGallery
-│   └── ui/                     # UI Primitives
-├── lib/                        # Thư viện & Cấu hình Core
-│   ├── auth-store.ts           # State Management Đăng nhập (Zustand)
-│   ├── store.ts                # State Management Giỏ hàng (Zustand + Persist)
-│   ├── db.ts                   # Khởi tạo Singleton PrismaClient instance
-│   ├── validation.ts           # Zod Schema validation dữ liệu
-│   └── utils.ts                # Các hàm tiện ích bổ trợ
-├── prisma/                     # Cấu hình Cơ sở dữ liệu
-│   ├── schema.prisma           # Cấu trúc CSDL thực tế
-│   └── seed.ts                 # Script khởi tạo dữ liệu mẫu
-├── public/                     # Tài nguyên tĩnh (Hình ảnh, Icons)
-├── next.config.ts              # Cấu hình Framework Next.js
-├── package.json                # Khai báo Dependencies & Scripts
-└── tsconfig.json               # Cấu hình TypeScript
-```
-
----
-
-#### 3.4.2. Bảng phân bổ Route & Chiến lược Rendering
-
-| Đường dẫn (Route) | Loại Component | Chiến lược Rendering | Lý do lựa chọn kỹ thuật |
-| :--- | :--- | :--- | :--- |
-| `/` | Server Component | **SSG + ISR** (`revalidate: 60`) | Trang chủ chứa banner và các sản phẩm nổi bật ít thay đổi. Khởi tạo tĩnh tại Build Time giúp tải tức thì, làm mới ngầm sau 60 giây. |
-| `/products` | Server Component | **SSG + ISR** (`revalidate: 60`) | Danh sách sản phẩm công khai cần tối ưu SEO và tốc độ truy cập ban đầu cho khách hàng. |
-| `/products/[slug]` | Server Component | **SSG + ISR** (`generateStaticParams`) | Pre-render tĩnh toàn bộ trang chi tiết sản phẩm. Khi Admin cập nhật thông tin sản phẩm, gọi `revalidatePath()` để xóa cache làm mới ngay. |
-| `/search` | Server Component | **SSR** (`dynamic = 'force-dynamic'`) | Tìm kiếm và lọc sản phẩm phụ thuộc trực tiếp vào tham số đường dẫn (`searchParams`). Cần render thời gian thực trên Server theo mỗi truy vấn của khách. |
-| `/cart` | Client Component | **CSR** (`"use client"`) | Giỏ hàng lưu trữ và tính toán trực tiếp trên trình duyệt người dùng bằng Zustand + LocalStorage. Cần phản hồi tức thì các thao tác tăng/giảm số lượng. |
-| `/checkout` | Client Component | **CSR** (`"use client"`) | Form nhập thông tin thanh toán cá nhân hóa. Thu thập dữ liệu Client và gửi yêu cầu tạo đơn đặt hàng qua API. |
-| `/login` & `/register` | Client Component | **CSR** (`"use client"`) | Xử lý Form đăng nhập/đăng ký người dùng, tương tác với Local State và gửi request xác thực. |
-| `/profile` & `/orders` | Client Component | **CSR** (`"use client"`) | Trang thông tin và đơn hàng cá nhân chỉ hiển thị sau khi Client xác thực Cookie và tải dữ liệu riêng của User. |
-| `/admin/products` | Server Component | **SSR** (`revalidate = 0`) | Trang Dashboard Quản trị yêu cầu dữ liệu chính xác 100% thời gian thực. Phải render Server để kiểm tra dữ liệu tồn kho mới nhất. |
-| `/admin/products/new` | Client Component | **CSR / SSR Form** | Form tạo sản phẩm mới dành cho Admin, tương tác dữ liệu động và gửi API `POST /api/products`. |
-| `/admin/products/[id]/edit` | Client Component | **CSR / SSR Form** | Form cập nhật sản phẩm cho Admin, lấy dữ liệu hiện tại và gửi API `PUT /api/products/[id]`. |
-| `/api/auth/*` | REST API Handler | **Server Execution** | Xử lý logic đăng nhập, đăng ký và thiết lập Cookie xác thực bảo mật `user_role` và `user_id`. |
-| `/api/products/*` | REST API Handler | **Server Execution** | Xử lý CRUD sản phẩm với Prisma ORM, kích hoạt `revalidatePath()` để tự động cập nhật cache của các trang ISR/SSG. |
-| `/api/orders/*` | REST API Handler | **Server Execution** | Xử lý tạo đơn hàng trong Prisma `$transaction`, tự động trừ kho sản phẩm và lưu bản ghi đơn hàng. |
-
----
 
 ## CHƯƠNG 4. CÀI ĐẶT VÀ TRIỂN KHAI ỨNG DỤNG
 
@@ -917,51 +843,151 @@ commerce/
 
 Hệ thống được thiết kế theo phong cách giao diện hiện đại (Modern Dark Mode UI) sử dụng TailwindCSS, mang lại trải nghiệm thị giác ấn tượng, mượt mà và trực quan.
 
+Bảng tổng hợp các màn hình chính của hệ thống:
+
+| Màn hình | Route | Chức năng chính |
+|---|---|---|
+| Trang chủ | `/` | Banner, sản phẩm nổi bật, danh mục |
+| Đăng nhập / Đăng ký | `/login` · `/register` | Xác thực người dùng, phân quyền |
+| Danh sách sản phẩm | `/products` · `/search` | Duyệt, tìm kiếm, lọc sản phẩm theo danh mục |
+| Chi tiết sản phẩm | `/product/[handle]` | Xem thông tin, hình ảnh, thêm vào giỏ |
+| Giỏ hàng | `/cart` | Xem/sửa/xóa sản phẩm, tổng tiền tạm tính |
+| Thanh toán | `/checkout` | Nhập địa chỉ, chọn PT thanh toán, đặt hàng |
+| Đơn hàng | `/orders` | Lịch sử đơn hàng, xem chi tiết hóa đơn |
+| Profile | `/profile` | Thông tin tài khoản người dùng |
+| Dashboard Quản trị | `/admin/products` | Danh sách sản phẩm, quản lý kho, CRUD |
+| Form Thêm/Sửa SP | `/admin/products/new` · `[id]/edit` | Nhập liệu thông tin sản phẩm |
+
+---
+
 #### Màn hình 1: Trang chủ hệ thống (Homepage)
+
+**Route:** `/`
+
 ![Giao diện Trang chủ](./images/demo-home.png)
 *Chú thích: Màn hình Trang chủ hiển thị Hero Banner ấn tượng, Rendering Badge thông báo chiến lược SSG+ISR (60s), danh mục sản phẩm nổi bật và các thẻ sản phẩm chất lượng cao.*
 
----
-
-#### Màn hình 2: Trang Tìm kiếm và Lọc sản phẩm
-![Giao diện Tìm kiếm và Lọc sản phẩm](./images/demo-products-search.png)
-*Chú thích: Màn hình Tìm kiếm & Lọc (SSR) cho phép người dùng tìm kiếm theo từ khóa, lọc theo danh mục và sắp xếp theo giá cả hoặc đánh giá thời gian thực.*
-
----
-
-#### Màn hình 3: Trang Chi tiết sản phẩm
-![Giao diện Trang chi tiết sản phẩm](./images/demo-product-detail.png)
-*Chú thích: Trang Chi tiết sản phẩm (SSG+ISR) hiển thị bộ sưu tập ảnh (Image Gallery), thông tin mô tả chi tiết, số lượng tồn kho còn lại, đánh giá sao và nút "Thêm vào giỏ hàng".*
+**Các thành phần hiển thị:**
+- **Banner Hero** toàn chiều rộng: Ảnh nền quảng bá, hiệu ứng Gradient Overlay, tiêu đề nổi bật, nút CTA "Khám phá ngay" chuyển hướng tới `/products` và nút "Admin Dashboard" tới `/admin/products`.
+- **HeroAuthSection**: Hiển thị nút Đăng nhập / Đăng ký hoặc lời chào người dùng tùy theo trạng thái phiên làm việc (Session).
+- **Perk Cards**: Khối giới thiệu tiện ích cửa hàng (Miễn phí vận chuyển toàn quốc, Bảo hành chính hãng 12 tháng, Thanh toán an toàn).
+- **Sản phẩm nổi bật (Featured Products)**: Danh sách tối đa 8 sản phẩm được ghim `isFeatured = true` hiển thị dạng lưới (Grid Card) với đầy đủ ảnh đại diện, tên, giá bán và badge giảm giá.
+- **Danh mục sản phẩm (Categories)**: Hiển thị toàn bộ nhóm danh mục cùng số lượng sản phẩm thuộc từng nhóm để điều hướng nhanh.
 
 ---
 
-#### Màn hình 4: Trang Giỏ hàng tương tác
-![Giao diện Giỏ hàng tương tác](./images/demo-cart.png)
-*Chú thích: Màn hình Giỏ hàng (CSR) sử dụng Zustand Store lưu trữ LocalStorage, cho phép người dùng thay đổi số lượng, xóa mặt hàng, xem tổng tiền tự động cập nhật và bấm tiến hành Thanh toán.*
+#### Màn hình 2: Trang Đăng nhập và Xác thực (Authentication)
 
----
+**Route:** `/login` · `/register`
 
-#### Màn hình 5: Trang Thanh toán & Đặt hàng
-![Giao diện Thanh toán & Đặt hàng](./images/demo-checkout.png)
-*Chú thích: Màn hình Thanh toán (Checkout) chứa Form thu thập địa chỉ giao hàng, lựa chọn phương thức thanh toán (COD, Chuyển khoản, Thẻ) và nút bấm Xác nhận đơn hàng.*
-
----
-
-#### Màn hình 6: Trang Đăng nhập và Xác thực
 ![Giao diện Đăng nhập và Xác thực](./images/demo-auth.png)
 *Chú thích: Màn hình Đăng nhập (/login) xử lý xác thực thông tin tài khoản người dùng, thiết lập Cookies phiên làm việc và đồng bộ State vào Zustand Auth Store.*
 
+**Các thành phần hiển thị:**
+- Form Đăng nhập: Ô nhập Email hoặc Tên người dùng và Mật khẩu, nút Submit "Đăng nhập", hỗ trợ modal khôi phục mật khẩu qua OTP.
+- Form Đăng ký: Ô nhập Họ và Tên, Tên người dùng duy nhất (Username), Địa chỉ Email, Mật khẩu và Nhập lại mật khẩu (kiểm tra trùng khớp thời gian thực).
+- Điều hướng tự động: Tự động chuyển hướng về Trang chủ sau khi đăng nhập thành công.
+- Xử lý thông báo lỗi: Báo lỗi trực quan khi sai thông tin đăng nhập hoặc email đã tồn tại.
+- Phân quyền người dùng (Role-based Authorization): Tự động phân chia vai trò `admin` (cho phép vào `/admin/*`) và `customer` (giới hạn ở phân hệ mua sắm).
+
 ---
 
-#### Màn hình 7: Trang Dashboard Quản trị Sản phẩm Admin
+#### Màn hình 3: Trang Tìm kiếm và Lọc sản phẩm
+
+**Route:** `/products` · `/search`
+
+![Giao diện Tìm kiếm và Lọc sản phẩm](./images/demo-products-search.png)
+*Chú thích: Màn hình Tìm kiếm & Lọc (SSR) cho phép người dùng tìm kiếm theo từ khóa, lọc theo danh mục và sắp xếp theo giá cả hoặc đánh giá thời gian thực.*
+
+**Các thành phần hiển thị:**
+- Khung tìm kiếm thời gian thực: Cho phép gõ từ khóa tìm theo tên sản phẩm, tự động gửi truy vấn SSR.
+- Thanh bộ lọc danh mục: Lọc nhanh sản phẩm theo các chuyên mục công nghệ, phụ kiện, thời trang.
+- Lưới danh sách sản phẩm: Hiển thị hình ảnh chất lượng cao, tên, đơn giá, tag danh mục và nút thao tác nhanh "Thêm vào giỏ".
+
+---
+
+#### Màn hình 4: Trang Chi tiết sản phẩm
+
+**Route:** `/product/[handle]`
+
+![Giao diện Trang chi tiết sản phẩm](./images/demo-product-detail.png)
+*Chú thích: Trang Chi tiết sản phẩm (SSG+ISR) hiển thị bộ sưu tập ảnh (Image Gallery), thông tin mô tả chi tiết, số lượng tồn kho còn lại, đánh giá sao và nút "Thêm vào giỏ hàng".*
+
+**Các thành phần hiển thị:**
+- Bộ sưu tập hình ảnh (Image Gallery): Trình chiếu ảnh chi tiết ở độ phân giải cao.
+- Khu vực thông tin: Tên sản phẩm, giá bán, giá niêm yết, tình trạng tồn kho trong CSDL.
+- Mô tả chi tiết: Nội dung diễn giải tính năng, thông số kỹ thuật của sản phẩm.
+- Bộ chọn số lượng: Tăng/giảm số lượng sản phẩm trước khi mua.
+- Nút "Thêm vào giỏ hàng": Tích hợp hiệu ứng phản hồi tức thì, cập nhật số lượng giỏ hàng trên Header.
+
+---
+
+#### Màn hình 5: Trang Giỏ hàng tương tác (Cart)
+
+**Route:** `/cart`
+
+![Giao diện Giỏ hàng tương tác](./images/demo-cart.png)
+*Chú thích: Màn hình Giỏ hàng (CSR) sử dụng Zustand Store lưu trữ LocalStorage, cho phép người dùng thay đổi số lượng, xóa mặt hàng, xem tổng tiền tự động cập nhật và bấm tiến hành Thanh toán.*
+
+**Các thành phần hiển thị:**
+- Bảng danh sách mặt hàng đã chọn: Ảnh thu nhỏ, tên sản phẩm, đơn giá, bộ nút tăng/giảm (+/-) số lượng và nút xóa từng món.
+- Khối tóm tắt đơn hàng (Order Summary): Tự động tính tổng tiền hàng, tiền thuế/phí và tổng thanh toán theo thời gian thực.
+- Nút "Tiến hành Thanh toán": Chuyển hướng tới trang đặt hàng `/checkout`.
+
+---
+
+#### Màn hình 6: Trang Thanh toán & Đặt hàng (Checkout)
+
+**Route:** `/checkout`
+
+![Giao diện Thanh toán & Đặt hàng](./images/demo-checkout.png)
+*Chú thích: Màn hình Thanh toán (Checkout) chứa Form thu thập địa chỉ giao hàng, lựa chọn phương thức thanh toán (COD, Chuyển khoản, Thẻ) và nút bấm Xác nhận đơn hàng.*
+
+**Các thành phần hiển thị:**
+- Form thông tin nhận hàng: Họ và tên người nhận, Số điện thoại liên hệ, Địa chỉ giao nhận chi tiết.
+- Tóm tắt đơn hàng: Danh sách mặt hàng, số lượng và tổng số tiền cần thanh toán.
+- Lựa chọn phương thức thanh toán: Hỗ trợ thanh toán khi nhận hàng (COD), Chuyển khoản ngân hàng hoặc Thẻ thanh toán.
+- Nút "Xác nhận Đặt hàng": Kích hoạt API `POST /api/orders`, tạo đơn trong CSDL, trừ tồn kho và làm trống giỏ hàng.
+
+---
+
+#### Màn hình 7: Trang Quản lý Đơn hàng cá nhân (Orders)
+
+**Route:** `/orders`
+
+**Các thành phần hiển thị:**
+- Danh sách đơn hàng đã mua: Mã đơn hàng (Order ID dạng cuid), Ngày đặt, Tổng tiền, Trạng thái xử lý (PENDING, PAID, SHIPPED).
+- Chi tiết đơn hàng: Xem bảng kê danh sách từng sản phẩm, số lượng mua, đơn giá thời điểm đặt và thông tin giao nhận.
+
+---
+
+#### Màn hình 8: Trang Dashboard Quản trị Sản phẩm Admin
+
+**Route:** `/admin/products`
+
 ![Giao diện Dashboard Quản trị Sản phẩm Admin](./images/demo-admin-products.png)
 *Chú thích: Trang Dashboard Admin (/admin/products) chạy chế độ SSR, được bảo vệ bởi AdminAuthGuard, hiển thị danh sách tất cả sản phẩm, tồn kho, giá bán, nút Thêm mới và bộ công cụ Sửa/Xóa.*
 
+**Các thành phần hiển thị:**
+- Bảng dữ liệu quản trị (Data Table): Hiển thị ảnh sản phẩm, tên, danh mục, giá bán niêm yết, số lượng tồn kho và cờ nổi bật (Featured).
+- Nút "Thêm sản phẩm mới": Mở giao diện biểu mẫu thêm sản phẩm.
+- Nhóm nút thao tác: Nút "Chỉnh sửa" để cập nhật thông tin và nút "Xóa" kèm hộp thoại xác nhận an toàn trước khi xóa bản ghi trong CSDL.
+- Thanh tìm kiếm và phân loại nhanh sản phẩm trong kho.
+
 ---
 
-#### Màn hình 8: Trang Thêm / Chỉnh sửa Sản phẩm Admin
+#### Màn hình 9: Trang Thêm / Chỉnh sửa Sản phẩm Admin
+
+**Route:** `/admin/products/new` · `/admin/products/[id]/edit`
+
 ![Giao diện Thêm / Sửa Sản phẩm Admin](./images/demo-admin-form.png)
 *Chú thích: Màn hình Form Quản trị dành cho Admin cho phép nhập/sửa Tên sản phẩm, Slug, Mô tả, Giá bán, Giá giảm, Số lượng tồn kho, Danh mục và Đường dẫn hình ảnh.*
+
+**Các thành phần hiển thị:**
+- Các trường nhập liệu: Tên sản phẩm, Đường dẫn thân thiện (Slug), Mô tả sản phẩm, Giá bán, Giá khuyến mãi, Số lượng trong kho.
+- Lựa chọn danh mục: Dropdown chọn danh mục liên kết (`Category`).
+- Nhập đường dẫn hình ảnh (Image URLs).
+- Nút "Lưu sản phẩm": Gọi API `POST /api/products` hoặc `PUT /api/products/[id]` và tự động kích hoạt `revalidatePath()` để đồng bộ giao diện người dùng tức thì.
 
 ---
 
@@ -1004,41 +1030,45 @@ Hệ thống thiết lập cơ chế phân quyền 2 lớp chặt chẽ:
 
 ---
 
-## CHƯƠNG 5. ĐÁNH GIÁ VÀ KẾT LUẬN
+## CHƯƠNG 5. KẾT LUẬN VÀ HƯỚNG PHÁT TRIỂN
 
-### 5.1. Đánh giá kết quả đạt được
+### 5.1. Kết luận
+Sau thời gian thực hiện đề tài **“Xây dựng Website bán hàng với Next.js App Router + TypeScript”**, em đã hoàn thành các mục tiêu cơ bản của một bài niên luận/báo cáo thực tập, xây dựng thành công ứng dụng web mua sắm trực tuyến hoạt động được với đầy đủ các luồng nghiệp vụ chính.
 
-#### 5.1.1. Về mặt Công nghệ và Kiến trúc
-* **Kiến trúc Next.js App Router mượt mà:** Khai thác tối đa sức mạnh của React Server Components (RSC) giúp giảm hơn 60% dung lượng JavaScript Bundle tải về phía Client so với mô hình SPA truyền thống.
-* **Chiến lược Hybrid Rendering tối ưu:** Áp dụng thành công và chuẩn xác từng chiến lược rendering cho từng phân hệ (SSG/ISR cho Trang chủ & Sản phẩm, SSR cho Tìm kiếm & Admin, CSR cho Giỏ hàng & Form), giúp trang web đạt chỉ số Performance và SEO vượt trội trên Google Lighthouse (đạt từ 95-100 điểm).
-* **An toàn kiểu dữ liệu (Type-Safe 100%):** Kết hợp chặt chẽ giữa TypeScript, Zod Validation và Prisma ORM giúp loại bỏ hoàn toàn các lỗi sai lệch kiểu dữ liệu từ Cơ sở dữ liệu $\rightarrow$ Server APIs $\rightarrow$ Client Interface.
+**Các chức năng đã hoàn thành:**
+• **Phân hệ Khách hàng:**
+  - Xem danh sách sản phẩm, danh mục và chi tiết sản phẩm.
+  - Tìm kiếm sản phẩm theo từ khóa và lọc theo danh mục.
+  - Thêm/bớt/xóa sản phẩm trong giỏ hàng.
+  - Thực hiện đặt hàng, điền thông tin giao hàng và chọn phương thức thanh toán.
+  - Xem danh sách đơn hàng đã đặt.
+• **Phân hệ Quản trị (Admin):**
+  - Đăng nhập tài khoản quản trị.
+  - Xem danh sách sản phẩm, thêm sản phẩm mới, chỉnh sửa thông tin và xóa sản phẩm.
 
-#### 5.1.2. Về mặt Chức năng và Nghiệp vụ
-* Hệ thống hoạt động ổn định, đáp ứng đầy đủ và mượt mà toàn bộ luồng nghiệp vụ E-commerce từ Khám phá sản phẩm, Tìm kiếm, Giỏ hàng, Đặt hàng đến Quản trị dữ liệu Admin.
-* Luồng giao dịch thanh toán và trừ tồn kho được bảo vệ an toàn nhờ cơ chế `Prisma $transaction`, đảm bảo tính toàn vẹn dữ liệu (ACID) ngay cả khi có nhiều giao dịch đồng thời.
-* Phân quyền người dùng rõ ràng, bảo mật tài nguyên Quản trị an toàn.
+**Ưu điểm của hệ thống:**
+• **Giao diện trực quan, dễ thao tác:** Giao diện tối màu (Dark Mode) hiện đại, rõ ràng, giúp người dùng dễ dàng tìm kiếm và mua sắm.
+• **Tốc độ tải trang nhanh:** Nhờ áp dụng cơ chế Render tĩnh (SSG/ISR) của Next.js, các trang như Trang chủ và Chi tiết sản phẩm tải rất mượt mà.
+• **Giỏ hàng tiện lợi:** Sử dụng Zustand lưu giỏ hàng vào bộ nhớ trình duyệt (LocalStorage), giúp giữ nguyên hàng trong giỏ kể cả khi tải lại trang.
+• **Quản lý dữ liệu nhất quán:** Sử dụng TypeScript kết hợp Prisma ORM giúp kiểm soát kiểu dữ liệu chặt chẽ từ CSDL đến Giao diện, hạn chế lỗi phát sinh trong quá trình chạy.
+
+**Nhược điểm của hệ thống:**
+• **Chưa tích hợp thanh toán online:** Hệ thống mới chỉ ghi nhận đơn hàng với hình thức COD hoặc Chuyển khoản, chưa kết nối trực tiếp với cổng thanh toán thực tế.
+• **Xác thực và phân quyền còn đơn giản:** Chức năng đăng nhập Admin đang xử lý qua Cookie và State phía Client để phục vụ thử nghiệm, chưa áp dụng cơ chế mã hóa mật khẩu và Token bảo mật chuyên sâu.
+• **Chưa hỗ trợ phân trang:** Danh sách sản phẩm hiển thị tất cả trên một trang, nếu số lượng sản phẩm lớn sẽ làm kéo dài trang web.
+• **Trang Admin chưa có thống kê:** Mới dừng lại ở việc quản lý sản phẩm (CRUD), chưa có biểu đồ báo cáo doanh thu hay số lượng đơn hàng.
+
+Ngoài ra, quá trình làm đề tài giúp em vận dụng thực tế các kiến thức đã học trên lớp như phân tích thiết kế hệ thống, sơ đồ UML, thiết kế CSDL và tiếp cận công nghệ Web hiện đại (Next.js, TypeScript, Prisma).
 
 ---
 
-### 5.2. Hạn chế thực tế và Hướng phát triển tiếp theo
-
-#### 5.2.1. Hạn chế thực tế
-1. **Cơ chế Xác thực (Auth):** Đang sử dụng cơ chế lưu Cookie thủ công và Zustand State cho mục đích demo niên luận, chưa tích hợp mã hóa JWT ký số (RSA/HS256) hoặc các thư viện chuẩn công nghiệp như NextAuth.js / Auth.js.
-2. **Cổng thanh toán:** Hiện tại hệ thống hỗ trợ phương thức Thanh toán khi nhận hàng (COD) và Chuyển khoản ngân hàng định danh, chưa tích hợp trực tiếp SDK cổng thanh toán trực tuyến thời gian thực (như VNPAY, MoMo, ZaloPay, Stripe).
-3. **Phân trang (Pagination):** Danh sách sản phẩm hiện đang tải toàn bộ dữ liệu, chưa chia trang phía Server khi quy mô sản phẩm lên tới hàng ngàn bản ghi.
-
-#### 5.2.2. Hướng phát triển tiếp theo
-1. Nâng cấp hệ thống xác thực lên **Auth.js (NextAuth v5)** hỗ trợ đăng nhập Social (Google, GitHub) và mã hóa Token bảo mật cao.
-2. Tích hợp SDK **VNPAY / MoMo API** để xử lý thanh toán trực tuyến tức thì với Webhook phản hồi trạng thái đơn hàng.
-3. Tích hợp **Redis Cache** cho các truy vấn tìm kiếm sản phẩm tần suất cao và xây dựng hệ thống Phân trang (Server-side Pagination) & Bộ lọc đa chiều tiên tiến.
-
----
-
-### 5.3. Kết luận chung
-
-Đề tài **“Xây dựng Website bán hàng với Next.js App Router + TypeScript”** đã hoàn thành trọn vẹn tất cả các mục tiêu lý thuyết và thực tiễn đề ra. Sản phẩm không chỉ là một ứng dụng thương mại điện tử hoạt động thực tế với đầy đủ chức năng mua sắm và quản trị, mà còn là một mô hình thực nghiệm minh chứng rõ nét cho hiệu quả vượt trội của kiến trúc **Hybrid Rendering** trong việc tối ưu hóa hiệu năng web và SEO.
-
-Quá trình thực hiện đề tài đã giúp em củng cố sâu sắc kiến thức về lập trình Web hiện đại, tư duy thiết kế hệ thống Type-safe với TypeScript & Prisma ORM, và khả năng làm chủ các công nghệ hàng đầu trong hệ sinh thái React/Next.js. Đây là nền tảng vững chắc để em tiếp tục phát triển các sản phẩm phần mềm quy mô lớn hơn trong tương lai.
+### 5.2. Hướng phát triển
+Để hoàn thiện hệ thống hơn trong tương lai, bài làm có thể phát triển thêm các hướng sau:
+• **Tích hợp thanh toán online đơn giản:** Kết nối cổng thanh toán qua mã QR (MoMo, VNPAY) để khách hàng có thể quét mã thanh toán trực tiếp.
+• **Nâng cấp hệ thống đăng nhập:** Áp dụng mã hóa mật khẩu (bcrypt) và mã hóa Token (JWT) để bảo mật tài khoản người dùng và Admin tốt hơn.
+• **Thêm chức năng phân trang & lọc nâng cao:** Chia nhỏ danh sách sản phẩm theo từng trang (Pagination) và bổ sung lọc theo khoảng giá, đánh giá.
+• **Thêm biểu đồ thống kê cho Admin:** Tích hợp thư viện biểu đồ đơn giản (như Chart.js) để trực quan hóa số lượng đơn hàng và tổng doanh thu.
+• **Tối ưu giao diện di động:** Cải thiện trải nghiệm người dùng trên các màn hình điện thoại nhỏ để thao tác vuốt chọn dễ dàng hơn.
 
 ---
 
@@ -1052,3 +1082,23 @@ Quá trình thực hiện đề tài đã giúp em củng cố sâu sắc kiến
 7. **Tran Thuy Vy (200Lab).** *Prisma là gì? Hướng dẫn ORM cho Node.js.* Truy cập từ: https://200lab.io/blog/prisma-la-gi
 8. **InRhythm (LinkedIn).** *Enhancing Web Performance: Comprehensive Guide to Server-Side Rendering.*
 9. **Hiệp hội Thương mại điện tử Việt Nam (VECOM).** *Báo cáo Chỉ số Thương mại điện tử Việt Nam (EBI 2026).* Truy cập từ: https://vecom.vn/bao-cao-chi-so-thuong-mai-dien-tu-viet-nam-2026
+
+---
+
+## PHỤ LỤC: BẢNG TỔNG HỢP VÀ ÁP DỤNG CÁC CHIẾN LƯỢC RENDERING (SSG, ISR, SSR, CSR) TRONG HỆ THỐNG
+
+Dưới đây là bảng tổng hợp chi tiết vị trí đường dẫn (Routes), file nguồn tương ứng và chiến lược Rendering (SSG, ISR, SSR, CSR) được áp dụng trong dự án website thương mại điện tử NextCommerce:
+
+| STT | Trang / Phân hệ Chức năng | Đường dẫn (Route) | File Nguồn | Chiến lược Rendering | Giải thích Lý do Áp dụng & Cơ chế Hoạt động |
+| :---: | :--- | :--- | :--- | :---: | :--- |
+| **1** | **Trang chủ (Homepage)** | `/` | `app/page.tsx` | **SSG + ISR** (`revalidate = 60`s) | Pre-render toàn bộ HTML tại Build Time để tối ưu SEO và thời gian phản hồi tức thì (< 50ms). Tự động tái tạo ngầm (revalidate) dữ liệu sản phẩm nổi bật mỗi 60 giây. |
+| **2** | **Danh mục Sản phẩm** | `/products` | `app/products/page.tsx` | **ISR** (`revalidate = 30`s) | Render trang danh sách sản phẩm tĩnh và lưu vào cache 30 giây. Khi có thay đổi từ Admin, cache sẽ tự động được làm mới theo chu kỳ 30 giây. |
+| **3** | **Chi tiết Sản phẩm** | `/products/[slug]` | `app/products/[slug]/page.tsx` | **SSG + ISR** (`generateStaticParams`, `revalidate = 60`s) | Sinh sẵn các trang chi tiết sản phẩm tĩnh dựa vào `slug` lúc Build time (`generateStaticParams`). Tái tạo ngầm mỗi 60 giây hoặc khi Admin gọi `revalidatePath()`. |
+| **4** | **Tìm kiếm & Lọc Sản phẩm** | `/search` | `app/search/page.tsx` | **SSR** (`dynamic = 'force-dynamic'`) | Do từ khóa tìm kiếm (`?q=...`) và bộ lọc thay đổi theo từng truy vấn thời gian thực của người dùng, trang cần Server-Side Rendering dữ liệu mới nhất trực tiếp từ CSDL. |
+| **5** | **Giỏ hàng Tương tác** | `/cart` | `app/cart/page.tsx` | **CSR** (`"use client"`, Zustand Store) | Xử lý các tương tác thời gian thực như Thêm/Xóa sản phẩm, tăng/giảm số lượng, tính tổng tiền ngầm phía Trình duyệt và lưu trữ dữ liệu bền vững vào `LocalStorage`. |
+| **6** | **Thanh toán & Đặt hàng** | `/checkout` | `app/checkout/page.tsx`, `CheckoutForm.tsx` | **SSR & CSR** (`"use client"` Form + API) | Đảm bảo tính bảo mật và cập nhật tồn kho chính xác thời gian thực. Form nhận thông tin từ Client và gửi request POST tới Server API để tạo đơn hàng. |
+| **7** | **Chi tiết Đơn hàng Cá nhân** | `/orders/[id]` | `app/orders/[id]/page.tsx` | **SSR** (`revalidate = 0`) | Thông tin đơn hàng cá nhân mang tính bảo mật và cần dữ liệu chính xác tuyệt đối ngay tại thời điểm khách hàng truy cập. |
+| **8** | **Đăng nhập & Xác thực** | `/login`, `/register` | `app/login/page.tsx`, `app/register/page.tsx` | **CSR** (`"use client"`) | Quản lý form nhập liệu, bật/tắt mật khẩu, xác thực OTP, lưu State tài khoản vào Zustand Auth Store và thiết lập Cookies phiên làm việc. |
+| **9** | **Trang Hồ sơ Cá nhân** | `/profile` | `app/profile/page.tsx` | **CSR** (`"use client"`) | Lấy thông tin user hiện tại từ Zustand Auth state và fetch danh sách đơn hàng đã mua phía Client qua REST API `/api/orders`. |
+| **10** | **Dashboard Quản trị Admin** | `/admin/products` | `app/admin/products/page.tsx` | **SSR** (`revalidate = 0`) | Admin Dashboard yêu cầu số lượng tồn kho và giá bán luôn là dữ liệu mới nhất 100%, đồng thời được bảo vệ bởi thành phần `AdminAuthGuard`. |
+

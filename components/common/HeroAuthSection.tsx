@@ -10,42 +10,42 @@ export function HeroAuthSection() {
 
   if (!user) {
     return (
-      <div className="mt-4 inline-flex items-center gap-2 px-4 py-2 rounded-xl border border-indigo-500/20 bg-indigo-500/5 text-xs text-slate-300">
-        <LogIn className="w-3.5 h-3.5 text-indigo-400" />
+      <div className="mt-4 inline-flex flex-wrap items-center gap-2 px-4 py-2.5 rounded-xl border border-indigo-200 bg-indigo-50 text-xs font-semibold text-slate-800 shadow-xs">
+        <LogIn className="w-4 h-4 text-indigo-600 shrink-0" />
         <span>Chưa đăng nhập —</span>
-        <Link href="/login" className="text-indigo-400 font-semibold hover:underline">
+        <Link href="/login" className="text-indigo-700 font-extrabold hover:underline">
           Đăng nhập ngay
         </Link>
-        <span className="text-slate-500">để lưu lịch sử đơn hàng</span>
+        <span className="text-slate-600 font-medium">để lưu lịch sử đơn hàng</span>
       </div>
     );
   }
 
   return (
     <div
-      className={`mt-4 inline-flex items-center gap-2 px-4 py-2 rounded-xl border text-xs font-semibold ${
+      className={`mt-4 inline-flex flex-wrap items-center gap-2 px-4 py-2.5 rounded-xl border text-xs font-bold shadow-xs ${
         user.role === 'admin'
-          ? 'bg-purple-500/10 text-purple-300 border-purple-500/20'
-          : 'bg-emerald-500/10 text-emerald-300 border-emerald-500/20'
+          ? 'bg-purple-50 text-purple-900 border-purple-200'
+          : 'bg-emerald-50 text-emerald-900 border-emerald-200'
       }`}
     >
       {user.role === 'admin' ? (
-        <ShieldCheck className="w-3.5 h-3.5" />
+        <ShieldCheck className="w-4 h-4 text-purple-600 shrink-0" />
       ) : (
-        <User className="w-3.5 h-3.5" />
+        <User className="w-4 h-4 text-emerald-600 shrink-0" />
       )}
-      Xin chào, <span className="font-bold">{user.name}</span>!
+      <span>Xin chào, <strong className="font-extrabold text-slate-900">{user.name}</strong>!</span>
       <span
-        className={`text-[10px] uppercase px-1.5 py-0.5 rounded font-mono ${
+        className={`text-[10px] uppercase px-2 py-0.5 rounded-md font-mono font-extrabold ${
           user.role === 'admin'
-            ? 'bg-purple-500/20 text-purple-400'
-            : 'bg-emerald-500/20 text-emerald-400'
+            ? 'bg-purple-200 text-purple-900'
+            : 'bg-emerald-200 text-emerald-900'
         }`}
       >
         {user.role}
       </span>
       {user.role === 'admin' && (
-        <Link href="/admin/products" className="ml-1 underline hover:no-underline">
+        <Link href="/admin/products" className="ml-1 text-purple-700 underline font-bold hover:no-underline">
           → Admin Panel
         </Link>
       )}

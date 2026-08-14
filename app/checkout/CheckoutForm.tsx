@@ -99,7 +99,7 @@ export function CheckoutForm({ products }: CheckoutFormProps) {
 
   if (items.length === 0) {
     return (
-      <div className="py-12 text-center text-slate-400">
+      <div className="py-12 text-center text-slate-500">
         Giỏ hàng đang trống. Vui lòng quay lại chọn sản phẩm trước khi thanh toán.
       </div>
     );
@@ -110,19 +110,19 @@ export function CheckoutForm({ products }: CheckoutFormProps) {
       {/* Shipping Details */}
       <div className="lg:col-span-2 space-y-6">
         {errorMsg && (
-          <div className="p-4 rounded-xl bg-red-500/10 border border-red-500/20 text-red-400 text-xs font-semibold">
+          <div className="p-4 rounded-xl bg-red-50 border border-red-200 text-red-600 text-xs font-semibold">
             ⚠️ {errorMsg}
           </div>
         )}
 
-        <div className="p-6 rounded-3xl bg-slate-900/60 border border-slate-800 space-y-4">
-          <h3 className="text-base font-bold text-white flex items-center gap-2">
-            <Truck className="w-5 h-5 text-indigo-400" /> Thông tin giao hàng
+        <div className="p-6 rounded-3xl bg-white border border-slate-200 shadow-xs space-y-4">
+          <h3 className="text-base font-bold text-slate-900 flex items-center gap-2">
+            <Truck className="w-5 h-5 text-indigo-600" /> Thông tin giao hàng
           </h3>
 
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 text-xs">
             <div>
-              <label className="block text-slate-300 font-semibold mb-1">
+              <label className="block text-slate-700 font-semibold mb-1">
                 Họ và Tên
               </label>
               <input
@@ -131,11 +131,11 @@ export function CheckoutForm({ products }: CheckoutFormProps) {
                 value={formData.shippingName}
                 onChange={handleChange}
                 required
-                className="w-full bg-slate-950 border border-slate-800 rounded-lg p-2.5 text-slate-200 focus:outline-none focus:border-indigo-500"
+                className="w-full bg-slate-50 border border-slate-300 rounded-xl p-2.5 text-slate-900 focus:bg-white focus:outline-none focus:border-indigo-600"
               />
             </div>
             <div>
-              <label className="block text-slate-300 font-semibold mb-1">
+              <label className="block text-slate-700 font-semibold mb-1">
                 Email nhận thông báo
               </label>
               <input
@@ -144,11 +144,11 @@ export function CheckoutForm({ products }: CheckoutFormProps) {
                 value={formData.shippingEmail}
                 onChange={handleChange}
                 required
-                className="w-full bg-slate-950 border border-slate-800 rounded-lg p-2.5 text-slate-200 focus:outline-none focus:border-indigo-500"
+                className="w-full bg-slate-50 border border-slate-300 rounded-xl p-2.5 text-slate-900 focus:bg-white focus:outline-none focus:border-indigo-600"
               />
             </div>
             <div>
-              <label className="block text-slate-300 font-semibold mb-1">
+              <label className="block text-slate-700 font-semibold mb-1">
                 Số điện thoại
               </label>
               <input
@@ -157,11 +157,11 @@ export function CheckoutForm({ products }: CheckoutFormProps) {
                 value={formData.shippingPhone}
                 onChange={handleChange}
                 required
-                className="w-full bg-slate-950 border border-slate-800 rounded-lg p-2.5 text-slate-200 focus:outline-none focus:border-indigo-500"
+                className="w-full bg-slate-50 border border-slate-300 rounded-xl p-2.5 text-slate-900 focus:bg-white focus:outline-none focus:border-indigo-600"
               />
             </div>
             <div>
-              <label className="block text-slate-300 font-semibold mb-1">
+              <label className="block text-slate-700 font-semibold mb-1">
                 Tỉnh / Thành phố
               </label>
               <input
@@ -170,11 +170,11 @@ export function CheckoutForm({ products }: CheckoutFormProps) {
                 value={formData.shippingCity}
                 onChange={handleChange}
                 required
-                className="w-full bg-slate-950 border border-slate-800 rounded-lg p-2.5 text-slate-200 focus:outline-none focus:border-indigo-500"
+                className="w-full bg-slate-50 border border-slate-300 rounded-xl p-2.5 text-slate-900 focus:bg-white focus:outline-none focus:border-indigo-600"
               />
             </div>
             <div className="sm:col-span-2">
-              <label className="block text-slate-300 font-semibold mb-1">
+              <label className="block text-slate-700 font-semibold mb-1">
                 Địa chỉ chi tiết
               </label>
               <input
@@ -183,24 +183,24 @@ export function CheckoutForm({ products }: CheckoutFormProps) {
                 value={formData.shippingAddress}
                 onChange={handleChange}
                 required
-                className="w-full bg-slate-950 border border-slate-800 rounded-lg p-2.5 text-slate-200 focus:outline-none focus:border-indigo-500"
+                className="w-full bg-slate-50 border border-slate-300 rounded-xl p-2.5 text-slate-900 focus:bg-white focus:outline-none focus:border-indigo-600"
               />
             </div>
           </div>
         </div>
 
         {/* Payment Method */}
-        <div className="p-6 rounded-3xl bg-slate-900/60 border border-slate-800 space-y-4">
-          <h3 className="text-base font-bold text-white flex items-center gap-2">
-            <CreditCard className="w-5 h-5 text-purple-400" /> Phương thức thanh toán
+        <div className="p-6 rounded-3xl bg-white border border-slate-200 shadow-xs space-y-4">
+          <h3 className="text-base font-bold text-slate-900 flex items-center gap-2">
+            <CreditCard className="w-5 h-5 text-purple-600" /> Phương thức thanh toán
           </h3>
 
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 text-xs">
             <label
               className={`flex items-center gap-2 p-3 rounded-xl border cursor-pointer transition-colors ${
                 formData.paymentMethod === 'credit_card'
-                  ? 'bg-indigo-600/10 border-indigo-500 text-white font-semibold'
-                  : 'bg-slate-950 border-slate-800 text-slate-400'
+                  ? 'bg-indigo-50 border-indigo-600 text-indigo-900 font-bold'
+                  : 'bg-slate-50 border-slate-200 text-slate-600'
               }`}
             >
               <input
@@ -216,8 +216,8 @@ export function CheckoutForm({ products }: CheckoutFormProps) {
             <label
               className={`flex items-center gap-2 p-3 rounded-xl border cursor-pointer transition-colors ${
                 formData.paymentMethod === 'bank_transfer'
-                  ? 'bg-indigo-600/10 border-indigo-500 text-white font-semibold'
-                  : 'bg-slate-950 border-slate-800 text-slate-400'
+                  ? 'bg-indigo-50 border-indigo-600 text-indigo-900 font-bold'
+                  : 'bg-slate-50 border-slate-200 text-slate-600'
               }`}
             >
               <input
@@ -233,8 +233,8 @@ export function CheckoutForm({ products }: CheckoutFormProps) {
             <label
               className={`flex items-center gap-2 p-3 rounded-xl border cursor-pointer transition-colors ${
                 formData.paymentMethod === 'cash'
-                  ? 'bg-indigo-600/10 border-indigo-500 text-white font-semibold'
-                  : 'bg-slate-950 border-slate-800 text-slate-400'
+                  ? 'bg-indigo-50 border-indigo-600 text-indigo-900 font-bold'
+                  : 'bg-slate-50 border-slate-200 text-slate-600'
               }`}
             >
               <input
@@ -252,8 +252,8 @@ export function CheckoutForm({ products }: CheckoutFormProps) {
       </div>
 
       {/* Order Summary Sidebar */}
-      <div className="p-6 rounded-3xl bg-slate-900/90 border border-slate-800 h-fit space-y-4">
-        <h3 className="text-base font-bold text-white pb-3 border-b border-slate-800">
+      <div className="p-6 rounded-3xl bg-white border border-slate-200 shadow-md h-fit space-y-4">
+        <h3 className="text-base font-bold text-slate-900 pb-3 border-b border-slate-200">
           Sản phẩm mua ({items.length})
         </h3>
 
@@ -263,40 +263,40 @@ export function CheckoutForm({ products }: CheckoutFormProps) {
               <img
                 src={product?.thumbnail}
                 alt=""
-                className="w-10 h-10 rounded-lg object-cover bg-slate-950 border border-slate-800 shrink-0"
+                className="w-10 h-10 rounded-lg object-cover bg-slate-100 border border-slate-200 shrink-0"
               />
               <div className="flex-1 min-w-0">
-                <p className="text-slate-200 font-medium truncate">{product?.name}</p>
-                <p className="text-slate-500 text-[11px]">x{quantity}</p>
+                <p className="text-slate-800 font-semibold truncate">{product?.name}</p>
+                <p className="text-slate-400 text-[11px]">x{quantity}</p>
               </div>
-              <span className="font-mono text-emerald-400 font-bold">
+              <span className="font-mono text-emerald-600 font-bold">
                 ${(unitPrice * quantity).toFixed(2)}
               </span>
             </div>
           ))}
         </div>
 
-        <div className="space-y-2 pt-3 border-t border-slate-800 text-xs">
-          <div className="flex justify-between text-slate-400">
+        <div className="space-y-2 pt-3 border-t border-slate-200 text-xs">
+          <div className="flex justify-between text-slate-600">
             <span>Tạm tính:</span>
-            <span className="font-mono text-slate-200">${subtotal.toFixed(2)}</span>
+            <span className="font-mono text-slate-800 font-semibold">${subtotal.toFixed(2)}</span>
           </div>
-          <div className="flex justify-between text-slate-400">
+          <div className="flex justify-between text-slate-600">
             <span>Vận chuyển:</span>
-            <span className="font-mono text-slate-200">
+            <span className="font-mono text-slate-800 font-semibold">
               {shippingFee === 0 ? 'FREE' : `$${shippingFee.toFixed(2)}`}
             </span>
           </div>
-          <div className="flex justify-between text-sm font-bold text-white pt-2 border-t border-slate-800">
+          <div className="flex justify-between text-sm font-extrabold text-slate-900 pt-2 border-t border-slate-200">
             <span>Tổng cộng:</span>
-            <span className="font-mono text-emerald-400">${grandTotal.toFixed(2)}</span>
+            <span className="font-mono text-emerald-600">${grandTotal.toFixed(2)}</span>
           </div>
         </div>
 
         <button
           type="submit"
           disabled={submitting}
-          className="w-full flex items-center justify-center gap-2 py-3 px-4 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white font-semibold text-sm shadow-lg transition-all disabled:opacity-50 cursor-pointer"
+          className="w-full flex items-center justify-center gap-2 py-3 px-4 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white font-semibold text-sm shadow-md transition-all disabled:opacity-50 cursor-pointer"
         >
           {submitting ? (
             'Đang xử lý đơn hàng...'
@@ -308,7 +308,7 @@ export function CheckoutForm({ products }: CheckoutFormProps) {
         </button>
 
         <p className="text-[11px] text-slate-500 text-center flex items-center justify-center gap-1">
-          <ShieldCheck className="w-3.5 h-3.5 text-emerald-400" /> Thanh toán được bảo vệ và xử lý tức thì bởi SSR
+          <ShieldCheck className="w-3.5 h-3.5 text-emerald-600" /> Thanh toán được bảo vệ và xử lý tức thì bởi SSR
         </p>
       </div>
     </form>

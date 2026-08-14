@@ -3,7 +3,6 @@ import { notFound } from 'next/navigation';
 import { db } from '@/lib/db';
 import { AddToCartButton } from '@/components/cart/AddToCartButton';
 import { ProductImageGallery } from '@/components/products/ProductImageGallery';
-import { RenderingBadge } from '@/components/common/RenderingBadge';
 import { Star, ShieldCheck, Truck, RotateCcw } from 'lucide-react';
 
 // SSG + ISR: Revalidate static product page every 60 seconds
@@ -62,42 +61,35 @@ export default async function ProductDetailPage({ params }: ProductDetailPagePro
 
   return (
     <div className="space-y-8">
-      <RenderingBadge
-        strategy="SSG"
-        revalidateSeconds={60}
-        routeName={`app/products/[slug]/page.tsx (slug: ${product.slug})`}
-        reason="Trang chi tiết sản phẩm được tạo trước bằng generateStaticParams() tại build time (SSG) giúp đạt điểm chuẩn SEO tối đa và tải cực nhanh. Khi có thay đổi về giá hoặc tồn kho trong Admin, trang được làm mới tự động qua ISR sau 60s."
-      />
-
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-10 bg-slate-900/60 border border-slate-800 p-6 sm:p-8 rounded-3xl">
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-10 bg-white border border-slate-200 p-6 sm:p-8 rounded-3xl shadow-xs">
         {/* Product Images Gallery */}
         <ProductImageGallery images={images} productName={product.name} />
 
         {/* Product Details */}
         <div className="flex flex-col space-y-6">
           <div>
-            <div className="inline-block px-3 py-1 rounded-full text-xs font-semibold bg-indigo-500/10 text-indigo-400 border border-indigo-500/20 mb-3">
+            <div className="inline-block px-3 py-1 rounded-full text-xs font-bold bg-indigo-50 text-indigo-700 border border-indigo-200 mb-3">
               {product.category.name}
             </div>
-            <h1 className="text-3xl font-extrabold text-white leading-tight">
+            <h1 className="text-3xl font-extrabold text-slate-900 leading-tight">
               {product.name}
             </h1>
 
             {/* Rating */}
             <div className="flex items-center gap-2 mt-3">
-              <div className="flex items-center text-amber-400">
+              <div className="flex items-center text-amber-500">
                 {[...Array(5)].map((_, i) => (
                   <Star
                     key={i}
                     className={`w-4 h-4 ${
                       i < Math.floor(product.rating)
                         ? 'fill-current'
-                        : 'text-slate-600'
+                        : 'text-slate-300'
                     }`}
                   />
                 ))}
               </div>
-              <span className="text-sm font-semibold text-slate-200">
+              <span className="text-sm font-bold text-slate-800">
                 {product.rating.toFixed(1)}
               </span>
               <span className="text-xs text-slate-500">
@@ -107,41 +99,41 @@ export default async function ProductDetailPage({ params }: ProductDetailPagePro
           </div>
 
           {/* Pricing */}
-          <div className="flex items-baseline gap-3 p-4 rounded-xl bg-slate-950/60 border border-slate-800">
+          <div className="flex items-baseline gap-3 p-4 rounded-2xl bg-slate-50 border border-slate-200">
             {formattedDiscount ? (
               <>
-                <span className="text-3xl font-bold text-emerald-400">
+                <span className="text-3xl font-extrabold text-emerald-600">
                   {formattedDiscount}
                 </span>
-                <span className="text-sm text-slate-500 line-through">
+                <span className="text-sm text-slate-400 line-through">
                   {formattedPrice}
                 </span>
-                <span className="ml-auto text-xs font-bold text-red-400 bg-red-500/10 px-2.5 py-1 rounded-md border border-red-500/20">
+                <span className="ml-auto text-xs font-bold text-red-600 bg-red-50 px-2.5 py-1 rounded-md border border-red-200">
                   Tiết kiệm {Math.round(((product.price - product.discountPrice!) / product.price) * 100)}%
                 </span>
               </>
             ) : (
-              <span className="text-3xl font-bold text-white">{formattedPrice}</span>
+              <span className="text-3xl font-extrabold text-slate-900">{formattedPrice}</span>
             )}
           </div>
 
           {/* Description */}
           <div className="space-y-2">
-            <h3 className="text-sm font-semibold text-slate-200">Mô tả sản phẩm</h3>
-            <p className="text-xs text-slate-300 leading-relaxed">
+            <h3 className="text-sm font-bold text-slate-900">Mô tả sản phẩm</h3>
+            <p className="text-xs text-slate-600 leading-relaxed">
               {product.longDescription || product.description}
             </p>
           </div>
 
           {/* Stock info */}
           <div className="flex items-center gap-2 text-xs font-medium">
-            <span className="text-slate-400">Tình trạng kho:</span>
+            <span className="text-slate-500">Tình trạng kho:</span>
             {product.stock > 0 ? (
-              <span className="text-emerald-400 font-semibold bg-emerald-500/10 px-2.5 py-0.5 rounded-full border border-emerald-500/20">
+              <span className="text-emerald-700 font-bold bg-emerald-50 px-2.5 py-0.5 rounded-full border border-emerald-200">
                 Còn {product.stock} sản phẩm
               </span>
             ) : (
-              <span className="text-red-400 font-semibold bg-red-500/10 px-2.5 py-0.5 rounded-full border border-red-500/20">
+              <span className="text-red-700 font-bold bg-red-50 px-2.5 py-0.5 rounded-full border border-red-200">
                 Hết hàng
               </span>
             )}
@@ -153,18 +145,18 @@ export default async function ProductDetailPage({ params }: ProductDetailPagePro
           </div>
 
           {/* Perks */}
-          <div className="grid grid-cols-3 gap-3 pt-4 border-t border-slate-800 text-center">
-            <div className="p-3 rounded-xl bg-slate-950/40 border border-slate-800/80">
-              <Truck className="w-5 h-5 mx-auto text-indigo-400 mb-1" />
-              <p className="text-[11px] font-medium text-slate-300">Freeship TOÀN QUỐC</p>
+          <div className="grid grid-cols-3 gap-3 pt-4 border-t border-slate-200 text-center">
+            <div className="p-3 rounded-xl bg-slate-50 border border-slate-200">
+              <Truck className="w-5 h-5 mx-auto text-indigo-600 mb-1" />
+              <p className="text-[11px] font-semibold text-slate-700">Freeship TOÀN QUỐC</p>
             </div>
-            <div className="p-3 rounded-xl bg-slate-950/40 border border-slate-800/80">
-              <ShieldCheck className="w-5 h-5 mx-auto text-purple-400 mb-1" />
-              <p className="text-[11px] font-medium text-slate-300">Bảo hành 12 tháng</p>
+            <div className="p-3 rounded-xl bg-slate-50 border border-slate-200">
+              <ShieldCheck className="w-5 h-5 mx-auto text-purple-600 mb-1" />
+              <p className="text-[11px] font-semibold text-slate-700">Bảo hành 12 tháng</p>
             </div>
-            <div className="p-3 rounded-xl bg-slate-950/40 border border-slate-800/80">
-              <RotateCcw className="w-5 h-5 mx-auto text-pink-400 mb-1" />
-              <p className="text-[11px] font-medium text-slate-300">Đổi trả 30 ngày</p>
+            <div className="p-3 rounded-xl bg-slate-50 border border-slate-200">
+              <RotateCcw className="w-5 h-5 mx-auto text-pink-600 mb-1" />
+              <p className="text-[11px] font-semibold text-slate-700">Đổi trả 30 ngày</p>
             </div>
           </div>
         </div>
@@ -172,16 +164,16 @@ export default async function ProductDetailPage({ params }: ProductDetailPagePro
 
       {/* Reviews section */}
       {product.reviews && product.reviews.length > 0 && (
-        <div className="bg-slate-900/60 border border-slate-800 p-6 rounded-3xl space-y-4">
-          <h3 className="text-lg font-bold text-white">Đánh giá từ khách hàng</h3>
+        <div className="bg-white border border-slate-200 p-6 rounded-3xl space-y-4 shadow-xs">
+          <h3 className="text-lg font-extrabold text-slate-900">Đánh giá từ khách hàng</h3>
           <div className="space-y-3">
             {product.reviews.map((rev) => (
-              <div key={rev.id} className="p-4 rounded-xl bg-slate-950 border border-slate-800 space-y-1.5">
+              <div key={rev.id} className="p-4 rounded-2xl bg-slate-50 border border-slate-200 space-y-1.5">
                 <div className="flex items-center justify-between">
-                  <span className="text-xs font-bold text-slate-200">{rev.title}</span>
-                  <span className="text-xs text-amber-400">★ {rev.rating}/5</span>
+                  <span className="text-xs font-bold text-slate-900">{rev.title}</span>
+                  <span className="text-xs font-bold text-amber-500">★ {rev.rating}/5</span>
                 </div>
-                <p className="text-xs text-slate-400">{rev.content}</p>
+                <p className="text-xs text-slate-600">{rev.content}</p>
               </div>
             ))}
           </div>

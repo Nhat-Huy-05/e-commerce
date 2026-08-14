@@ -1,7 +1,6 @@
-import React from 'react';
-import { notFound } from 'next/navigation';
-import { db } from '@/lib/db';
 import { ProductForm } from '@/components/admin/ProductForm';
+import { db } from '@/lib/db';
+import { notFound } from 'next/navigation';
 
 export const revalidate = 0;
 export const dynamic = 'force-dynamic';
@@ -29,7 +28,7 @@ export default async function EditProductPage({ params }: EditProductPageProps) 
   return (
     <div className="space-y-6">
       <div className="pb-4 border-b border-slate-800">
-        <h1 className="text-3xl font-extrabold text-white">
+        <h1 className="text-3xl font-extrabold text-slate-900">
           Chỉnh sửa Sản phẩm: <span className="text-indigo-400">{product.name}</span>
         </h1>
         <p className="text-xs text-slate-400 mt-1">

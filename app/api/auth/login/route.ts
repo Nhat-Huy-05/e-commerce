@@ -12,13 +12,26 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    const user = await db.user.findUnique({
-      where: { email: email.toLowerCase().trim() },
+    const normalizedInput = email.toLowerCase().trim();
+
+    let user: any = await db.user.findUnique({
+      where: { email: normalizedInput },
     });
+
+    if (!user) {
+      try {
+        const users: any[] = await db.$queryRaw`SELECT * FROM User WHERE LOWER(username) = ${normalizedInput} LIMIT 1`;
+        if (users && users.length > 0) {
+          user = users[0];
+        }
+      } catch (err) {
+        console.warn('Username query error:', err);
+      }
+    }
 
     if (!user || user.password !== password) {
       return NextResponse.json(
-        { error: 'Email hoặc Mật khẩu không chính xác' },
+        { error: 'Tài khoản (Email/Tên người dùng) hoặc Mật khẩu không chính xác' },
         { status: 401 }
       );
     }
@@ -49,10 +62,10 @@ export async function POST(request: NextRequest) {
     });
 
     return response;
-  } catch (error) {
+  } catch (error: any) {
     console.error('Login error:', error);
     return NextResponse.json(
-      { error: 'Đã có lỗi xảy ra khi đăng nhập' },
+      { error: error?.message || 'Đã có lỗi xảy ra khi đăng ký/đăng nhập' },
       { status: 500 }
     );
   }
