@@ -1,3 +1,4 @@
+import { Suspense } from 'react';
 import { ProductFilter } from '@/components/products/ProductFilter';
 import { ProductGrid } from '@/components/products/ProductGrid';
 import { db } from '@/lib/db';
@@ -46,7 +47,9 @@ export default async function ProductsPage({ searchParams }: ProductsPageProps) 
         </div>
       </div>
 
-      <ProductFilter categories={categories} />
+      <Suspense fallback={<div className="h-16 bg-white border border-slate-200 rounded-2xl animate-pulse mb-8" />}>
+        <ProductFilter categories={categories} />
+      </Suspense>
 
       <ProductGrid products={products} />
     </div>
