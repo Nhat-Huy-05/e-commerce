@@ -1,9 +1,9 @@
 'use client';
 
-import React, { useState } from 'react';
-import { useRouter } from 'next/navigation';
 import { Category, ProductWithCategory } from '@/lib/types';
-import { Save, ArrowLeft, Trash2 } from 'lucide-react';
+import { ArrowLeft, Save } from 'lucide-react';
+import { useRouter } from 'next/navigation';
+import React, { useState } from 'react';
 
 interface ProductFormProps {
   initialData?: ProductWithCategory | null;
@@ -53,10 +53,24 @@ export function ProductForm({ initialData, categories }: ProductFormProps) {
     setErrorMsg('');
 
     try {
-      const imagesArray = formData.images
+      const normalizeUrl = (url: string) => {
+        const trimmed = url.trim();
+        if (!trimmed) return '';
+        if (trimmed.startsWith('http://') || trimmed.startsWith('https://') || trimmed.startsWith('/')) {
+          return trimmed;
+        }
+        return `/${trimmed}`;
+      };
+
+      const normalizedThumbnail = normalizeUrl(formData.thumbnail);
+      let imagesArray = formData.images
         .split(',')
-        .map((s: string) => s.trim())
+        .map((s: string) => normalizeUrl(s))
         .filter((s: string) => s.length > 0);
+
+      if (imagesArray.length === 0 && normalizedThumbnail) {
+        imagesArray = [normalizedThumbnail];
+      }
 
       const payload = {
         name: formData.name,
@@ -67,7 +81,7 @@ export function ProductForm({ initialData, categories }: ProductFormProps) {
         discountPrice: formData.discountPrice ? parseFloat(formData.discountPrice) : null,
         stock: parseInt(formData.stock, 10),
         categoryId: formData.categoryId,
-        thumbnail: formData.thumbnail,
+        thumbnail: normalizedThumbnail,
         images: imagesArray,
         isFeatured: formData.isFeatured,
       };
@@ -240,11 +254,26 @@ export function ProductForm({ initialData, categories }: ProductFormProps) {
               URL Ảnh đại diện (Thumbnail)
             </label>
             <input
-              type="url"
+              type="text"
               name="thumbnail"
+              placeholder="https://..."
               value={formData.thumbnail}
               onChange={handleChange}
               required
+              className="w-full bg-slate-950 border border-slate-800 rounded-lg p-2.5 text-slate-200 focus:outline-none focus:border-indigo-500 font-mono text-[11px]"
+            />
+          </div>
+
+          <div className="sm:col-span-2">
+            <label className="block text-slate-300 font-semibold mb-1">
+              Danh sách Ảnh sản phẩm
+            </label>
+            <input
+              type="text"
+              name="images"
+              placeholder="https://..."
+              value={formData.images}
+              onChange={handleChange}
               className="w-full bg-slate-950 border border-slate-800 rounded-lg p-2.5 text-slate-200 focus:outline-none focus:border-indigo-500 font-mono text-[11px]"
             />
           </div>

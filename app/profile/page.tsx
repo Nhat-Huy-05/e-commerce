@@ -13,7 +13,8 @@ import {
   ShieldCheck,
   ShoppingCart,
   TrendingUp,
-  Users
+  Users,
+  Plus
 } from 'lucide-react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
@@ -178,11 +179,12 @@ function AdminPanel() {
         </div>
 
         {/* Quick action shortcuts */}
-        <div className="grid grid-cols-2 sm:grid-cols-3 gap-2 pt-1">
+        <div className="grid grid-cols-2 sm:grid-cols-4 gap-2 pt-1">
           {[
-            { href: '/admin/products/new', label: 'Thêm sản phẩm', icon: Package },
-            { href: '/admin/products', label: 'Quản lý SP', icon: BarChart2 },
-            { href: '/admin/products', label: 'Tồn kho thấp', icon: AlertTriangle },
+            { href: '/admin/products', label: 'Quản lý SP', icon: Package },
+            { href: '/admin/orders', label: 'Quản lý Đơn hàng', icon: ShoppingCart },
+            { href: '/admin/customers', label: 'Quản lý Khách hàng', icon: Users },
+            { href: '/admin/products/new', label: '+ Thêm SP mới', icon: Plus },
           ].map((s) => {
             const Icon = s.icon;
             return (

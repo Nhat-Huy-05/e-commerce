@@ -9,8 +9,8 @@ export const CreateProductSchema = z.object({
   discountPrice: z.number().nullable().optional(),
   stock: z.number().int().nonnegative('Stock cannot be negative'),
   categoryId: z.string().min(1, 'Category is required'),
-  images: z.array(z.string().url()).min(1, 'At least one image URL is required'),
-  thumbnail: z.string().url('Thumbnail must be a valid URL'),
+  images: z.array(z.string().min(1, 'Image path/URL is required')).min(1, 'At least one image is required'),
+  thumbnail: z.string().min(1, 'Thumbnail is required'),
   isFeatured: z.boolean().default(false),
 });
 
@@ -39,7 +39,7 @@ export const CreateCategorySchema = z.object({
   name: z.string().min(1, 'Category name is required'),
   slug: z.string().min(1, 'Slug is required'),
   description: z.string().optional(),
-  image: z.string().url().optional(),
+  image: z.string().optional(),
 });
 
 export type CreateProductInput = z.infer<typeof CreateProductSchema>;

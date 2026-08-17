@@ -1,6 +1,7 @@
 import { db } from '@/lib/db';
 import { Package, Clock, ArrowLeft } from 'lucide-react';
 import Link from 'next/link';
+import { AdminNavBar } from '@/components/admin/AdminNavBar';
 
 export const revalidate = 0;
 export const dynamic = 'force-dynamic';
@@ -30,6 +31,7 @@ export default async function AdminOrdersPage() {
 
   return (
     <div className="space-y-6">
+      <AdminNavBar />
       {/* Header */}
       <div className="pb-4 border-b border-slate-200 flex items-center justify-between">
         <div>

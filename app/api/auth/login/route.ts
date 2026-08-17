@@ -36,11 +36,22 @@ export async function POST(request: NextRequest) {
       );
     }
 
+    if (user.status === 'banned') {
+      return NextResponse.json(
+        {
+          error:
+            '⛔ Tài khoản của bạn đã bị khóa bởi Quản trị viên do vi phạm điều khoản. Vui lòng liên hệ Admin để được hỗ trợ.',
+        },
+        { status: 403 }
+      );
+    }
+
     const userPayload = {
       id: user.id,
       email: user.email,
       name: user.name,
       role: user.role,
+      status: user.status || 'active',
     };
 
     const response = NextResponse.json({

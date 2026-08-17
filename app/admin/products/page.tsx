@@ -1,9 +1,8 @@
-import React from 'react';
-import Link from 'next/link';
+import { AdminNavBar } from '@/components/admin/AdminNavBar';
 import { db } from '@/lib/db';
+import { AlertTriangle, DollarSign, Edit, Package, Plus, ShoppingCart } from 'lucide-react';
+import Link from 'next/link';
 import { DeleteProductButton } from './DeleteProductButton';
-import { AdminPageHeader } from './AdminPageHeader';
-import { Plus, Edit, DollarSign, ShoppingCart, Package, AlertTriangle } from 'lucide-react';
 
 export const revalidate = 0;
 export const dynamic = 'force-dynamic';
@@ -38,8 +37,15 @@ export default async function AdminProductsPage() {
 
   return (
     <div className="space-y-6">
+      <AdminNavBar />
+
       <div className="flex flex-wrap items-center justify-between gap-4">
-        <AdminPageHeader totalProducts={products.length} />
+        <div>
+          <h2 className="text-xl font-bold text-slate-900">Quản lý Kho & Danh sách Sản phẩm</h2>
+          <p className="text-xs text-slate-500">
+            Hiện có <strong>{products.length}</strong> sản phẩm trong toàn bộ hệ thống
+          </p>
+        </div>
 
         <Link
           href="/admin/products/new"
@@ -80,7 +86,7 @@ export default async function AdminProductsPage() {
           </div>
           <div>
             <p className="text-xs font-semibold text-slate-500">Sản Phẩm Đã Bán</p>
-            <p className="text-xl font-black text-slate-900 font-mono">{totalUnitsSold} cái</p>
+            <p className="text-xl font-black text-slate-900 font-mono">{totalUnitsSold} Sản Phẩm</p>
           </div>
         </div>
 
