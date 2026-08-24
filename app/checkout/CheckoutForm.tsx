@@ -1,10 +1,10 @@
 'use client';
 
-import React, { useState } from 'react';
-import { useRouter } from 'next/navigation';
-import { useCart } from '@/lib/store';
 import { useAuth } from '@/lib/auth-store';
-import { CreditCard, Truck, ShieldCheck, CheckCircle2 } from 'lucide-react';
+import { useCart } from '@/lib/store';
+import { CheckCircle2, CreditCard, ShieldCheck, Truck } from 'lucide-react';
+import { useRouter } from 'next/navigation';
+import React, { useState } from 'react';
 
 interface ProductInfo {
   id: string;
@@ -173,6 +173,19 @@ export function CheckoutForm({ products }: CheckoutFormProps) {
                 className="w-full bg-slate-50 border border-slate-300 rounded-xl p-2.5 text-slate-900 focus:bg-white focus:outline-none focus:border-indigo-600"
               />
             </div>
+            <div>
+              <label className="block text-slate-700 font-semibold mb-1">
+                Mã bưu chính <span className="text-slate-400 font-normal">(tuỳ chọn)</span>
+              </label>
+              <input
+                type="text"
+                name="shippingZipCode"
+                value={formData.shippingZipCode}
+                onChange={handleChange}
+                placeholder="VD: 700000"
+                className="w-full bg-slate-50 border border-slate-300 rounded-xl p-2.5 text-slate-900 focus:bg-white focus:outline-none focus:border-indigo-600"
+              />
+            </div>
             <div className="sm:col-span-2">
               <label className="block text-slate-700 font-semibold mb-1">
                 Địa chỉ chi tiết
@@ -197,11 +210,10 @@ export function CheckoutForm({ products }: CheckoutFormProps) {
 
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 text-xs">
             <label
-              className={`flex items-center gap-2 p-3 rounded-xl border cursor-pointer transition-colors ${
-                formData.paymentMethod === 'credit_card'
-                  ? 'bg-indigo-50 border-indigo-600 text-indigo-900 font-bold'
-                  : 'bg-slate-50 border-slate-200 text-slate-600'
-              }`}
+              className={`flex items-center gap-2 p-3 rounded-xl border cursor-pointer transition-colors ${formData.paymentMethod === 'credit_card'
+                ? 'bg-indigo-50 border-indigo-600 text-indigo-900 font-bold'
+                : 'bg-slate-50 border-slate-200 text-slate-600'
+                }`}
             >
               <input
                 type="radio"
@@ -214,11 +226,10 @@ export function CheckoutForm({ products }: CheckoutFormProps) {
               Thẻ Tín dụng / Visa
             </label>
             <label
-              className={`flex items-center gap-2 p-3 rounded-xl border cursor-pointer transition-colors ${
-                formData.paymentMethod === 'bank_transfer'
-                  ? 'bg-indigo-50 border-indigo-600 text-indigo-900 font-bold'
-                  : 'bg-slate-50 border-slate-200 text-slate-600'
-              }`}
+              className={`flex items-center gap-2 p-3 rounded-xl border cursor-pointer transition-colors ${formData.paymentMethod === 'bank_transfer'
+                ? 'bg-indigo-50 border-indigo-600 text-indigo-900 font-bold'
+                : 'bg-slate-50 border-slate-200 text-slate-600'
+                }`}
             >
               <input
                 type="radio"
@@ -231,11 +242,10 @@ export function CheckoutForm({ products }: CheckoutFormProps) {
               Chuyển khoản Ngân hàng
             </label>
             <label
-              className={`flex items-center gap-2 p-3 rounded-xl border cursor-pointer transition-colors ${
-                formData.paymentMethod === 'cash'
-                  ? 'bg-indigo-50 border-indigo-600 text-indigo-900 font-bold'
-                  : 'bg-slate-50 border-slate-200 text-slate-600'
-              }`}
+              className={`flex items-center gap-2 p-3 rounded-xl border cursor-pointer transition-colors ${formData.paymentMethod === 'cash'
+                ? 'bg-indigo-50 border-indigo-600 text-indigo-900 font-bold'
+                : 'bg-slate-50 border-slate-200 text-slate-600'
+                }`}
             >
               <input
                 type="radio"
@@ -308,8 +318,9 @@ export function CheckoutForm({ products }: CheckoutFormProps) {
         </button>
 
         <p className="text-[11px] text-slate-500 text-center flex items-center justify-center gap-1">
-          <ShieldCheck className="w-3.5 h-3.5 text-emerald-600" /> Thanh toán được bảo vệ và xử lý tức thì bởi SSR
+          <ShieldCheck className="w-3.5 h-3.5 text-emerald-600" /> Thanh toán được bảo vệ và xử lý tức thì
         </p>
+        {/*thanh toán được bảo vệ và xử lý tức thì bởi SSR */}
       </div>
     </form>
   );

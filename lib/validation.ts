@@ -30,7 +30,7 @@ export const CreateOrderSchema = z.object({
   shippingAddress: z.string().min(1, 'Shipping address is required'),
   shippingCity: z.string().min(1, 'City is required'),
   shippingCountry: z.string().min(1, 'Country is required'),
-  shippingZipCode: z.string().min(1, 'Zip code is required'),
+  shippingZipCode: z.string().optional().default(''),
   paymentMethod: z.enum(['credit_card', 'bank_transfer', 'cash']).default('credit_card'),
   notes: z.string().optional(),
 });
