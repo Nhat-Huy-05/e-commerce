@@ -4,21 +4,31 @@
 /node_modules
 /.pnp
 .pnp.js
+.yarn/*
+!.yarn/patches
+!.yarn/plugins
+!.yarn/releases
+!.yarn/versions
 
 # testing
 /coverage
 .playwright
+/playwright-report/
+/test-results/
 
 # next.js
 /.next/
 /out/
+next-env.d.ts
 
 # production
 /build
+/dist
 
 # misc
 .DS_Store
-*.pem
+Thumbs.db
+*.log
 
 # debug
 npm-debug.log*
@@ -26,14 +36,55 @@ yarn-debug.log*
 yarn-error.log*
 .pnpm-debug.log*
 
-# local env files
 .env*
 !.env.example
 
-# vercel
+# secrets & keys
+*.pem
+*.key
+*.p12
+*.pfx
+*.crt
+*.cer
+id_rsa*
+id_ed25519*
+secrets/
+credentials.json
+service-account*.json
+serviceAccountKey.json
+firebase-adminsdk*.json
+google-services.json
+GoogleService-Info.plist
+
+# database & backup
+*.sqlite
+*.sqlite3
+*.db
+*.sql
+*.bak
+*.dump
+
+# vercel / deploy
 .vercel
+.netlify
+.firebase/
+.firebaserc
+.terraform/
+*.tfstate
+*.tfstate.*
 
 # typescript
 *.tsbuildinfo
-next-env.d.ts
-.env*.local
+
+# editor / IDE
+.vscode/*
+!.vscode/extensions.json
+!.vscode/settings.json
+.idea/
+*.swp
+
+# misc caches
+.eslintcache
+.turbo
+.cache/
+.sentry-cli*
