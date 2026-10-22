@@ -13,7 +13,6 @@ import {
   RefreshCw,
   ShieldCheck,
   ShoppingBag,
-  UserCheck,
   X,
 } from 'lucide-react';
 import Link from 'next/link';
@@ -76,41 +75,6 @@ function LoginForm() {
       router.refresh();
     } catch (err: any) {
       setErrorMsg(err.message || 'Đã xảy ra lỗi khi đăng nhập');
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  const fastLogin = async (fastEmail: string, fastPass: string) => {
-    setEmail(fastEmail);
-    setPassword(fastPass);
-    setLoading(true);
-    setErrorMsg('');
-
-    try {
-      const res = await fetch('/api/auth/login', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ email: fastEmail, password: fastPass }),
-      });
-
-      const data = await res.json();
-      if (!res.ok) {
-        throw new Error(data.error || 'Đăng nhập thất bại');
-      }
-
-      setUser(data.user);
-
-      if (redirectTo) {
-        router.push(redirectTo);
-      } else if (data.user.role === 'admin') {
-        router.push('/admin/products');
-      } else {
-        router.push('/profile');
-      }
-      router.refresh();
-    } catch (err: any) {
-      setErrorMsg(err.message);
     } finally {
       setLoading(false);
     }
@@ -238,31 +202,9 @@ function LoginForm() {
             </p>
           ) : (
             <p className="text-xs text-slate-500">
-              Chọn tài khoản để trải nghiệm các phân quyền khác nhau
+              Nhập email hoặc tên người dùng để tiếp tục
             </p>
           )}
-        </div>
-
-        {/* 1-Click Fast Login Section */}
-        <div className="p-4 rounded-2xl bg-slate-50 border border-slate-200 space-y-3">
-          <div className="grid grid-cols-2 gap-2">
-            <button
-              type="button"
-              onClick={() => fastLogin('admin@commerce.com', 'adminpassword123')}
-              disabled={loading}
-              className="flex items-center justify-center gap-1.5 p-2.5 rounded-xl bg-purple-50 hover:bg-purple-100 border border-purple-200 text-purple-700 font-semibold text-xs transition-colors cursor-pointer"
-            >
-              <ShieldCheck className="w-4 h-4 text-purple-600" /> Admin
-            </button>
-            <button
-              type="button"
-              onClick={() => fastLogin('customer@example.com', 'customerpassword123')}
-              disabled={loading}
-              className="flex items-center justify-center gap-1.5 p-2.5 rounded-xl bg-emerald-50 hover:bg-emerald-100 border border-emerald-200 text-emerald-700 font-semibold text-xs transition-colors cursor-pointer"
-            >
-              <UserCheck className="w-4 h-4 text-emerald-600" /> Customer
-            </button>
-          </div>
         </div>
 
         {errorMsg && (

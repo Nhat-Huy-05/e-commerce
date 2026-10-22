@@ -14,7 +14,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   ];
 
   const products = await db.product.findMany({ select: { slug: true, updatedAt: true } });
-  const productRoutes: MetadataRoute.Sitemap = products.map((p) => ({
+  const productRoutes: MetadataRoute.Sitemap = products.map((p: { slug: string; updatedAt: Date }) => ({
     url: `${baseUrl}/products/${p.slug}`,
     lastModified: p.updatedAt,
   }));
