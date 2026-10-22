@@ -10,10 +10,9 @@ import {
   Lock,
   LogIn,
   Mail,
-  RefreshCw,
   ShieldCheck,
   ShoppingBag,
-  X,
+  X
 } from 'lucide-react';
 import Link from 'next/link';
 import { useRouter, useSearchParams } from 'next/navigation';
@@ -24,7 +23,7 @@ function LoginForm() {
   const searchParams = useSearchParams();
   const redirectTo = searchParams.get('redirect');
   const setUser = useAuth((state) => state.setUser);
-  
+
   // Login form state
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -194,7 +193,7 @@ function LoginForm() {
           <div className="w-12 h-12 mx-auto rounded-2xl bg-indigo-50 text-indigo-600 flex items-center justify-center border border-indigo-200 shadow-xs">
             <LogIn className="w-6 h-6" />
           </div>
-          <h1 className="text-2xl font-extrabold text-slate-900">Đăng nhập Tài khoản</h1>
+          <h1 className="text-2xl font-extrabold text-slate-900">Đăng nhập</h1>
           {redirectTo ? (
             <p className="text-xs text-amber-600 font-semibold flex items-center justify-center gap-1">
               <ShoppingBag className="w-3.5 h-3.5" />
@@ -222,7 +221,7 @@ function LoginForm() {
               type="text"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
-              placeholder="Email hoặc Tên người dùng (username)"
+              placeholder="Email/Số điện thoại/Tên đăng nhập "
               required
               className="w-full bg-slate-50 border border-slate-300 rounded-xl p-3 text-slate-900 placeholder-slate-400 focus:bg-white focus:outline-none focus:border-indigo-600 focus:ring-2 focus:ring-indigo-500/20 transition-all"
             />
@@ -237,7 +236,7 @@ function LoginForm() {
                 type={showPassword ? 'text' : 'password'}
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
-                placeholder="••••••••"
+                placeholder="Nhập mật khẩu"
                 required
                 className="w-full bg-slate-50 border border-slate-300 rounded-xl p-3 pr-10 text-slate-900 placeholder-slate-400 focus:bg-white focus:outline-none focus:border-indigo-600 focus:ring-2 focus:ring-indigo-500/20 transition-all"
               />

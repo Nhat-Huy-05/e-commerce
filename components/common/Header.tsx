@@ -1,21 +1,20 @@
 'use client';
 
-import React, { useState, useEffect } from 'react';
-import Link from 'next/link';
-import { useRouter } from 'next/navigation';
-import { useCart } from '@/lib/store';
 import { useAuth } from '@/lib/auth-store';
+import { useCart } from '@/lib/store';
 import {
-  ShoppingBag,
-  Search,
-  ShieldCheck,
-  Store,
   Home,
-  Package,
-  User,
   LogIn,
   LogOut,
+  Package,
+  ShieldCheck,
+  ShoppingBag,
+  Store,
+  User
 } from 'lucide-react';
+import Link from 'next/link';
+import { useRouter } from 'next/navigation';
+import { useEffect, useState } from 'react';
 
 import { HeaderSearch } from './HeaderSearch';
 
@@ -50,9 +49,6 @@ export function Header() {
           </div>
           <span className="font-extrabold text-slate-900">
             NextCommerce
-          </span>
-          <span className="text-[10px] uppercase font-mono px-1.5 py-0.5 rounded bg-indigo-50 text-indigo-700 border border-indigo-200">
-            Thesis
           </span>
         </Link>
 
@@ -97,11 +93,10 @@ export function Header() {
                 <User className="w-3.5 h-3.5 text-indigo-600" />
                 <span className="max-w-[100px] truncate">{currentUser.name}</span>
                 <span
-                  className={`text-[9px] uppercase px-1.5 py-0.2 rounded font-mono font-bold ${
-                    currentUser.role === 'admin'
+                  className={`text-[9px] uppercase px-1.5 py-0.2 rounded font-mono font-bold ${currentUser.role === 'admin'
                       ? 'bg-purple-100 text-purple-700'
                       : 'bg-emerald-100 text-emerald-700'
-                  }`}
+                    }`}
                 >
                   {currentUser.role}
                 </span>

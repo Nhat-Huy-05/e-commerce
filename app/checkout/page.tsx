@@ -1,4 +1,5 @@
 import { db } from '@/lib/db';
+import { Suspense } from 'react';
 import { CheckoutForm } from './CheckoutForm';
 
 // SSR Strategy: Force dynamic server-side rendering for security and real-time stock/price verification
@@ -23,7 +24,9 @@ export default async function CheckoutPage() {
         <h1 className="text-3xl font-extrabold text-slate-900">Thanh toán Đơn hàng</h1>
       </div>
 
-      <CheckoutForm products={products} />
+      <Suspense fallback={<div className="py-12 text-center text-slate-400">Đang tải biểu mẫu...</div>}>
+        <CheckoutForm products={products} />
+      </Suspense>
     </div>
   );
 }

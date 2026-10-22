@@ -1,8 +1,6 @@
 # NextCommerce - Nền Tảng Thương Mại Điện Tử Hybrid Rendering
 
-> **Báo cáo Đề tài Niên Luận**  
-> **Sinh viên thực hiện:** Bùi Nguyễn Nhật Huy (HUSC K47)  
-> **Đơn vị:** Khoa Công nghệ Thông tin - Trường Đại học Khoa học, Đại học Huế  
+
 > **Nội dung nghiên cứu:** Ứng dụng Next.js 15 App Router, Turbopack, Prisma ORM và kiến trúc Hybrid Rendering (SSG, ISR, SSR, CSR) vào bài toán xây dựng hệ thống E-commerce hiện đại.
 
 ---
@@ -26,8 +24,8 @@ Dự án được tổ chức khoa học theo chuẩn **Next.js App Router**, t�
 ```text
 e-commerce/
 ├── 📁 app/                               # Next.js App Router (Routing, Layouts & API)
-│   ├── 📁 about/                         # Trang giới thiệu đề tài niên luận (SSG)
-│   │   └── page.tsx
+│   ├── 📁 about/                         # Chưa setting 
+│   │   
 │   ├── 📁 admin/                         # Khu vực quản trị hệ thống (Admin Dashboard)
 │   │   ├── 📁 customers/                 # Quản lý khách hàng, phân quyền, trạng thái
 │   │   ├── 📁 orders/                    # Quản lý & xử lý trạng thái đơn hàng
@@ -82,8 +80,7 @@ e-commerce/
 │   │   ├── Header.tsx                    # Thanh điều hướng chính (Logo, Menu, Cart, Auth)
 │   │   ├── HeaderSearch.tsx              # Thanh tìm kiếm thông minh với animation thu kính lúp
 │   │   ├── HeroAuthSection.tsx           # Khối hiển thị trạng thái đăng nhập trên Hero Banner
-│   │   ├── HeroBannerActions.tsx         # Nút điều hướng nhanh trên trang chủ
-│   │   └── RenderingBadge.tsx            # Badge trực quan hóa chiến lược Rendering (SSG/ISR/SSR/CSR)
+│   │   └── HeroBannerActions.tsx         # Nút điều hướng nhanh trên trang chủ
 │   ├── 📁 icons/                         # SVG icons tùy biến
 │   │   └── logo.tsx
 │   ├── 📁 products/                      # Component liên quan đến hiển thị sản phẩm
@@ -141,15 +138,23 @@ pnpm install
 ### 3. Đồng bộ Cơ sở dữ liệu (Prisma & SQLite)
 ```bash
 # Tạo schema trong SQLite (nếu chưa có file dev.db)
-npx prisma db push
+pnpm prisma db push
 
 # Nạp dữ liệu mẫu (Sản phẩm, danh mục, tài khoản demo)
-npx tsx prisma/seed.ts
+pnpm tsx prisma/seed.ts
+
+pnpm prisma db seed # Nạp dữ liệu mẫu
 ```
 
 ### 4. Khởi chạy máy chủ phát triển
 ```bash
 pnpm run dev
+```
+### 5. Chạy SQLite
+```bash
+pnpm prisma studio
+# hoặc
+npx prisma studio
 ```
 
 Truy cập ứng dụng tại: [http://localhost:3000](http://localhost:3000)

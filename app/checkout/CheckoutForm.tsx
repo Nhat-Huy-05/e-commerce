@@ -3,7 +3,7 @@
 import { useAuth } from '@/lib/auth-store';
 import { useCart } from '@/lib/store';
 import { CheckCircle2, CreditCard, ShieldCheck, Truck } from 'lucide-react';
-import { useRouter } from 'next/navigation';
+import { useRouter, useSearchParams } from 'next/navigation';
 import React, { useState } from 'react';
 
 interface ProductInfo {
@@ -21,10 +21,17 @@ interface CheckoutFormProps {
 
 export function CheckoutForm({ products }: CheckoutFormProps) {
   const router = useRouter();
-  const { items, clearCart } = useCart();
+  const searchParams = useSearchParams();
+  const { items, removeItem, clearCart } = useCart();
   const { user } = useAuth();
   const [submitting, setSubmitting] = useState(false);
   const [errorMsg, setErrorMsg] = useState('');
+
+  const selectedParam = searchParams.get('items');
+  const selectedIdList = selectedParam ? selectedParam.split(',').filter(Boolean) : null;
+  const activeItems = selectedIdList && selectedIdList.length > 0
+    ? items.filter((i) => selectedIdList.includes(i.productId))
+    : items;
 
   const [formData, setFormData] = useState({
     shippingName: user?.name || '',
@@ -38,7 +45,7 @@ export function CheckoutForm({ products }: CheckoutFormProps) {
     notes: '',
   });
 
-  const cartItemsDetailed = items.map((item) => {
+  const cartItemsDetailed = activeItems.map((item) => {
     const prod = products.find((p) => p.id === item.productId);
     const unitPrice = prod ? prod.discountPrice ?? prod.price : 0;
     return {
@@ -61,8 +68,8 @@ export function CheckoutForm({ products }: CheckoutFormProps) {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (items.length === 0) {
-      setErrorMsg('Giỏ hàng của bạn đang trống.');
+    if (activeItems.length === 0) {
+      setErrorMsg('Không có sản phẩm nào được chọn để thanh toán.');
       return;
     }
 
@@ -73,7 +80,7 @@ export function CheckoutForm({ products }: CheckoutFormProps) {
       const payload = {
         ...formData,
         userId: user?.id,
-        items: items.map((i) => ({ productId: i.productId, quantity: i.quantity })),
+        items: activeItems.map((i) => ({ productId: i.productId, quantity: i.quantity })),
       };
 
       const res = await fetch('/api/orders', {
@@ -88,7 +95,12 @@ export function CheckoutForm({ products }: CheckoutFormProps) {
         throw new Error(data.error || 'Đặt hàng thất bại');
       }
 
-      clearCart();
+      // Nếu chỉ thanh toán một số sản phẩm đã chọn thì chỉ xóa các sản phẩm đó
+      if (selectedIdList && selectedIdList.length > 0 && selectedIdList.length < items.length) {
+        selectedIdList.forEach((id) => removeItem(id));
+      } else {
+        clearCart();
+      }
       router.push(`/orders/${data.id}`);
     } catch (err: any) {
       setErrorMsg(err.message || 'Có lỗi xảy ra khi tạo đơn hàng');
@@ -97,10 +109,14 @@ export function CheckoutForm({ products }: CheckoutFormProps) {
     }
   };
 
-  if (items.length === 0) {
+  if (activeItems.length === 0) {
     return (
       <div className="py-12 text-center text-slate-500">
-        Giỏ hàng đang trống. Vui lòng quay lại chọn sản phẩm trước khi thanh toán.
+        Không có sản phẩm nào được chọn để thanh toán. Vui lòng quay lại{' '}
+        <a href="/cart" className="text-indigo-600 font-semibold hover:underline">
+          Giỏ hàng
+        </a>{' '}
+        và tích chọn sản phẩm bạn muốn mua.
       </div>
     );
   }

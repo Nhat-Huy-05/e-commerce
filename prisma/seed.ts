@@ -27,7 +27,7 @@ async function main() {
     data: {
       email: 'customer@example.com',
       password: 'customerpassword123',
-      name: 'Bùi Nguyễn Nhật Huy',
+      name: 'Customer Demo',
       role: 'customer',
     },
   });
