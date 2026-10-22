@@ -1,10 +1,9 @@
 'use client';
 
-import React, { useState, useEffect, useRef } from 'react';
-import Link from 'next/link';
-import { useRouter } from 'next/navigation';
-import { Search, X, Loader2, ArrowRight, Tag } from 'lucide-react';
 import { ProductWithCategory } from '@/lib/types';
+import { ArrowRight, Loader2, Search, Tag, X } from 'lucide-react';
+import { useRouter } from 'next/navigation';
+import React, { useEffect, useRef, useState } from 'react';
 
 const DEFAULT_FALLBACK_IMAGE =
   'https://images.unsplash.com/photo-1505740420928-5e560c06d30e?w=800&q=80';
@@ -16,6 +15,7 @@ export function HeaderSearch() {
   const [isLoading, setIsLoading] = useState(false);
   const [isOpen, setIsOpen] = useState(false);
   const [selectedIndex, setSelectedIndex] = useState(-1);
+  const [isFocused, setIsFocused] = useState(false);
 
   const containerRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLInputElement>(null);
@@ -144,24 +144,43 @@ export function HeaderSearch() {
       className="flex-1 max-w-md hidden sm:block relative z-50"
     >
       <form onSubmit={handleFormSubmit} className="relative flex items-center">
+        {/* Search Icon that smoothly collapses and fades out on focus or when typing */}
+        <div
+          className={`absolute left-3.5 flex items-center pointer-events-none transition-all duration-300 ease-out origin-left ${
+            isFocused || searchQuery
+              ? 'opacity-0 scale-50 -translate-x-3 pointer-events-none'
+              : 'opacity-100 scale-100 translate-x-0'
+          }`}
+        >
+          <Search className="w-4 h-4 text-slate-400" />
+        </div>
+
         <input
           ref={inputRef}
           type="text"
-          placeholder="Tìm kiếm sản phẩm... (ví dụ: phone, audio, chair...)"
+          placeholder={isFocused ? 'Nhập tên sản phẩm để tìm...' : 'Tìm kiếm sản phẩm...'}
           value={searchQuery}
           onChange={(e) => {
             setSearchQuery(e.target.value);
             setSelectedIndex(-1);
           }}
           onFocus={() => {
+            setIsFocused(true);
             if (searchQuery.trim()) {
               setIsOpen(true);
             }
           }}
+          onBlur={() => {
+            setIsFocused(false);
+          }}
           onKeyDown={handleKeyDown}
-          className="w-full bg-slate-100 border border-slate-200 rounded-full py-2 pl-9 pr-9 text-xs text-slate-900 placeholder-slate-400 focus:bg-white focus:outline-none focus:border-indigo-600 focus:ring-2 focus:ring-indigo-500/20 transition-all shadow-inner"
+          className={`w-full bg-slate-100/90 border rounded-full py-2 pr-9 text-xs text-slate-900 placeholder:text-slate-400 transition-all duration-300 ease-out outline-none focus:outline-none focus-visible:outline-none focus:ring-0 focus-visible:ring-0 focus-visible:ring-offset-0 dark:focus-visible:ring-0 dark:focus-visible:ring-offset-0 ${
+            isFocused || searchQuery
+              ? 'pl-3.5 bg-white border-indigo-500 shadow-[0_0_0_3px_rgba(99,102,241,0.15)]'
+              : 'pl-10 border-slate-200 hover:bg-slate-100 hover:border-slate-300'
+          }`}
+          style={{ outline: 'none' }}
         />
-        <Search className="w-4 h-4 text-slate-400 absolute left-3 pointer-events-none" />
 
         {/* Right side loading spinner or clear button */}
         <div className="absolute right-3 flex items-center gap-1">
@@ -207,11 +226,10 @@ export function HeaderSearch() {
                     type="button"
                     onClick={() => handleSelectProduct(product.slug)}
                     onMouseEnter={() => setSelectedIndex(idx)}
-                    className={`w-full text-left p-3 flex items-center gap-3 transition-colors cursor-pointer ${
-                      isSelected
-                        ? 'bg-indigo-50 border-l-2 border-indigo-600 text-indigo-950'
-                        : 'hover:bg-slate-50 text-slate-800'
-                    }`}
+                    className={`w-full text-left p-3 flex items-center gap-3 transition-colors cursor-pointer ${isSelected
+                      ? 'bg-indigo-50 border-l-2 border-indigo-600 text-indigo-950'
+                      : 'hover:bg-slate-50 text-slate-800'
+                      }`}
                   >
                     {/* Thumbnail Image */}
                     <div className="w-10 h-10 rounded-lg overflow-hidden bg-slate-100 flex-shrink-0 border border-slate-200">
@@ -270,11 +288,10 @@ export function HeaderSearch() {
             type="button"
             onClick={() => handleFormSubmit()}
             onMouseEnter={() => setSelectedIndex(suggestions.length)}
-            className={`w-full p-3 bg-slate-50 flex items-center justify-between text-xs font-medium transition-colors cursor-pointer ${
-              selectedIndex === suggestions.length
-                ? 'bg-indigo-100 text-indigo-800'
-                : 'text-indigo-600 hover:bg-slate-100 hover:text-indigo-700'
-            }`}
+            className={`w-full p-3 bg-slate-50 flex items-center justify-between text-xs font-medium transition-colors cursor-pointer ${selectedIndex === suggestions.length
+              ? 'bg-indigo-100 text-indigo-800'
+              : 'text-indigo-600 hover:bg-slate-100 hover:text-indigo-700'
+              }`}
           >
             <span>
               Xem tất cả kết quả cho &quot;
