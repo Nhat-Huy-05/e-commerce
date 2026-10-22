@@ -1,15 +1,14 @@
-import React from 'react';
-import Link from 'next/link';
-import { 
-  ShoppingBag, 
-  MapPin, 
-  Phone, 
-  Mail, 
-  Clock, 
+import {
+  Clock,
   Globe,
+  Mail,
+  MapPin,
+  MessageCircle,
+  Phone,
   Share2,
-  MessageCircle
+  ShoppingBag
 } from 'lucide-react';
+import Link from 'next/link';
 
 export function Footer() {
   return (
@@ -99,24 +98,24 @@ export function Footer() {
                 </Link>
               </li>
               <li>
-                <span className="hover:text-indigo-600 transition-colors cursor-pointer">
+                <Link href="/terms" className="hover:text-indigo-600 transition-colors">
                   Chính sách bảo hành 12 tháng
-                </span>
+                </Link>
               </li>
               <li>
-                <span className="hover:text-indigo-600 transition-colors cursor-pointer">
+                <Link href="/terms" className="hover:text-indigo-600 transition-colors">
                   Chính sách đổi trả & hoàn tiền
-                </span>
+                </Link>
               </li>
               <li>
-                <span className="hover:text-indigo-600 transition-colors cursor-pointer">
+                <Link href="/terms" className="hover:text-indigo-600 transition-colors">
                   Phương thức thanh toán
-                </span>
+                </Link>
               </li>
               <li>
-                <span className="hover:text-indigo-600 transition-colors cursor-pointer">
+                <Link href="/privacy" className="hover:text-indigo-600 transition-colors">
                   Bảo mật thông tin khách hàng
-                </span>
+                </Link>
               </li>
             </ul>
           </div>
@@ -169,12 +168,18 @@ export function Footer() {
       <div className="border-t border-slate-200 py-6 bg-slate-50 text-xs text-slate-500">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col sm:flex-row items-center justify-between gap-3 text-center sm:text-left">
           <p>© {new Date().getFullYear()} <strong className="text-slate-900">NextCommerce Inc.</strong> Giữ toàn bộ bản quyền. GPKD số 04018999 do Sở KH&ĐT cấp.</p>
-          <div className="flex items-center gap-4 text-[11px]">
-            <span className="hover:text-indigo-600 cursor-pointer">Điều khoản sử dụng</span>
+          <div className="flex items-center gap-3 text-[11px]">
+            <Link href="/terms" className="hover:text-indigo-600 transition-colors">
+              Điều khoản sử dụng
+            </Link>
             <span>•</span>
-            <span className="hover:text-indigo-600 cursor-pointer">Chính sách bảo mật</span>
+            <Link href="/privacy" className="hover:text-indigo-600 transition-colors">
+              Chính sách bảo mật
+            </Link>
             <span>•</span>
-            <span className="hover:text-indigo-600 cursor-pointer">Hệ thống cửa hàng</span>
+            <Link href="/stores" className="hover:text-indigo-600 transition-colors">
+              Hệ thống cửa hàng
+            </Link>
           </div>
         </div>
       </div>
