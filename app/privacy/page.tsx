@@ -1,17 +1,14 @@
-import React from 'react';
-import Link from 'next/link';
-import { Metadata } from 'next';
-import { 
-  ShieldCheck, 
-  Lock, 
-  EyeOff, 
-  UserCheck, 
-  Database, 
-  Cookie, 
-  HelpCircle, 
+import {
+  CheckCircle2,
   ChevronRight,
-  CheckCircle2
+  EyeOff,
+  HelpCircle,
+  Lock,
+  ShieldCheck,
+  UserCheck
 } from 'lucide-react';
+import { Metadata } from 'next';
+import Link from 'next/link';
 
 export const metadata: Metadata = {
   title: 'Chính Sách Bảo Mật | NextCommerce',
@@ -142,9 +139,6 @@ export default function PrivacyPage() {
               <li>Địa chỉ nhận hàng chi tiết (Số nhà, Phường/Xã, Quận/Huyện, Tỉnh/Thành).</li>
               <li>Lịch sử đơn hàng và các đánh giá sản phẩm do bạn gửi lên hệ thống.</li>
             </ul>
-            <p className="text-slate-500 italic pt-1">
-              * Lưu ý: NextCommerce không lưu trữ mã thẻ tín dụng CVV/CVC của khách hàng. Toàn bộ thanh toán thẻ được thực hiện trực tiếp qua cổng thanh toán liên kết ngân hàng bảo mật.
-            </p>
           </div>
         </section>
 

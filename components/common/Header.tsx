@@ -40,14 +40,14 @@ export function Header() {
   };
 
   return (
-    <header className="sticky top-0 z-50 w-full border-b border-slate-200 bg-white/90 backdrop-blur-md shadow-xs">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between gap-4">
+    <header className="sticky top-0 z-50 w-full border-b border-slate-200 bg-white/95 backdrop-blur-md shadow-xs">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-[72px] flex items-center justify-between gap-4 sm:gap-6">
         {/* Brand logo */}
-        <Link href="/" className="flex items-center gap-2 font-bold text-lg text-slate-900 group shrink-0">
-          <div className="w-8 h-8 rounded-lg bg-indigo-600 flex items-center justify-center text-white shadow-md group-hover:scale-105 transition-transform">
+        <Link href="/" className="flex items-center gap-2.5 font-bold text-slate-900 group shrink-0">
+          <div className="w-9 h-9 rounded-xl bg-indigo-600 flex items-center justify-center text-white shadow-md group-hover:scale-105 transition-transform">
             <Store className="w-5 h-5" />
           </div>
-          <span className="font-extrabold text-slate-900">
+          <span className="text-xl font-black tracking-tight text-slate-900">
             NextCommerce
           </span>
         </Link>
@@ -56,17 +56,17 @@ export function Header() {
         <HeaderSearch />
 
         {/* Navigation Links */}
-        <nav className="flex items-center gap-1 sm:gap-2">
+        <nav className="flex items-center gap-1.5 sm:gap-2">
           <Link
             href="/"
-            className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-medium text-slate-600 hover:text-slate-900 hover:bg-slate-100 transition-colors"
+            className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-sm font-medium text-slate-600 hover:text-indigo-600 hover:bg-slate-100 transition-colors"
           >
             <Home className="w-4 h-4" />
             <span className="hidden md:inline">Home</span>
           </Link>
           <Link
             href="/products"
-            className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-medium text-slate-600 hover:text-slate-900 hover:bg-slate-100 transition-colors"
+            className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-sm font-medium text-slate-600 hover:text-indigo-600 hover:bg-slate-100 transition-colors"
           >
             <Package className="w-4 h-4" />
             <span className="hidden md:inline">Products</span>
@@ -91,9 +91,9 @@ export function Header() {
                 className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-medium text-slate-800 bg-slate-100 border border-slate-200 hover:bg-slate-200 transition-colors"
               >
                 <User className="w-3.5 h-3.5 text-indigo-600" />
-                <span className="max-w-[100px] truncate">{currentUser.name}</span>
+                <span className="max-w-[110px] truncate">{currentUser.name}</span>
                 <span
-                  className={`text-[9px] uppercase px-1.5 py-0.2 rounded font-mono font-bold ${currentUser.role === 'admin'
+                  className={`text-[9px] uppercase px-1.5 py-0.5 rounded font-mono font-bold ${currentUser.role === 'admin'
                       ? 'bg-purple-100 text-purple-700'
                       : 'bg-emerald-100 text-emerald-700'
                     }`}
@@ -112,7 +112,7 @@ export function Header() {
           ) : (
             <Link
               href="/login"
-              className="flex items-center gap-1.5 px-3.5 py-1.5 rounded-lg text-xs font-semibold text-white bg-indigo-600 hover:bg-indigo-700 shadow-sm transition-colors"
+              className="flex items-center gap-1.5 px-3.5 py-2 rounded-lg text-xs sm:text-sm font-semibold text-white bg-indigo-600 hover:bg-indigo-700 shadow-sm transition-all"
             >
               <LogIn className="w-4 h-4" />
               <span>Đăng nhập</span>
@@ -122,11 +122,11 @@ export function Header() {
           {/* Cart Icon */}
           <Link
             href="/cart"
-            className="relative flex items-center justify-center p-2 rounded-lg bg-indigo-50 text-indigo-600 hover:bg-indigo-100 border border-indigo-200 transition-colors ml-1"
+            className="relative flex items-center justify-center p-2 rounded-lg bg-indigo-50 text-indigo-600 hover:bg-indigo-100 border border-indigo-200 transition-colors ml-0.5"
           >
             <ShoppingBag className="w-5 h-5" />
             {totalItems > 0 && (
-              <span className="absolute -top-1.5 -right-1.5 bg-indigo-600 text-white font-bold text-[10px] w-5 h-5 rounded-full flex items-center justify-center shadow border-2 border-white">
+              <span className="absolute -top-1.5 -right-1.5 bg-indigo-600 text-white font-bold text-[11px] w-5 h-5 rounded-full flex items-center justify-center shadow border-2 border-white">
                 {totalItems}
               </span>
             )}
