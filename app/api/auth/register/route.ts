@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { db } from '@/lib/db';
+import bcrypt from 'bcryptjs';
 
 export async function POST(request: NextRequest) {
   try {
@@ -39,16 +40,15 @@ export async function POST(request: NextRequest) {
         );
       }
 
-      try {
-        const existingUsers: any[] = await db.$queryRaw`SELECT id FROM User WHERE LOWER(username) = ${cleanUsername} LIMIT 1`;
-        if (existingUsers && existingUsers.length > 0) {
-          return NextResponse.json(
-            { error: `Tên người dùng "${cleanUsername}" đã được sử dụng. Vui lòng chọn tên khác!` },
-            { status: 400 }
-          );
-        }
-      } catch (err) {
-        console.warn('Username uniqueness check warning:', err);
+      const existingUserByUsername = await db.user.findFirst({
+        where: { username: cleanUsername },
+      });
+
+      if (existingUserByUsername) {
+        return NextResponse.json(
+          { error: `Tên người dùng "${cleanUsername}" đã được sử dụng. Vui lòng chọn tên khác!` },
+          { status: 400 }
+        );
       }
     }
 
@@ -63,33 +63,18 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    let newUser: any;
-    try {
-      newUser = await (db.user as any).create({
-        data: {
-          name: name.trim(),
-          username: cleanUsername,
-          email: cleanEmail,
-          password,
-          role: 'customer',
-        },
-      });
-    } catch {
-      newUser = await db.user.create({
-        data: {
-          name: name.trim(),
-          email: cleanEmail,
-          password,
-          role: 'customer',
-        },
-      });
-      if (cleanUsername) {
-        try {
-          await db.$executeRaw`UPDATE User SET username = ${cleanUsername} WHERE id = ${newUser.id}`;
-          newUser.username = cleanUsername;
-        } catch (e) {}
-      }
-    }
+    // Hash the password securely
+    const hashedPassword = await bcrypt.hash(password, 10);
+
+    const newUser = await db.user.create({
+      data: {
+        name: name.trim(),
+        username: cleanUsername,
+        email: cleanEmail,
+        password: hashedPassword,
+        role: 'customer',
+      },
+    });
 
     const userPayload = {
       id: newUser.id,

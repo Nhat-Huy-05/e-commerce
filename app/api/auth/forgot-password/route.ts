@@ -30,8 +30,8 @@ export async function POST(request: NextRequest) {
     // Generate 6-digit OTP
     const otp = Math.floor(100000 + Math.random() * 900000).toString();
 
-    // Save OTP to store
-    saveOtp(normalizedEmail, otp);
+    // Save OTP to database
+    await saveOtp(normalizedEmail, otp);
 
     // In a production app, we would send this OTP via an Email service (Resend, Nodemailer, etc.)
     // For local development and demonstration, we return the generated OTP in the response payload.

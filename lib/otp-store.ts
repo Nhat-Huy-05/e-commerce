@@ -1,39 +1,63 @@
-interface OtpEntry {
-  otp: string;
-  expiresAt: number;
-}
+import { db } from '@/lib/db';
 
-const globalForOtp = globalThis as unknown as {
-  otpStore: Map<string, OtpEntry> | undefined;
-};
-
-export const otpStore = globalForOtp.otpStore ?? new Map<string, OtpEntry>();
-
-if (process.env.NODE_ENV !== 'production') {
-  globalForOtp.otpStore = otpStore;
-}
-
-export function saveOtp(email: string, otp: string) {
+export async function saveOtp(email: string, otp: string): Promise<void> {
   const normalizedEmail = email.toLowerCase().trim();
-  // OTP valid for 10 minutes
-  const expiresAt = Date.now() + 10 * 60 * 1000;
-  otpStore.set(normalizedEmail, { otp, expiresAt });
+  const expiresAt = new Date(Date.now() + 10 * 60 * 1000); // 10 minutes
+
+  // Delete any existing OTPs for this email to avoid duplicates
+  try {
+    await db.otpToken.deleteMany({
+      where: { email: normalizedEmail },
+    });
+  } catch (error) {
+    console.warn('Error clearing old OTPs:', error);
+  }
+
+  // Create new OTP record
+  await db.otpToken.create({
+    data: {
+      email: normalizedEmail,
+      otp: otp.trim(),
+      expiresAt,
+    },
+  });
 }
 
-export function verifyOtp(email: string, otp: string): boolean {
+export async function verifyOtp(email: string, otp: string): Promise<boolean> {
   const normalizedEmail = email.toLowerCase().trim();
-  const entry = otpStore.get(normalizedEmail);
-  
-  if (!entry) return false;
-  if (Date.now() > entry.expiresAt) {
-    otpStore.delete(normalizedEmail);
+  const trimmedOtp = otp.trim();
+
+  try {
+    const record = await db.otpToken.findFirst({
+      where: {
+        email: normalizedEmail,
+      },
+      orderBy: {
+        createdAt: 'desc',
+      },
+    });
+
+    if (!record) return false;
+
+    // Check expiration
+    if (new Date() > record.expiresAt) {
+      await db.otpToken.deleteMany({
+        where: { email: normalizedEmail },
+      });
+      return false;
+    }
+
+    if (record.otp === trimmedOtp) {
+      // Consume OTP so it cannot be reused
+      await db.otpToken.deleteMany({
+        where: { email: normalizedEmail },
+      });
+      return true;
+    }
+
+    return false;
+  } catch (error) {
+    console.error('Verify OTP error:', error);
     return false;
   }
-  
-  if (entry.otp === otp.trim()) {
-    otpStore.delete(normalizedEmail);
-    return true;
-  }
-  
-  return false;
 }

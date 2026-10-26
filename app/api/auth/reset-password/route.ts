@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { db } from '@/lib/db';
 import { verifyOtp } from '@/lib/otp-store';
+import bcrypt from 'bcryptjs';
 
 export async function POST(request: NextRequest) {
   try {
@@ -22,8 +23,8 @@ export async function POST(request: NextRequest) {
 
     const normalizedEmail = email.toLowerCase().trim();
 
-    // Verify OTP
-    const isValidOtp = verifyOtp(normalizedEmail, otp);
+    // Verify OTP from database
+    const isValidOtp = await verifyOtp(normalizedEmail, otp);
     if (!isValidOtp) {
       return NextResponse.json(
         { error: 'Mã OTP không chính xác hoặc đã hết hạn' },
@@ -31,10 +32,13 @@ export async function POST(request: NextRequest) {
       );
     }
 
+    // Hash the new password
+    const hashedPassword = await bcrypt.hash(newPassword, 10);
+
     // Update user password in database
     await db.user.update({
       where: { email: normalizedEmail },
-      data: { password: newPassword },
+      data: { password: hashedPassword },
     });
 
     return NextResponse.json({

@@ -1,4 +1,5 @@
 import { PrismaClient } from '@prisma/client';
+import bcrypt from 'bcryptjs';
 
 const prisma = new PrismaClient();
 
@@ -13,11 +14,15 @@ async function main() {
   await prisma.category.deleteMany({});
   await prisma.user.deleteMany({});
 
-  // 2. Create Users
+  // 2. Create Users with hashed passwords
+  const adminPasswordHash = await bcrypt.hash('adminpassword123', 10);
+  const customerPasswordHash = await bcrypt.hash('customerpassword123', 10);
+
   const adminUser = await prisma.user.create({
     data: {
       email: 'admin@commerce.com',
-      password: 'adminpassword123',
+      username: 'admin',
+      password: adminPasswordHash,
       name: 'Admin Manager',
       role: 'admin',
     },
@@ -26,7 +31,8 @@ async function main() {
   const customerUser = await prisma.user.create({
     data: {
       email: 'customer@example.com',
-      password: 'customerpassword123',
+      username: 'customer',
+      password: customerPasswordHash,
       name: 'Customer Demo',
       role: 'customer',
     },

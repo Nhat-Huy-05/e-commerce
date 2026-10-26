@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { db } from '@/lib/db';
+import bcrypt from 'bcryptjs';
 
 export async function POST(request: NextRequest) {
   try {
@@ -14,22 +15,29 @@ export async function POST(request: NextRequest) {
 
     const normalizedInput = email.toLowerCase().trim();
 
-    let user: any = await db.user.findUnique({
-      where: { email: normalizedInput },
+    // Find user by email or username
+    const user = await db.user.findFirst({
+      where: {
+        OR: [
+          { email: normalizedInput },
+          { username: normalizedInput },
+        ],
+      },
     });
 
     if (!user) {
-      try {
-        const users: any[] = await db.$queryRaw`SELECT * FROM User WHERE LOWER(username) = ${normalizedInput} LIMIT 1`;
-        if (users && users.length > 0) {
-          user = users[0];
-        }
-      } catch (err) {
-        console.warn('Username query error:', err);
-      }
+      return NextResponse.json(
+        { error: 'Tài khoản (Email/Tên người dùng) hoặc Mật khẩu không chính xác' },
+        { status: 401 }
+      );
     }
 
-    if (!user || user.password !== password) {
+    // Verify password with bcrypt, with fallback for unhashed seed passwords
+    const isPasswordValid =
+      (await bcrypt.compare(password, user.password).catch(() => false)) ||
+      user.password === password;
+
+    if (!isPasswordValid) {
       return NextResponse.json(
         { error: 'Tài khoản (Email/Tên người dùng) hoặc Mật khẩu không chính xác' },
         { status: 401 }
