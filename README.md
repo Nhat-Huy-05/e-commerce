@@ -10,9 +10,7 @@
 - **Framework:** Next.js 15 (App Router, Turbopack)
 - **UI Library:** React 19, Lucide React Icons
 - **Ngôn ngữ:** TypeScript (Strict Type Checking)
-- **Styling:** Tailwind CSS v4, Vanilla CSS Utilities
-- **Database & ORM:** SQLite (`prisma/dev.db`), Prisma ORM 5.x
-- **State Management:** Zustand (với LocalStorage Persistence cho Cart & Auth)
+- **Database & ORM:** PostgreSQL (Prisma Postgres), Prisma ORM 5.x
 - **Validation:** Zod Schema Validation
 
 ---
@@ -135,29 +133,29 @@ e-commerce/
 pnpm install
 ```
 
-### 3. Đồng bộ Cơ sở dữ liệu (Prisma & SQLite)
+### 3. Đồng bộ Cơ sở dữ liệu (Prisma & PostgreSQL)
 ```bash
-# Tạo schema trong SQLite (nếu chưa có file dev.db)
+# Đồng bộ cấu trúc bảng vào Database
 pnpm prisma db push
 
-# Nạp dữ liệu mẫu (Sản phẩm, danh mục, tài khoản demo)
-pnpm tsx prisma/seed.ts
-
-pnpm prisma db seed # Nạp dữ liệu mẫu
+# Nạp dữ liệu mẫu ban đầu (Sản phẩm, danh mục, tài khoản demo)
+pnpm prisma db seed
 ```
 
 ### 4. Khởi chạy máy chủ phát triển
 ```bash
 pnpm run dev
 ```
-### 5. Chạy SQLite
+### 5. Quản lý & Chỉnh sửa Cơ sở dữ liệu (Prisma Studio)
+Mở giao diện web trực quan để xem, thêm, sửa, xóa dữ liệu trong database:
 ```bash
-pnpm prisma studio
-# hoặc
 npx prisma studio
+# hoặc
+pnpm prisma studio
 ```
+Giao diện quản trị sẽ tự động mở tại: [http://localhost:5555](http://localhost:5555)
 
-Truy cập ứng dụng tại: [http://localhost:3000](http://localhost:3000)
+Truy cập ứng dụng web tại: [http://localhost:3000](http://localhost:3000)
 
 ---
 
