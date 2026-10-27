@@ -1,6 +1,7 @@
 'use client';
 
 import { useAuth } from '@/lib/auth-store';
+import { useLanguage } from '@/lib/i18n/store';
 import { useCart } from '@/lib/store';
 import {
   Home,
@@ -17,12 +18,14 @@ import { useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
 
 import { HeaderSearch } from './HeaderSearch';
+import { LanguageSwitcher } from './LanguageSwitcher';
 
 export function Header() {
   const router = useRouter();
   const [mounted, setMounted] = useState(false);
   const cartItems = useCart((state) => state.items);
   const { user, logout } = useAuth();
+  const { t } = useLanguage();
 
   useEffect(() => {
     setMounted(true);
@@ -41,7 +44,7 @@ export function Header() {
 
   return (
     <header className="sticky top-0 z-50 w-full border-b border-slate-200 bg-white/95 backdrop-blur-md shadow-xs">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-[72px] flex items-center justify-between gap-4 sm:gap-6">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-[72px] flex items-center justify-between gap-3 sm:gap-6">
         {/* Brand logo */}
         <Link href="/" className="flex items-center gap-2.5 font-bold text-slate-900 group shrink-0">
           <div className="w-9 h-9 rounded-xl bg-indigo-600 flex items-center justify-center text-white shadow-md group-hover:scale-105 transition-transform">
@@ -62,14 +65,14 @@ export function Header() {
             className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-sm font-medium text-slate-600 hover:text-indigo-600 hover:bg-slate-100 transition-colors"
           >
             <Home className="w-4 h-4" />
-            <span className="hidden md:inline">Home</span>
+            <span className="hidden md:inline">{t('header.home')}</span>
           </Link>
           <Link
             href="/products"
             className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-sm font-medium text-slate-600 hover:text-indigo-600 hover:bg-slate-100 transition-colors"
           >
             <Package className="w-4 h-4" />
-            <span className="hidden md:inline">Products</span>
+            <span className="hidden md:inline">{t('header.products')}</span>
           </Link>
 
           {/* Admin Panel Button if Admin */}
@@ -79,7 +82,7 @@ export function Header() {
               className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-semibold text-purple-700 bg-purple-50 hover:bg-purple-100 border border-purple-200 transition-colors"
             >
               <ShieldCheck className="w-4 h-4" />
-              <span className="hidden md:inline">Admin Panel</span>
+              <span className="hidden md:inline">{t('header.admin')}</span>
             </Link>
           )}
 
@@ -93,10 +96,11 @@ export function Header() {
                 <User className="w-3.5 h-3.5 text-indigo-600" />
                 <span className="max-w-[110px] truncate">{currentUser.name}</span>
                 <span
-                  className={`text-[9px] uppercase px-1.5 py-0.5 rounded font-mono font-bold ${currentUser.role === 'admin'
+                  className={`text-[9px] uppercase px-1.5 py-0.5 rounded font-mono font-bold ${
+                    currentUser.role === 'admin'
                       ? 'bg-purple-100 text-purple-700'
                       : 'bg-emerald-100 text-emerald-700'
-                    }`}
+                  }`}
                 >
                   {currentUser.role}
                 </span>
@@ -104,7 +108,7 @@ export function Header() {
               <button
                 onClick={handleLogout}
                 className="p-1.5 rounded-lg text-slate-500 hover:text-red-600 hover:bg-red-50 transition-colors cursor-pointer"
-                title="Đăng xuất"
+                title={t('common.logout')}
               >
                 <LogOut className="w-4 h-4" />
               </button>
@@ -115,7 +119,7 @@ export function Header() {
               className="flex items-center gap-1.5 px-3.5 py-2 rounded-lg text-xs sm:text-sm font-semibold text-white bg-indigo-600 hover:bg-indigo-700 shadow-sm transition-all"
             >
               <LogIn className="w-4 h-4" />
-              <span>Đăng nhập</span>
+              <span>{t('common.login')}</span>
             </Link>
           )}
 
@@ -123,6 +127,7 @@ export function Header() {
           <Link
             href="/cart"
             className="relative flex items-center justify-center p-2 rounded-lg bg-indigo-50 text-indigo-600 hover:bg-indigo-100 border border-indigo-200 transition-colors ml-0.5"
+            title={t('common.cart')}
           >
             <ShoppingBag className="w-5 h-5" />
             {totalItems > 0 && (
@@ -131,6 +136,11 @@ export function Header() {
               </span>
             )}
           </Link>
+
+          {/* Language Switcher */}
+          <div className="ml-1">
+            <LanguageSwitcher />
+          </div>
         </nav>
       </div>
     </header>

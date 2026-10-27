@@ -1,6 +1,7 @@
 'use client';
 
 import { ProductWithCategory } from '@/lib/types';
+import { useLanguage } from '@/lib/i18n/store';
 import { ArrowRight, Loader2, Search, Tag, X } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 import React, { useEffect, useRef, useState } from 'react';
@@ -10,6 +11,7 @@ const DEFAULT_FALLBACK_IMAGE =
 
 export function HeaderSearch() {
   const router = useRouter();
+  const { language, t } = useLanguage();
   const [searchQuery, setSearchQuery] = useState('');
   const [suggestions, setSuggestions] = useState<ProductWithCategory[]>([]);
   const [isLoading, setIsLoading] = useState(false);
@@ -158,7 +160,13 @@ export function HeaderSearch() {
         <input
           ref={inputRef}
           type="text"
-          placeholder={isFocused ? 'Nhập tên sản phẩm để tìm...' : 'Tìm kiếm sản phẩm...'}
+          placeholder={
+            isFocused
+              ? language === 'vi'
+                ? 'Nhập tên sản phẩm để tìm...'
+                : 'Type product name to search...'
+              : t('common.searchPlaceholder')
+          }
           value={searchQuery}
           onChange={(e) => {
             setSearchQuery(e.target.value);
@@ -191,7 +199,7 @@ export function HeaderSearch() {
               type="button"
               onClick={clearSearch}
               className="p-1 rounded-full text-slate-400 hover:text-slate-700 hover:bg-slate-200 transition-colors"
-              title="Xóa tìm kiếm"
+              title={language === 'vi' ? 'Xóa tìm kiếm' : 'Clear search'}
             >
               <X className="w-4 h-4" />
             </button>
@@ -205,16 +213,24 @@ export function HeaderSearch() {
           {/* Header info */}
           <div className="px-4 py-2.5 bg-slate-50 flex items-center justify-between text-xs text-slate-500 font-medium border-b border-slate-200">
             <span className="flex items-center gap-1.5 font-semibold text-slate-700">
-              <Tag className="w-3.5 h-3.5 text-indigo-600" /> Gợi ý tìm kiếm
+              <Tag className="w-3.5 h-3.5 text-indigo-600" />{' '}
+              {language === 'vi' ? 'Gợi ý tìm kiếm' : 'Search suggestions'}
             </span>
-            <span>{suggestions.length} sản phẩm</span>
+            <span>
+              {suggestions.length}{' '}
+              {language === 'vi' ? 'sản phẩm' : 'products'}
+            </span>
           </div>
 
           {/* Product Items List */}
           {isLoading && suggestions.length === 0 ? (
             <div className="p-8 text-center text-sm text-slate-500 flex items-center justify-center gap-2.5">
               <Loader2 className="w-4.5 h-4.5 text-indigo-600 animate-spin" />
-              <span>Đang tìm kiếm sản phẩm...</span>
+              <span>
+                {language === 'vi'
+                  ? 'Đang tìm kiếm sản phẩm...'
+                  : 'Searching products...'}
+              </span>
             </div>
           ) : suggestions.length > 0 ? (
             <div className="max-h-96 overflow-y-auto divide-y divide-slate-100 custom-scrollbar">
@@ -277,7 +293,10 @@ export function HeaderSearch() {
             </div>
           ) : (
             <div className="p-8 text-center text-sm text-slate-500">
-              Không tìm thấy sản phẩm nào khớp với &quot;
+              {language === 'vi'
+                ? 'Không tìm thấy sản phẩm nào khớp với '
+                : 'No products matched for '}
+              &quot;
               <span className="text-slate-800 font-semibold">{searchQuery}</span>
               &quot;
             </div>
@@ -288,14 +307,17 @@ export function HeaderSearch() {
             type="button"
             onClick={() => handleFormSubmit()}
             onMouseEnter={() => setSelectedIndex(suggestions.length)}
-            className={`w-full p-3.5 bg-slate-50 flex items-center justify-between text-xs font-semibold transition-colors cursor-pointer ${selectedIndex === suggestions.length
-              ? 'bg-indigo-100 text-indigo-800'
-              : 'text-indigo-600 hover:bg-slate-100 hover:text-indigo-700'
-              }`}
+            className={`w-full p-3.5 bg-slate-50 flex items-center justify-between text-xs font-semibold transition-colors cursor-pointer ${
+              selectedIndex === suggestions.length
+                ? 'bg-indigo-100 text-indigo-800'
+                : 'text-indigo-600 hover:bg-slate-100 hover:text-indigo-700'
+            }`}
           >
             <span>
-              Xem tất cả kết quả cho &quot;
-              <span className="font-bold">{searchQuery}</span>&quot;
+              {language === 'vi'
+                ? 'Xem tất cả kết quả cho '
+                : 'View all results for '}
+              &quot;<span className="font-bold">{searchQuery}</span>&quot;
             </span>
             <ArrowRight className="w-4 h-4 ml-1" />
           </button>
