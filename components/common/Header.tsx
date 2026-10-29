@@ -96,11 +96,10 @@ export function Header() {
                 <User className="w-3.5 h-3.5 text-indigo-600" />
                 <span className="max-w-[110px] truncate">{currentUser.name}</span>
                 <span
-                  className={`text-[9px] uppercase px-1.5 py-0.5 rounded font-mono font-bold ${
-                    currentUser.role === 'admin'
-                      ? 'bg-purple-100 text-purple-700'
-                      : 'bg-emerald-100 text-emerald-700'
-                  }`}
+                  className={`text-[9px] uppercase px-1.5 py-0.5 rounded font-mono font-bold ${currentUser.role === 'admin'
+                    ? 'bg-purple-100 text-purple-700'
+                    : 'bg-emerald-100 text-emerald-700'
+                    }`}
                 >
                   {currentUser.role}
                 </span>

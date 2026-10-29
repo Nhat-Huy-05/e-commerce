@@ -1,6 +1,7 @@
 'use client';
 
 import { useAuth } from '@/lib/auth-store';
+import { useLanguage } from '@/lib/i18n/store';
 import {
   ArrowLeft,
   CheckCircle2,
@@ -23,6 +24,7 @@ function LoginForm() {
   const searchParams = useSearchParams();
   const redirectTo = searchParams.get('redirect');
   const setUser = useAuth((state) => state.setUser);
+  const { language, t } = useLanguage();
 
   // Login form state
   const [email, setEmail] = useState('');
@@ -59,7 +61,10 @@ function LoginForm() {
 
       const data = await res.json();
       if (!res.ok) {
-        throw new Error(data.error || 'Đăng nhập thất bại');
+        throw new Error(
+          data.error ||
+            (language === 'vi' ? 'Đăng nhập thất bại' : 'Login failed')
+        );
       }
 
       setUser(data.user);
@@ -73,7 +78,12 @@ function LoginForm() {
       }
       router.refresh();
     } catch (err: any) {
-      setErrorMsg(err.message || 'Đã xảy ra lỗi khi đăng nhập');
+      setErrorMsg(
+        err.message ||
+          (language === 'vi'
+            ? 'Đã xảy ra lỗi khi đăng nhập'
+            : 'An error occurred while signing in')
+      );
     } finally {
       setLoading(false);
     }
@@ -81,7 +91,7 @@ function LoginForm() {
 
   // Open modal handler
   const handleOpenForgotModal = () => {
-    setForgotEmail(email); // Pre-fill email if user already typed it
+    setForgotEmail(email);
     setOtp('');
     setDemoOtp('');
     setNewPassword('');
@@ -103,7 +113,11 @@ function LoginForm() {
   const handleRequestOtp = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!forgotEmail) {
-      setForgotError('Vui lòng nhập Email của bạn');
+      setForgotError(
+        language === 'vi'
+          ? 'Vui lòng nhập Email của bạn'
+          : 'Please enter your email address'
+      );
       return;
     }
 
@@ -120,16 +134,27 @@ function LoginForm() {
 
       const data = await res.json();
       if (!res.ok) {
-        throw new Error(data.error || 'Không thể gửi mã OTP');
+        throw new Error(
+          data.error ||
+            (language === 'vi' ? 'Không thể gửi mã OTP' : 'Unable to send OTP')
+        );
       }
 
       if (data.otp) {
         setDemoOtp(data.otp);
       }
-      setForgotSuccess(data.message || 'Mã OTP đã được gửi đến email!');
+      setForgotSuccess(
+        data.message ||
+          (language === 'vi'
+            ? 'Mã OTP đã được gửi đến email!'
+            : 'OTP code has been sent to your email!')
+      );
       setForgotStep('verify');
     } catch (err: any) {
-      setForgotError(err.message || 'Đã có lỗi xảy ra');
+      setForgotError(
+        err.message ||
+          (language === 'vi' ? 'Đã có lỗi xảy ra' : 'An error occurred')
+      );
     } finally {
       setForgotLoading(false);
     }
@@ -142,17 +167,25 @@ function LoginForm() {
     setForgotSuccess('');
 
     if (!otp || otp.trim().length !== 6) {
-      setForgotError('Mã OTP phải gồm đúng 6 chữ số');
+      setForgotError(
+        language === 'vi'
+          ? 'Mã OTP phải gồm đúng 6 chữ số'
+          : 'OTP must be exactly 6 digits'
+      );
       return;
     }
 
     if (!newPassword || newPassword.length < 6) {
-      setForgotError('Mật khẩu mới phải có ít nhất 6 ký tự');
+      setForgotError(
+        language === 'vi'
+          ? 'Mật khẩu mới phải có ít nhất 6 ký tự'
+          : 'New password must be at least 6 characters'
+      );
       return;
     }
 
     if (newPassword !== confirmPassword) {
-      setForgotError('Mật khẩu xác nhận không khớp');
+      setForgotError(t('auth.confirmPasswordMismatch'));
       return;
     }
 
@@ -171,16 +204,28 @@ function LoginForm() {
 
       const data = await res.json();
       if (!res.ok) {
-        throw new Error(data.error || 'Xác thực OTP thất bại');
+        throw new Error(
+          data.error ||
+            (language === 'vi'
+              ? 'Xác thực OTP thất bại'
+              : 'OTP verification failed')
+        );
       }
 
-      setForgotSuccess(data.message || 'Đổi mật khẩu thành công!');
-      // Update form state with new credentials
+      setForgotSuccess(
+        data.message ||
+          (language === 'vi'
+            ? 'Đổi mật khẩu thành công!'
+            : 'Password changed successfully!')
+      );
       setEmail(forgotEmail);
       setPassword(newPassword);
       setForgotStep('success');
     } catch (err: any) {
-      setForgotError(err.message || 'Đã có lỗi xảy ra');
+      setForgotError(
+        err.message ||
+          (language === 'vi' ? 'Đã có lỗi xảy ra' : 'An error occurred')
+      );
     } finally {
       setForgotLoading(false);
     }
@@ -193,15 +238,17 @@ function LoginForm() {
           <div className="w-12 h-12 mx-auto rounded-2xl bg-indigo-50 text-indigo-600 flex items-center justify-center border border-indigo-200 shadow-xs">
             <LogIn className="w-6 h-6" />
           </div>
-          <h1 className="text-2xl font-extrabold text-slate-900">Đăng nhập</h1>
+          <h1 className="text-2xl font-extrabold text-slate-900">
+            {t('auth.loginTitle')}
+          </h1>
           {redirectTo ? (
             <p className="text-xs text-amber-600 font-semibold flex items-center justify-center gap-1">
               <ShoppingBag className="w-3.5 h-3.5" />
-              Đăng nhập để thêm sản phẩm vào giỏ hàng
+              {t('auth.loginCartRedirect')}
             </p>
           ) : (
             <p className="text-xs text-slate-500">
-              Nhập email hoặc tên người dùng để tiếp tục
+              {t('auth.loginSubtitle')}
             </p>
           )}
         </div>
@@ -215,13 +262,13 @@ function LoginForm() {
         <form onSubmit={handleLoginSubmit} className="space-y-4 text-xs">
           <div>
             <label className="block text-slate-700 font-semibold mb-1 flex items-center gap-1">
-              <Mail className="w-3.5 h-3.5 text-slate-400" /> Email hoặc Tên người dùng
+              <Mail className="w-3.5 h-3.5 text-slate-400" /> {t('auth.emailOrUsername')}
             </label>
             <input
               type="text"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
-              placeholder="Email/Số điện thoại/Tên đăng nhập "
+              placeholder={t('auth.emailOrUsernamePlaceholder')}
               required
               className="w-full bg-slate-50 border border-slate-300 rounded-xl p-3 text-slate-900 placeholder-slate-400 focus:bg-white focus:outline-none focus:border-indigo-600 focus:ring-2 focus:ring-indigo-500/20 transition-all"
             />
@@ -229,14 +276,14 @@ function LoginForm() {
 
           <div>
             <label className="block text-slate-700 font-semibold mb-1 flex items-center gap-1">
-              <Key className="w-3.5 h-3.5 text-slate-400" /> Mật khẩu
+              <Key className="w-3.5 h-3.5 text-slate-400" /> {t('auth.password')}
             </label>
             <div className="relative flex items-center">
               <input
                 type={showPassword ? 'text' : 'password'}
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
-                placeholder="Nhập mật khẩu"
+                placeholder={t('auth.passwordPlaceholder')}
                 required
                 className="w-full bg-slate-50 border border-slate-300 rounded-xl p-3 pr-10 text-slate-900 placeholder-slate-400 focus:bg-white focus:outline-none focus:border-indigo-600 focus:ring-2 focus:ring-indigo-500/20 transition-all"
               />
@@ -244,7 +291,7 @@ function LoginForm() {
                 type="button"
                 onClick={() => setShowPassword(!showPassword)}
                 className="absolute right-3 p-1 text-slate-400 hover:text-slate-600 transition-colors cursor-pointer"
-                title={showPassword ? 'Ẩn mật khẩu' : 'Hiện mật khẩu'}
+                title={showPassword ? t('auth.hidePassword') : t('auth.showPassword')}
               >
                 {showPassword ? (
                   <EyeOff className="w-4 h-4" />
@@ -253,14 +300,14 @@ function LoginForm() {
                 )}
               </button>
             </div>
-            {/* Feature Request: Quên mật khẩu ngay bên dưới dòng Mật khẩu */}
+            {/* Quên mật khẩu ngay bên dưới dòng Mật khẩu */}
             <div className="flex justify-end mt-1.5">
               <button
                 type="button"
                 onClick={handleOpenForgotModal}
                 className="text-xs text-indigo-600 hover:text-indigo-700 hover:underline font-semibold cursor-pointer transition-colors"
               >
-                Quên mật khẩu?
+                {t('auth.forgotPassword')}
               </button>
             </div>
           </div>
@@ -270,14 +317,14 @@ function LoginForm() {
             disabled={loading}
             className="w-full py-3 rounded-xl bg-indigo-600 hover:bg-indigo-700 text-white font-semibold text-sm shadow-md transition-colors cursor-pointer disabled:opacity-50"
           >
-            {loading ? 'Đang đăng nhập...' : 'Đăng nhập'}
+            {loading ? t('auth.loggingIn') : t('auth.loginSubmit')}
           </button>
         </form>
 
         <p className="text-xs text-center text-slate-500">
-          Chưa có tài khoản?{' '}
+          {t('auth.noAccountPrompt')}{' '}
           <Link href="/register" className="text-indigo-600 font-semibold hover:underline">
-            Đăng ký Khách hàng mới
+            {t('auth.registerNewAccount')}
           </Link>
         </p>
       </div>
@@ -292,7 +339,9 @@ function LoginForm() {
                 <div className="w-8 h-8 rounded-xl bg-indigo-50 text-indigo-600 flex items-center justify-center border border-indigo-200">
                   <ShieldCheck className="w-4.5 h-4.5" />
                 </div>
-                <h3 className="text-base font-extrabold text-slate-900">Khôi phục Mật khẩu</h3>
+                <h3 className="text-base font-extrabold text-slate-900">
+                  {t('auth.forgotTitle')}
+                </h3>
               </div>
               <button
                 onClick={handleCloseForgotModal}
@@ -318,18 +367,18 @@ function LoginForm() {
             {forgotStep === 'request' && (
               <form onSubmit={handleRequestOtp} className="space-y-4">
                 <p className="text-slate-600 leading-relaxed">
-                  Nhập địa chỉ Email (Gmail) liên kết với tài khoản của bạn để nhận mã OTP xác thực.
+                  {t('auth.forgotStep1Prompt')}
                 </p>
 
                 <div>
                   <label className="block text-slate-700 font-semibold mb-1 flex items-center gap-1">
-                    <Mail className="w-3.5 h-3.5 text-indigo-600" /> Nhập Email / Gmail
+                    <Mail className="w-3.5 h-3.5 text-indigo-600" /> {t('auth.forgotEmailLabel')}
                   </label>
                   <input
                     type="email"
                     value={forgotEmail}
                     onChange={(e) => setForgotEmail(e.target.value)}
-                    placeholder="email@example.com"
+                    placeholder={t('auth.forgotEmailPlaceholder')}
                     required
                     className="w-full bg-slate-50 border border-slate-300 rounded-xl p-3 text-slate-900 placeholder-slate-400 focus:bg-white focus:outline-none focus:border-indigo-600"
                   />
@@ -341,14 +390,14 @@ function LoginForm() {
                     onClick={handleCloseForgotModal}
                     className="w-1/3 py-2.5 rounded-xl border border-slate-200 bg-slate-100 text-slate-700 hover:bg-slate-200 transition-colors cursor-pointer font-semibold"
                   >
-                    Hủy
+                    {t('auth.cancel')}
                   </button>
                   <button
                     type="submit"
                     disabled={forgotLoading}
                     className="w-2/3 py-2.5 rounded-xl bg-indigo-600 hover:bg-indigo-700 text-white font-semibold shadow-md transition-colors cursor-pointer disabled:opacity-50"
                   >
-                    {forgotLoading ? 'Đang gửi OTP...' : 'Gửi mã OTP'}
+                    {forgotLoading ? t('auth.forgotSendingOtp') : t('auth.forgotSendOtp')}
                   </button>
                 </div>
               </form>
@@ -359,7 +408,7 @@ function LoginForm() {
               <form onSubmit={handleResetPassword} className="space-y-4">
                 {demoOtp && (
                   <div className="p-3 rounded-xl bg-indigo-50 border border-indigo-200 text-indigo-800 flex items-center justify-between">
-                    <span className="font-semibold">Mã OTP thử nghiệm:</span>
+                    <span className="font-semibold">{t('auth.demoOtpLabel')}</span>
                     <span className="font-mono text-sm font-bold bg-indigo-100 px-2.5 py-1 rounded-lg text-indigo-900 tracking-widest border border-indigo-200">
                       {demoOtp}
                     </span>
@@ -368,14 +417,14 @@ function LoginForm() {
 
                 <div>
                   <label className="block text-slate-700 font-semibold mb-1 flex items-center gap-1">
-                    <ShieldCheck className="w-3.5 h-3.5 text-indigo-600" /> Mã OTP (6 chữ số)
+                    <ShieldCheck className="w-3.5 h-3.5 text-indigo-600" /> {t('auth.otpLabel')}
                   </label>
                   <input
                     type="text"
                     maxLength={6}
                     value={otp}
                     onChange={(e) => setOtp(e.target.value.replace(/\D/g, ''))}
-                    placeholder="123456"
+                    placeholder={t('auth.otpPlaceholder')}
                     required
                     className="w-full bg-slate-50 border border-slate-300 rounded-xl p-3 text-center tracking-widest text-lg font-mono text-indigo-700 focus:bg-white focus:outline-none focus:border-indigo-600"
                   />
@@ -383,14 +432,14 @@ function LoginForm() {
 
                 <div>
                   <label className="block text-slate-700 font-semibold mb-1 flex items-center gap-1">
-                    <Lock className="w-3.5 h-3.5 text-indigo-600" /> Mật khẩu mới
+                    <Lock className="w-3.5 h-3.5 text-indigo-600" /> {t('auth.newPasswordLabel')}
                   </label>
                   <div className="relative flex items-center">
                     <input
                       type={showNewPassword ? 'text' : 'password'}
                       value={newPassword}
                       onChange={(e) => setNewPassword(e.target.value)}
-                      placeholder="Nhập mật khẩu mới (ít nhất 6 ký tự)"
+                      placeholder={t('auth.newPasswordPlaceholder')}
                       required
                       className="w-full bg-slate-50 border border-slate-300 rounded-xl p-3 pr-10 text-slate-900 placeholder-slate-400 focus:bg-white focus:outline-none focus:border-indigo-600"
                     />
@@ -398,7 +447,7 @@ function LoginForm() {
                       type="button"
                       onClick={() => setShowNewPassword(!showNewPassword)}
                       className="absolute right-3 p-1 text-slate-400 hover:text-slate-600 transition-colors cursor-pointer"
-                      title={showNewPassword ? 'Ẩn mật khẩu' : 'Hiện mật khẩu'}
+                      title={showNewPassword ? t('auth.hidePassword') : t('auth.showPassword')}
                     >
                       {showNewPassword ? (
                         <EyeOff className="w-4 h-4" />
@@ -411,14 +460,14 @@ function LoginForm() {
 
                 <div>
                   <label className="block text-slate-700 font-semibold mb-1 flex items-center gap-1">
-                    <Lock className="w-3.5 h-3.5 text-indigo-600" /> Xác nhận mật khẩu mới
+                    <Lock className="w-3.5 h-3.5 text-indigo-600" /> {t('auth.confirmNewPasswordLabel')}
                   </label>
                   <div className="relative flex items-center">
                     <input
                       type={showConfirmPassword ? 'text' : 'password'}
                       value={confirmPassword}
                       onChange={(e) => setConfirmPassword(e.target.value)}
-                      placeholder="Nhập lại mật khẩu mới"
+                      placeholder={t('auth.confirmNewPasswordPlaceholder')}
                       required
                       className="w-full bg-slate-50 border border-slate-300 rounded-xl p-3 pr-10 text-slate-900 placeholder-slate-400 focus:bg-white focus:outline-none focus:border-indigo-600"
                     />
@@ -426,7 +475,7 @@ function LoginForm() {
                       type="button"
                       onClick={() => setShowConfirmPassword(!showConfirmPassword)}
                       className="absolute right-3 p-1 text-slate-400 hover:text-slate-600 transition-colors cursor-pointer"
-                      title={showConfirmPassword ? 'Ẩn mật khẩu' : 'Hiện mật khẩu'}
+                      title={showConfirmPassword ? t('auth.hidePassword') : t('auth.showPassword')}
                     >
                       {showConfirmPassword ? (
                         <EyeOff className="w-4 h-4" />
@@ -447,14 +496,14 @@ function LoginForm() {
                     }}
                     className="w-1/3 py-2.5 rounded-xl border border-slate-200 bg-slate-100 text-slate-700 hover:bg-slate-200 transition-colors cursor-pointer flex items-center justify-center gap-1 font-semibold"
                   >
-                    <ArrowLeft className="w-3.5 h-3.5" /> Quay lại
+                    <ArrowLeft className="w-3.5 h-3.5" /> {t('auth.back')}
                   </button>
                   <button
                     type="submit"
                     disabled={forgotLoading}
                     className="w-2/3 py-2.5 rounded-xl bg-indigo-600 hover:bg-indigo-700 text-white font-semibold shadow-md transition-colors cursor-pointer disabled:opacity-50"
                   >
-                    {forgotLoading ? 'Đang xử lý...' : 'Xác nhận đổi mật khẩu'}
+                    {forgotLoading ? t('auth.resettingPassword') : t('auth.confirmResetPassword')}
                   </button>
                 </div>
               </form>
@@ -467,9 +516,11 @@ function LoginForm() {
                   <CheckCircle2 className="w-8 h-8" />
                 </div>
                 <div className="space-y-1">
-                  <h4 className="text-lg font-bold text-slate-900">Đổi mật khẩu thành công!</h4>
+                  <h4 className="text-lg font-bold text-slate-900">
+                    {t('auth.forgotSuccessTitle')}
+                  </h4>
                   <p className="text-slate-500 text-xs">
-                    Mật khẩu của bạn đã được cập nhật thành công. Bạn có thể đăng nhập ngay bây giờ.
+                    {t('auth.forgotSuccessDesc')}
                   </p>
                 </div>
                 <button
@@ -477,7 +528,7 @@ function LoginForm() {
                   onClick={handleCloseForgotModal}
                   className="w-full py-3 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white font-semibold shadow-md transition-colors cursor-pointer"
                 >
-                  Đăng nhập ngay
+                  {t('auth.signInNow')}
                 </button>
               </div>
             )}
@@ -489,12 +540,16 @@ function LoginForm() {
 }
 
 export default function LoginPage() {
+  const { language } = useLanguage();
+
   return (
     <Suspense
       fallback={
         <div className="max-w-md mx-auto py-16 text-center text-slate-500 flex flex-col items-center justify-center gap-3">
           <div className="w-8 h-8 border-4 border-indigo-600 border-t-transparent rounded-full animate-spin"></div>
-          <p className="text-xs font-semibold">Đang tải...</p>
+          <p className="text-xs font-semibold">
+            {language === 'vi' ? 'Đang tải...' : 'Loading...'}
+          </p>
         </div>
       }
     >

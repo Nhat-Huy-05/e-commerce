@@ -149,16 +149,57 @@ export interface Translations {
   auth: {
     loginTitle: string;
     loginSubtitle: string;
+    loginCartRedirect: string;
+    loginSubmit: string;
+    loggingIn: string;
+    emailOrUsername: string;
+    emailOrUsernamePlaceholder: string;
+    password: string;
+    passwordPlaceholder: string;
+    showPassword: string;
+    hidePassword: string;
+    forgotPassword: string;
+    noAccountPrompt: string;
+    registerNewAccount: string;
+
+    // Register
     registerTitle: string;
     registerSubtitle: string;
+    fullName: string;
+    fullNamePlaceholder: string;
+    username: string;
+    usernamePlaceholder: string;
+    email: string;
     emailPlaceholder: string;
-    passwordPlaceholder: string;
-    namePlaceholder: string;
+    passwordMinLength: string;
     confirmPassword: string;
-    noAccountPrompt: string;
+    confirmPasswordPlaceholder: string;
+    confirmPasswordMismatch: string;
+    registerSubmit: string;
+    registering: string;
     hasAccountPrompt: string;
-    loginSuccess: string;
-    registerSuccess: string;
-    logoutSuccess: string;
+    loginNow: string;
+
+    // Forgot Password Modal
+    forgotTitle: string;
+    forgotStep1Prompt: string;
+    forgotEmailLabel: string;
+    forgotEmailPlaceholder: string;
+    forgotSendOtp: string;
+    forgotSendingOtp: string;
+    cancel: string;
+    demoOtpLabel: string;
+    otpLabel: string;
+    otpPlaceholder: string;
+    newPasswordLabel: string;
+    newPasswordPlaceholder: string;
+    confirmNewPasswordLabel: string;
+    confirmNewPasswordPlaceholder: string;
+    back: string;
+    confirmResetPassword: string;
+    resettingPassword: string;
+    forgotSuccessTitle: string;
+    forgotSuccessDesc: string;
+    signInNow: string;
   };
 }

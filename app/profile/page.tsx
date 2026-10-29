@@ -1,6 +1,7 @@
 'use client';
 
 import { useAuth } from '@/lib/auth-store';
+import { useLanguage } from '@/lib/i18n/store';
 import { OrderWithItems } from '@/lib/types';
 import {
   AlertTriangle,
@@ -339,6 +340,7 @@ function AdminPanel() {
 
 /* ─────────────────────── customer order history ─── */
 function CustomerOrders({ userId }: { userId: string }) {
+  const { language } = useLanguage();
   const [orders, setOrders] = useState<OrderWithItems[]>([]);
   const [loading, setLoading] = useState(true);
 
@@ -354,21 +356,21 @@ function CustomerOrders({ userId }: { userId: string }) {
     <div className="p-6 rounded-3xl bg-white border border-slate-200 shadow-xs space-y-4">
       <h2 className="text-lg font-extrabold text-slate-900 flex items-center gap-2">
         <Package className="w-5 h-5 text-indigo-600" />
-        Lịch sử Đơn hàng đã mua
+        {language === 'vi' ? 'Lịch sử Đơn hàng đã mua' : 'Order History'}
       </h2>
 
       {loading ? (
         <div className="py-8 text-center text-xs text-slate-400 animate-pulse">
-          Đang tải danh sách đơn hàng...
+          {language === 'vi' ? 'Đang tải danh sách đơn hàng...' : 'Loading order history...'}
         </div>
       ) : orders.length === 0 ? (
         <div className="py-8 text-center text-xs text-slate-500 space-y-2">
-          <p>Bạn chưa có đơn hàng nào.</p>
+          <p>{language === 'vi' ? 'Bạn chưa có đơn hàng nào.' : 'You have no orders yet.'}</p>
           <Link
             href="/products"
             className="inline-flex items-center gap-1 text-indigo-600 hover:underline font-semibold"
           >
-            Khám phá sản phẩm để mua sắm ngay <ArrowRight className="w-3.5 h-3.5" />
+            {language === 'vi' ? 'Khám phá sản phẩm để mua sắm ngay' : 'Explore products to start shopping'} <ArrowRight className="w-3.5 h-3.5" />
           </Link>
         </div>
       ) : (
@@ -383,7 +385,7 @@ function CustomerOrders({ userId }: { userId: string }) {
                   <span className="font-mono font-bold text-indigo-600">{ord.orderNumber}</span>
                   <span className="text-[10px] text-slate-500 flex items-center gap-1">
                     <Clock className="w-3 h-3" />
-                    {new Date(ord.createdAt).toLocaleDateString('vi-VN')}
+                    {new Date(ord.createdAt).toLocaleDateString(language === 'vi' ? 'vi-VN' : 'en-US')}
                   </span>
                 </div>
                 <span className="font-mono text-emerald-600 font-extrabold">
@@ -392,14 +394,14 @@ function CustomerOrders({ userId }: { userId: string }) {
               </div>
               <div className="flex items-center justify-between text-xs">
                 <span className="text-slate-500 text-[11px]">
-                  Trạng thái:{' '}
+                  {language === 'vi' ? 'Trạng thái:' : 'Status:'}{' '}
                   <span className="text-slate-900 font-bold uppercase">{ord.status}</span>
                 </span>
                 <Link
                   href={`/orders/${ord.id}`}
                   className="text-xs text-indigo-600 hover:text-indigo-700 font-semibold flex items-center gap-1"
                 >
-                  Xem chi tiết <ArrowRight className="w-3 h-3" />
+                  {language === 'vi' ? 'Xem chi tiết' : 'View Details'} <ArrowRight className="w-3 h-3" />
                 </Link>
               </div>
             </div>
@@ -414,6 +416,7 @@ function CustomerOrders({ userId }: { userId: string }) {
 export default function ProfilePage() {
   const router = useRouter();
   const { user, logout } = useAuth();
+  const { language, t } = useLanguage();
   // Wait for zustand to rehydrate from localStorage before deciding to redirect
   const [hydrated, setHydrated] = useState(false);
 
@@ -427,7 +430,9 @@ export default function ProfilePage() {
 
   if (!hydrated || !user) {
     return (
-      <div className="py-20 text-center text-slate-500">Đang xác thực thông tin tài khoản...</div>
+      <div className="py-20 text-center text-slate-500">
+        {language === 'vi' ? 'Đang xác thực thông tin tài khoản...' : 'Authenticating account...'}
+      </div>
     );
   }
 
@@ -473,7 +478,7 @@ export default function ProfilePage() {
             {isAdmin && (
               <p className="text-[11px] text-purple-500 font-medium mt-1 flex items-center gap-1">
                 <ShieldCheck className="w-3 h-3" />
-                Quản trị viên hệ thống – Toàn quyền quản lý
+                {language === 'vi' ? 'Quản trị viên hệ thống – Toàn quyền quản lý' : 'System Administrator – Full Access'}
               </p>
             )}
           </div>
@@ -492,7 +497,7 @@ export default function ProfilePage() {
             onClick={handleLogout}
             className="inline-flex items-center gap-1.5 px-4 py-2 rounded-xl bg-red-50 hover:bg-red-100 text-red-600 font-semibold text-xs border border-red-200 transition-colors cursor-pointer"
           >
-            <LogOut className="w-4 h-4" /> Đăng xuất
+            <LogOut className="w-4 h-4" /> {t('common.logout')}
           </button>
         </div>
       </div>
