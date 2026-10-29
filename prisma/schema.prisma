@@ -142,3 +142,4 @@ model OtpToken {
 
   @@index([email])
 }
+//Define the structure for all table foreign key relationships, and the PostgreSQL connection configuration.

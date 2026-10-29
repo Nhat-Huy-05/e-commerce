@@ -1,6 +1,5 @@
 'use client';
 
-import React from 'react';
 import { HeroAuthSection } from '@/components/common/HeroAuthSection';
 import { HeroBannerActions } from '@/components/common/HeroBannerActions';
 import { useLanguage } from '@/lib/i18n/store';
@@ -13,7 +12,7 @@ export function HomeHero() {
     <section className="relative overflow-hidden rounded-3xl border border-slate-200 shadow-md min-h-[400px] sm:min-h-[440px] flex items-center">
       {/* Full-width Background Image */}
       <img
-        src="/hero-banner.jpg"
+        src="screenshots/hero-banner.jpg"
         alt="Hero Banner Promo"
         className="absolute inset-0 w-full h-full object-cover object-center"
       />

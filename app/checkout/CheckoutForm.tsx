@@ -5,6 +5,7 @@ import { useCart } from '@/lib/store';
 import { useLanguage } from '@/lib/i18n/store';
 import { CheckCircle2, CreditCard, ShieldCheck, Truck } from 'lucide-react';
 import { useRouter, useSearchParams } from 'next/navigation';
+import Link from 'next/link';
 import React, { useState } from 'react';
 
 interface ProductInfo {
@@ -117,17 +118,17 @@ export function CheckoutForm({ products }: CheckoutFormProps) {
         {language === 'vi' ? (
           <>
             Không có sản phẩm nào được chọn để thanh toán. Vui lòng quay lại{' '}
-            <a href="/cart" className="text-indigo-600 font-semibold hover:underline">
+            <Link href="/cart" className="text-indigo-600 font-semibold hover:underline">
               Giỏ hàng
-            </a>{' '}
+            </Link>{' '}
             và tích chọn sản phẩm bạn muốn mua.
           </>
         ) : (
           <>
             No products selected for checkout. Please return to{' '}
-            <a href="/cart" className="text-indigo-600 font-semibold hover:underline">
+            <Link href="/cart" className="text-indigo-600 font-semibold hover:underline">
               Cart
-            </a>{' '}
+            </Link>{' '}
             and select products to purchase.
           </>
         )}
