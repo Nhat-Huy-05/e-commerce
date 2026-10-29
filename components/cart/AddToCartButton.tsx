@@ -4,6 +4,7 @@ import React, { useState } from 'react';
 import { useRouter, usePathname } from 'next/navigation';
 import { useCart } from '@/lib/store';
 import { useAuth } from '@/lib/auth-store';
+import { useLanguage } from '@/lib/i18n/store';
 import { ShoppingBag, Check, LogIn } from 'lucide-react';
 
 interface AddToCartButtonProps {
@@ -19,6 +20,7 @@ export function AddToCartButton({
 }: AddToCartButtonProps) {
   const addItem = useCart((state) => state.addItem);
   const { user } = useAuth();
+  const { language, t } = useLanguage();
   const router = useRouter();
   const pathname = usePathname();
 
@@ -34,7 +36,7 @@ export function AddToCartButton({
       setNeedsLogin(true);
       setTimeout(() => {
         router.push(`/login?redirect=${encodeURIComponent(pathname)}`);
-      }, 800); // ngắn xíu để user thấy feedback trước khi chuyển trang
+      }, 800);
       return;
     }
 
@@ -55,7 +57,6 @@ export function AddToCartButton({
     full: 'w-full bg-indigo-600 hover:bg-indigo-700 text-white py-3 px-6 text-base shadow-md',
   };
 
-  // Trạng thái "cần đăng nhập" — override màu sang vàng cam
   const needsLoginStyles =
     variant === 'full'
       ? 'w-full bg-amber-500 hover:bg-amber-600 text-white py-3 px-6 text-base shadow-md'
@@ -70,17 +71,17 @@ export function AddToCartButton({
       {needsLogin ? (
         <>
           <LogIn className="w-4 h-4 mr-2 animate-bounce" />
-          Vui lòng đăng nhập...
+          {language === 'vi' ? 'Vui lòng đăng nhập...' : 'Please log in...'}
         </>
       ) : added ? (
         <>
           <Check className="w-4 h-4 mr-2 text-emerald-400" />
-          Đã thêm vào giỏ!
+          {language === 'vi' ? 'Đã thêm vào giỏ!' : 'Added to cart!'}
         </>
       ) : (
         <>
           <ShoppingBag className="w-4 h-4 mr-2" />
-          Add to Cart
+          {t('common.addToCart')}
         </>
       )}
     </button>

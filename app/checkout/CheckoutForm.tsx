@@ -2,8 +2,10 @@
 
 import { useAuth } from '@/lib/auth-store';
 import { useCart } from '@/lib/store';
+import { useLanguage } from '@/lib/i18n/store';
 import { CheckCircle2, CreditCard, ShieldCheck, Truck } from 'lucide-react';
 import { useRouter, useSearchParams } from 'next/navigation';
+import Link from 'next/link';
 import React, { useState } from 'react';
 
 interface ProductInfo {
@@ -24,6 +26,7 @@ export function CheckoutForm({ products }: CheckoutFormProps) {
   const searchParams = useSearchParams();
   const { items, removeItem, clearCart } = useCart();
   const { user } = useAuth();
+  const { language, t } = useLanguage();
   const [submitting, setSubmitting] = useState(false);
   const [errorMsg, setErrorMsg] = useState('');
 
@@ -69,7 +72,7 @@ export function CheckoutForm({ products }: CheckoutFormProps) {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (activeItems.length === 0) {
-      setErrorMsg('Không có sản phẩm nào được chọn để thanh toán.');
+      setErrorMsg(language === 'vi' ? 'Không có sản phẩm nào được chọn để thanh toán.' : 'No products selected for checkout.');
       return;
     }
 
@@ -92,7 +95,7 @@ export function CheckoutForm({ products }: CheckoutFormProps) {
       const data = await res.json();
 
       if (!res.ok) {
-        throw new Error(data.error || 'Đặt hàng thất bại');
+        throw new Error(data.error || (language === 'vi' ? 'Đặt hàng thất bại' : 'Failed to place order'));
       }
 
       // Nếu chỉ thanh toán một số sản phẩm đã chọn thì chỉ xóa các sản phẩm đó
@@ -103,7 +106,7 @@ export function CheckoutForm({ products }: CheckoutFormProps) {
       }
       router.push(`/orders/${data.id}`);
     } catch (err: any) {
-      setErrorMsg(err.message || 'Có lỗi xảy ra khi tạo đơn hàng');
+      setErrorMsg(err.message || (language === 'vi' ? 'Có lỗi xảy ra khi tạo đơn hàng' : 'An error occurred while creating order'));
     } finally {
       setSubmitting(false);
     }
@@ -112,11 +115,23 @@ export function CheckoutForm({ products }: CheckoutFormProps) {
   if (activeItems.length === 0) {
     return (
       <div className="py-12 text-center text-slate-500">
-        Không có sản phẩm nào được chọn để thanh toán. Vui lòng quay lại{' '}
-        <a href="/cart" className="text-indigo-600 font-semibold hover:underline">
-          Giỏ hàng
-        </a>{' '}
-        và tích chọn sản phẩm bạn muốn mua.
+        {language === 'vi' ? (
+          <>
+            Không có sản phẩm nào được chọn để thanh toán. Vui lòng quay lại{' '}
+            <Link href="/cart" className="text-indigo-600 font-semibold hover:underline">
+              Giỏ hàng
+            </Link>{' '}
+            và tích chọn sản phẩm bạn muốn mua.
+          </>
+        ) : (
+          <>
+            No products selected for checkout. Please return to{' '}
+            <Link href="/cart" className="text-indigo-600 font-semibold hover:underline">
+              Cart
+            </Link>{' '}
+            and select products to purchase.
+          </>
+        )}
       </div>
     );
   }
@@ -133,13 +148,13 @@ export function CheckoutForm({ products }: CheckoutFormProps) {
 
         <div className="p-6 rounded-3xl bg-white border border-slate-200 shadow-xs space-y-4">
           <h3 className="text-base font-bold text-slate-900 flex items-center gap-2">
-            <Truck className="w-5 h-5 text-indigo-600" /> Thông tin giao hàng
+            <Truck className="w-5 h-5 text-indigo-600" /> {t('checkout.shippingInfo')}
           </h3>
 
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 text-xs">
             <div>
               <label className="block text-slate-700 font-semibold mb-1">
-                Họ và Tên
+                {t('checkout.fullName')}
               </label>
               <input
                 type="text"
@@ -152,7 +167,7 @@ export function CheckoutForm({ products }: CheckoutFormProps) {
             </div>
             <div>
               <label className="block text-slate-700 font-semibold mb-1">
-                Email nhận thông báo
+                {t('checkout.email')}
               </label>
               <input
                 type="email"
@@ -165,7 +180,7 @@ export function CheckoutForm({ products }: CheckoutFormProps) {
             </div>
             <div>
               <label className="block text-slate-700 font-semibold mb-1">
-                Số điện thoại
+                {t('checkout.phone')}
               </label>
               <input
                 type="text"
@@ -178,7 +193,7 @@ export function CheckoutForm({ products }: CheckoutFormProps) {
             </div>
             <div>
               <label className="block text-slate-700 font-semibold mb-1">
-                Tỉnh / Thành phố
+                {t('checkout.city')}
               </label>
               <input
                 type="text"
@@ -191,7 +206,7 @@ export function CheckoutForm({ products }: CheckoutFormProps) {
             </div>
             <div>
               <label className="block text-slate-700 font-semibold mb-1">
-                Mã bưu chính <span className="text-slate-400 font-normal">(tuỳ chọn)</span>
+                {t('checkout.zipCode')}
               </label>
               <input
                 type="text"
@@ -204,7 +219,7 @@ export function CheckoutForm({ products }: CheckoutFormProps) {
             </div>
             <div className="sm:col-span-2">
               <label className="block text-slate-700 font-semibold mb-1">
-                Địa chỉ chi tiết
+                {t('checkout.address')}
               </label>
               <input
                 type="text"
@@ -221,7 +236,7 @@ export function CheckoutForm({ products }: CheckoutFormProps) {
         {/* Payment Method */}
         <div className="p-6 rounded-3xl bg-white border border-slate-200 shadow-xs space-y-4">
           <h3 className="text-base font-bold text-slate-900 flex items-center gap-2">
-            <CreditCard className="w-5 h-5 text-purple-600" /> Phương thức thanh toán
+            <CreditCard className="w-5 h-5 text-purple-600" /> {t('checkout.paymentMethod')}
           </h3>
 
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 text-xs">
@@ -239,7 +254,7 @@ export function CheckoutForm({ products }: CheckoutFormProps) {
                 onChange={handleChange}
                 className="hidden"
               />
-              Thẻ Tín dụng / Visa
+              {t('checkout.creditCard')}
             </label>
             <label
               className={`flex items-center gap-2 p-3 rounded-xl border cursor-pointer transition-colors ${formData.paymentMethod === 'bank_transfer'
@@ -255,7 +270,7 @@ export function CheckoutForm({ products }: CheckoutFormProps) {
                 onChange={handleChange}
                 className="hidden"
               />
-              Chuyển khoản Ngân hàng
+              {t('checkout.sepayBankTransfer')}
             </label>
             <label
               className={`flex items-center gap-2 p-3 rounded-xl border cursor-pointer transition-colors ${formData.paymentMethod === 'cash'
@@ -271,7 +286,7 @@ export function CheckoutForm({ products }: CheckoutFormProps) {
                 onChange={handleChange}
                 className="hidden"
               />
-              Thanh toán khi nhận hàng (COD)
+              {t('checkout.cod')}
             </label>
           </div>
         </div>
@@ -280,7 +295,7 @@ export function CheckoutForm({ products }: CheckoutFormProps) {
       {/* Order Summary Sidebar */}
       <div className="p-6 rounded-3xl bg-white border border-slate-200 shadow-md h-fit space-y-4">
         <h3 className="text-base font-bold text-slate-900 pb-3 border-b border-slate-200">
-          Sản phẩm mua ({items.length})
+          {language === 'vi' ? 'Sản phẩm mua' : 'Order Items'} ({items.length})
         </h3>
 
         <div className="space-y-3 max-h-60 overflow-y-auto pr-1">
@@ -304,17 +319,17 @@ export function CheckoutForm({ products }: CheckoutFormProps) {
 
         <div className="space-y-2 pt-3 border-t border-slate-200 text-xs">
           <div className="flex justify-between text-slate-600">
-            <span>Tạm tính:</span>
+            <span>{t('common.subtotal')}:</span>
             <span className="font-mono text-slate-800 font-semibold">${subtotal.toFixed(2)}</span>
           </div>
           <div className="flex justify-between text-slate-600">
-            <span>Vận chuyển:</span>
+            <span>{t('common.shipping')}:</span>
             <span className="font-mono text-slate-800 font-semibold">
               {shippingFee === 0 ? 'FREE' : `$${shippingFee.toFixed(2)}`}
             </span>
           </div>
           <div className="flex justify-between text-sm font-extrabold text-slate-900 pt-2 border-t border-slate-200">
-            <span>Tổng cộng:</span>
+            <span>{t('common.total')}:</span>
             <span className="font-mono text-emerald-600">${grandTotal.toFixed(2)}</span>
           </div>
         </div>
@@ -325,18 +340,18 @@ export function CheckoutForm({ products }: CheckoutFormProps) {
           className="w-full flex items-center justify-center gap-2 py-3 px-4 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white font-semibold text-sm shadow-md transition-all disabled:opacity-50 cursor-pointer"
         >
           {submitting ? (
-            'Đang xử lý đơn hàng...'
+            t('checkout.processing')
           ) : (
             <>
-              <CheckCircle2 className="w-4 h-4" /> Xác nhận Đặt hàng
+              <CheckCircle2 className="w-4 h-4" /> {t('checkout.placeOrder')}
             </>
           )}
         </button>
 
         <p className="text-[11px] text-slate-500 text-center flex items-center justify-center gap-1">
-          <ShieldCheck className="w-3.5 h-3.5 text-emerald-600" /> Thanh toán được bảo vệ và xử lý tức thì
+          <ShieldCheck className="w-3.5 h-3.5 text-emerald-600" />{' '}
+          {language === 'vi' ? 'Thanh toán an toàn và bảo mật' : 'Secure and protected checkout'}
         </p>
-        {/*thanh toán được bảo vệ và xử lý tức thì bởi SSR */}
       </div>
     </form>
   );

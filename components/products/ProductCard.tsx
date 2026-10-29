@@ -4,6 +4,7 @@ import React, { useState } from 'react';
 import Link from 'next/link';
 import { ProductWithCategory } from '@/lib/types';
 import { AddToCartButton } from '@/components/cart/AddToCartButton';
+import { useLanguage } from '@/lib/i18n/store';
 import { Star } from 'lucide-react';
 
 interface ProductCardProps {
@@ -14,6 +15,7 @@ const DEFAULT_FALLBACK_IMAGE =
   'https://images.unsplash.com/photo-1505740420928-5e560c06d30e?w=800&q=80';
 
 export function ProductCard({ product }: ProductCardProps) {
+  const { t } = useLanguage();
   const [imgSrc, setImgSrc] = useState(product.thumbnail || DEFAULT_FALLBACK_IMAGE);
 
   const formattedPrice = new Intl.NumberFormat('en-US', {
@@ -40,12 +42,12 @@ export function ProductCard({ product }: ProductCardProps) {
         />
         {product.isFeatured && (
           <span className="absolute top-3 left-3 bg-amber-500 text-white font-bold text-[10px] uppercase tracking-widest px-2.5 py-1 rounded-full shadow-sm">
-            Featured
+            {t('common.featured')}
           </span>
         )}
         {product.discountPrice && (
           <span className="absolute top-3 right-3 bg-red-600 text-white font-bold text-xs px-2 py-0.5 rounded-md shadow-sm">
-            SALE
+            {t('common.sale')}
           </span>
         )}
       </Link>

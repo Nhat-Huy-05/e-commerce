@@ -2,12 +2,14 @@
 
 import { useCart } from '@/lib/store';
 import { ProductWithCategory } from '@/lib/types';
+import { useLanguage } from '@/lib/i18n/store';
 import { ArrowRight, Minus, Plus, ShoppingCart, Trash2 } from 'lucide-react';
 import Link from 'next/link';
 import { useEffect, useState } from 'react';
 
 export default function CartPage() {
   const { items, removeItem, updateQuantity, clearCart } = useCart();
+  const { language, t } = useLanguage();
   const [products, setProducts] = useState<ProductWithCategory[]>([]);
   const [loading, setLoading] = useState(true);
   const [selectedIds, setSelectedIds] = useState<string[]>([]);
@@ -89,9 +91,11 @@ export default function CartPage() {
     <div className="space-y-6">
       <div className="pb-4 border-b border-slate-200 flex items-center justify-between">
         <div>
-          <h1 className="text-3xl font-extrabold text-slate-900">Giỏ hàng</h1>
+          <h1 className="text-3xl font-extrabold text-slate-900">{t('cart.title')}</h1>
           <p className="text-xs text-slate-500 mt-1">
-            Quản lý và cập nhật sản phẩm đã chọn
+            {language === 'vi'
+              ? 'Quản lý và cập nhật sản phẩm đã chọn'
+              : 'Manage and update your selected products'}
           </p>
         </div>
         {items.length > 0 && (
@@ -104,7 +108,8 @@ export default function CartPage() {
                 }}
                 className="text-xs font-semibold text-amber-700 hover:text-amber-800 flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-amber-50 border border-amber-200 transition-colors cursor-pointer"
               >
-                <Trash2 className="w-3.5 h-3.5" /> Xóa đã chọn ({selectedIds.length})
+                <Trash2 className="w-3.5 h-3.5" />{' '}
+                {language === 'vi' ? 'Xóa đã chọn' : 'Delete selected'} ({selectedIds.length})
               </button>
             )}
             <button
@@ -114,7 +119,7 @@ export default function CartPage() {
               }}
               className="text-xs font-semibold text-red-600 hover:text-red-700 flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-red-50 border border-red-200 transition-colors cursor-pointer"
             >
-              <Trash2 className="w-3.5 h-3.5" /> Xóa tất cả
+              <Trash2 className="w-3.5 h-3.5" /> {t('cart.clearAll')}
             </button>
           </div>
         )}
@@ -122,22 +127,22 @@ export default function CartPage() {
 
       {loading ? (
         <div className="py-20 text-center text-slate-500 text-sm">
-          Đang tải dữ liệu giỏ hàng...
+          {t('common.loading')}
         </div>
       ) : items.length === 0 ? (
         <div className="py-16 text-center space-y-4 bg-white border border-slate-200 rounded-3xl shadow-xs">
           <div className="w-16 h-16 mx-auto rounded-full bg-slate-100 flex items-center justify-center text-slate-400">
             <ShoppingCart className="w-8 h-8" />
           </div>
-          <h3 className="text-lg font-bold text-slate-900">Giỏ hàng đang trống</h3>
+          <h3 className="text-lg font-bold text-slate-900">{t('cart.emptyTitle')}</h3>
           <p className="text-xs text-slate-500 max-w-sm mx-auto">
-            Hãy khám phá danh mục sản phẩm tuyệt vời của chúng tôi và chọn thêm món đồ bạn yêu thích.
+            {t('cart.emptySubtitle')}
           </p>
           <Link
             href="/products"
             className="inline-flex items-center gap-2 px-6 py-2.5 rounded-xl bg-indigo-600 hover:bg-indigo-700 text-white font-semibold text-xs shadow-md transition-colors"
           >
-            Khám phá Sản phẩm ngay <ArrowRight className="w-4 h-4" />
+            {t('cart.continueShopping')} <ArrowRight className="w-4 h-4" />
           </Link>
         </div>
       ) : (
@@ -154,13 +159,14 @@ export default function CartPage() {
                   className="w-4 h-4 rounded border-slate-300 text-indigo-600 focus:ring-indigo-500 accent-indigo-600 cursor-pointer"
                 />
                 <span className="text-slate-800 font-bold hover:text-indigo-600 transition-colors">
-                  Chọn tất cả ({items.length} sản phẩm)
+                  {language === 'vi' ? 'Chọn tất cả' : 'Select all'} ({items.length}{' '}
+                  {language === 'vi' ? 'sản phẩm' : 'items'})
                 </span>
               </label>
 
               <div className="hidden sm:flex items-center gap-8 md:gap-12 text-slate-500 font-semibold">
-                <span className="w-24 text-center">Số lượng</span>
-                <span className="w-24 text-right">Thành tiền</span>
+                <span className="w-24 text-center">{t('common.quantity')}</span>
+                <span className="w-24 text-right">{t('common.total')}</span>
                 <span className="w-6"></span>
               </div>
             </div>
@@ -196,7 +202,7 @@ export default function CartPage() {
                         className="text-xs sm:text-sm font-bold text-slate-900 line-clamp-2 hover:text-indigo-600 transition-colors"
                         title={product?.name}
                       >
-                        {product?.name || 'Đang tải...'}
+                        {product?.name || t('common.loading')}
                       </Link>
                       <div className="flex items-baseline gap-2 mt-1">
                         <span className="text-xs text-indigo-600 font-mono font-semibold">
@@ -220,7 +226,7 @@ export default function CartPage() {
                           type="button"
                           onClick={() => updateQuantity(productId, quantity - 1)}
                           className="p-1 text-slate-600 hover:text-slate-900 rounded hover:bg-slate-200 cursor-pointer transition-colors"
-                          title="Giảm số lượng"
+                          title={language === 'vi' ? 'Giảm số lượng' : 'Decrease quantity'}
                         >
                           <Minus className="w-3.5 h-3.5" />
                         </button>
@@ -231,7 +237,7 @@ export default function CartPage() {
                           type="button"
                           onClick={() => updateQuantity(productId, quantity + 1)}
                           className="p-1 text-slate-600 hover:text-slate-900 rounded hover:bg-slate-200 cursor-pointer transition-colors"
-                          title="Tăng số lượng"
+                          title={language === 'vi' ? 'Tăng số lượng' : 'Increase quantity'}
                         >
                           <Plus className="w-3.5 h-3.5" />
                         </button>
@@ -254,7 +260,7 @@ export default function CartPage() {
                           setSelectedIds((prev) => prev.filter((id) => id !== productId));
                         }}
                         className="p-1 text-slate-400 hover:text-red-600 rounded-lg hover:bg-red-50 transition-colors cursor-pointer"
-                        title="Xóa sản phẩm này"
+                        title={language === 'vi' ? 'Xóa sản phẩm này' : 'Remove item'}
                       >
                         <Trash2 className="w-4 h-4" />
                       </button>
@@ -268,28 +274,29 @@ export default function CartPage() {
           {/* Cart Summary Card */}
           <div className="p-6 rounded-3xl bg-white border border-slate-200 shadow-md h-fit space-y-4">
             <h3 className="text-base font-extrabold text-slate-900 pb-3 border-b border-slate-200">
-              Tóm tắt đơn hàng
+              {t('cart.orderSummary')}
             </h3>
 
             <div className="space-y-2.5 text-xs">
               <div className="flex justify-between text-slate-600">
-                <span>Đã chọn:</span>
+                <span>{language === 'vi' ? 'Đã chọn:' : 'Selected:'}</span>
                 <span className="font-semibold text-slate-800">
-                  {selectedDetails.length} sản phẩm ({selectedCount} món)
+                  {selectedDetails.length} {language === 'vi' ? 'sản phẩm' : 'items'} ({selectedCount}{' '}
+                  {language === 'vi' ? 'món' : 'pcs'})
                 </span>
               </div>
               <div className="flex justify-between text-slate-600">
-                <span>Tạm tính:</span>
+                <span>{t('common.subtotal')}:</span>
                 <span className="font-mono font-semibold text-slate-800">${subtotal.toFixed(2)}</span>
               </div>
               <div className="flex justify-between text-slate-600">
-                <span>Phí vận chuyển:</span>
+                <span>{t('common.shipping')}:</span>
                 <span className="font-mono font-semibold text-slate-800">
                   {shippingFee === 0 ? 'FREE' : `$${shippingFee.toFixed(2)}`}
                 </span>
               </div>
               <div className="flex justify-between text-sm font-extrabold text-slate-900 pt-3 border-t border-slate-200">
-                <span>Tổng tiền:</span>
+                <span>{t('common.total')}:</span>
                 <span className="font-mono text-emerald-600">${grandTotal.toFixed(2)}</span>
               </div>
             </div>
@@ -299,14 +306,14 @@ export default function CartPage() {
                 disabled
                 className="w-full py-3 px-4 rounded-xl bg-slate-100 text-slate-400 font-semibold text-xs cursor-not-allowed border border-slate-200 text-center"
               >
-                Vui lòng chọn sản phẩm để thanh toán
+                {language === 'vi' ? 'Vui lòng chọn sản phẩm để thanh toán' : 'Please select products to checkout'}
               </button>
             ) : (
               <Link
                 href={`/checkout?items=${selectedIds.join(',')}`}
                 className="w-full flex items-center justify-center gap-2 py-3 px-4 rounded-xl bg-indigo-600 hover:bg-indigo-700 text-white font-semibold text-sm shadow-md transition-all cursor-pointer"
               >
-                Thanh toán ({selectedDetails.length}) <ArrowRight className="w-4 h-4" />
+                {t('cart.proceedToCheckout')} ({selectedDetails.length}) <ArrowRight className="w-4 h-4" />
               </Link>
             )}
           </div>
@@ -315,4 +322,3 @@ export default function CartPage() {
     </div>
   );
 }
-

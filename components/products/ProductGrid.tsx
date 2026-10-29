@@ -1,6 +1,9 @@
+'use client';
+
 import React from 'react';
 import { ProductWithCategory } from '@/lib/types';
 import { ProductCard } from './ProductCard';
+import { useLanguage } from '@/lib/i18n/store';
 
 interface ProductGridProps {
   products: ProductWithCategory[];
@@ -9,12 +12,16 @@ interface ProductGridProps {
 
 export function ProductGrid({
   products,
-  emptyMessage = 'No products found matching your criteria.',
+  emptyMessage,
 }: ProductGridProps) {
+  const { t } = useLanguage();
+
   if (!products || products.length === 0) {
     return (
-      <div className="w-full text-center py-16 px-4 bg-slate-900/40 border border-slate-800 rounded-2xl">
-        <p className="text-base text-slate-400 font-medium">{emptyMessage}</p>
+      <div className="w-full text-center py-16 px-4 bg-slate-50 border border-slate-200 rounded-2xl">
+        <p className="text-sm text-slate-500 font-medium">
+          {emptyMessage || t('products.noProductsFound')}
+        </p>
       </div>
     );
   }
