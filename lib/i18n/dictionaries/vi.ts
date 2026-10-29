@@ -93,6 +93,9 @@ export const vi: Translations = {
     featuredCategoriesSubtitle: 'Tìm kiếm sản phẩm phù hợp nhất theo từng nhu cầu sử dụng',
     featuredProductsTitle: 'Sản Phẩm Nổi Bật',
     featuredProductsSubtitle: 'Tuyển chọn những thiết bị công nghệ & phụ kiện được yêu thích nhất',
+    featuredTabAll: 'Tất cả nổi bật',
+    featuredTabSale: 'Đang giảm giá',
+    featuredTabTopRated: 'Đánh giá cao',
     viewAllProducts: 'Xem tất cả sản phẩm',
   },
   products: {

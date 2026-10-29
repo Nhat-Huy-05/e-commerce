@@ -91,6 +91,9 @@ export interface Translations {
     featuredCategoriesSubtitle: string;
     featuredProductsTitle: string;
     featuredProductsSubtitle: string;
+    featuredTabAll: string;
+    featuredTabSale: string;
+    featuredTabTopRated: string;
     viewAllProducts: string;
   };
   products: {
