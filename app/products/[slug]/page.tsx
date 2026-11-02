@@ -39,12 +39,15 @@ export default async function ProductDetailPage({ params }: ProductDetailPagePro
 
   let images: string[] = [];
   try {
-    images = JSON.parse(product.images || '[]');
+    const parsed = JSON.parse(product.images || '[]');
+    if (Array.isArray(parsed)) {
+      images = parsed.filter(Boolean);
+    }
   } catch {
     images = [];
   }
-  if (images.length === 0 && product.thumbnail) {
-    images.push(product.thumbnail);
+  if (product.thumbnail && !images.includes(product.thumbnail)) {
+    images.unshift(product.thumbnail);
   }
 
   return (

@@ -13,6 +13,7 @@ const ALLOWED_MIME_TYPES = [
 
 export async function POST(request: NextRequest) {
   try {
+    // 1. Verify Admin authorization
     const userRole = request.cookies.get('user_role')?.value;
     if (userRole !== 'admin') {
       return NextResponse.json(
@@ -21,6 +22,7 @@ export async function POST(request: NextRequest) {
       );
     }
 
+    // 2. Parse multipart form data (supports multiple 'files' or single 'file')
     const formData = await request.formData();
 
     let files = formData.getAll('files') as File[];
@@ -38,6 +40,7 @@ export async function POST(request: NextRequest) {
       );
     }
 
+    // 3. Validate mime type and file size for each image
     for (const file of files) {
       if (!ALLOWED_MIME_TYPES.includes(file.type)) {
         return NextResponse.json(
@@ -58,6 +61,7 @@ export async function POST(request: NextRequest) {
       }
     }
 
+    // 4. Upload files to Vercel Blob with sanitized unique pathnames
     const uploadedUrls: string[] = [];
 
     for (const file of files) {
@@ -89,4 +93,3 @@ export async function POST(request: NextRequest) {
     );
   }
 }
-

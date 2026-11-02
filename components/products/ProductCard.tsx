@@ -1,11 +1,11 @@
 'use client';
 
-import React, { useState } from 'react';
-import Link from 'next/link';
-import { ProductWithCategory } from '@/lib/types';
 import { AddToCartButton } from '@/components/cart/AddToCartButton';
 import { useLanguage } from '@/lib/i18n/store';
+import { ProductWithCategory } from '@/lib/types';
 import { Star } from 'lucide-react';
+import Link from 'next/link';
+import React, { useMemo, useState } from 'react';
 
 interface ProductCardProps {
   product: ProductWithCategory;
@@ -16,18 +16,35 @@ const DEFAULT_FALLBACK_IMAGE =
 
 export function ProductCard({ product }: ProductCardProps) {
   const { t } = useLanguage();
-  const [imgSrc, setImgSrc] = useState(product.thumbnail || DEFAULT_FALLBACK_IMAGE);
 
-  // Extract secondary image if available
-  let secondaryImage: string | null = null;
-  try {
-    const parsedImages = typeof product.images === 'string' ? JSON.parse(product.images) : product.images;
-    if (Array.isArray(parsedImages) && parsedImages.length > 1) {
-      secondaryImage = parsedImages[1];
+  // Extract up to 2-3 images for card preview navigation
+  const cardImages: string[] = useMemo(() => {
+    let list: string[] = [];
+    try {
+      const parsed =
+        typeof product.images === 'string'
+          ? JSON.parse(product.images)
+          : product.images;
+      if (Array.isArray(parsed)) {
+        list = parsed.filter(
+          (item): item is string => typeof item === 'string' && item.trim().length > 0
+        );
+      }
+    } catch {
+      list = [];
     }
-  } catch {
-    secondaryImage = null;
-  }
+    if (product.thumbnail && !list.includes(product.thumbnail)) {
+      list.unshift(product.thumbnail);
+    }
+    return list.length > 0 ? list.slice(0, 3) : [DEFAULT_FALLBACK_IMAGE];
+  }, [product.images, product.thumbnail]);
+
+  const [activeIdx, setActiveIdx] = useState(0);
+  const [imgErrors, setImgErrors] = useState<Record<number, boolean>>({});
+
+  const currentDisplayImg = imgErrors[activeIdx]
+    ? DEFAULT_FALLBACK_IMAGE
+    : cardImages[activeIdx] || cardImages[0] || DEFAULT_FALLBACK_IMAGE;
 
   const formattedPrice = new Intl.NumberFormat('en-US', {
     style: 'currency',
@@ -48,31 +65,50 @@ export function ProductCard({ product }: ProductCardProps) {
 
   return (
     <div className="group relative flex flex-col bg-white border border-slate-200 rounded-2xl overflow-hidden shadow-2xs hover:shadow-xl hover:border-indigo-200 transition-all duration-300">
-      {/* Image Container with Smooth Secondary Hover Effect */}
+      {/* Image container with 2-3 images interactive preview */}
       <Link
         href={`/products/${product.slug}`}
         className="relative block w-full aspect-square overflow-hidden bg-slate-50 border-b border-slate-100"
       >
-        {/* Primary Image */}
+        {/* Main preview image */}
         <img
-          src={imgSrc}
+          src={currentDisplayImg}
           alt={product.name}
-          onError={() => setImgSrc(DEFAULT_FALLBACK_IMAGE)}
-          className={`w-full h-full object-cover object-center transition-all duration-500 ease-out ${
-            secondaryImage ? 'group-hover:opacity-0 group-hover:scale-105' : 'group-hover:scale-105'
-          }`}
+          onError={() => setImgErrors((prev) => ({ ...prev, [activeIdx]: true }))}
+          className="w-full h-full object-cover object-center transition-all duration-300 ease-out group-hover:scale-105"
         />
 
-        {/* Secondary Image on Hover (if available) */}
-        {secondaryImage && (
-          <img
-            src={secondaryImage}
-            alt={`${product.name} alternate view`}
-            className="absolute inset-0 w-full h-full object-cover object-center opacity-0 group-hover:opacity-100 group-hover:scale-105 transition-all duration-500 ease-out"
-          />
+        {/* 2-3 images interactive dots indicator */}
+        {cardImages.length > 1 && (
+          <div
+            className="absolute bottom-2.5 inset-x-0 flex items-center justify-center gap-1.5 z-20"
+            onClick={(e) => {
+              e.preventDefault();
+              e.stopPropagation();
+            }}
+          >
+            {cardImages.map((_, idx) => (
+              <button
+                key={idx}
+                type="button"
+                aria-label={`View image ${idx + 1}`}
+                onMouseEnter={() => setActiveIdx(idx)}
+                onClick={(e) => {
+                  e.preventDefault();
+                  e.stopPropagation();
+                  setActiveIdx(idx);
+                }}
+                className={`transition-all duration-200 rounded-full cursor-pointer shadow-xs ${
+                  activeIdx === idx
+                    ? 'w-5 h-1.5 bg-indigo-600'
+                    : 'w-1.5 h-1.5 bg-slate-300/80 hover:bg-slate-400'
+                }`}
+              />
+            ))}
+          </div>
         )}
 
-        {/* Badges */}
+        {/* Badges: Featured & Discount */}
         <div className="absolute top-2.5 left-2.5 right-2.5 flex items-center justify-between pointer-events-none z-10">
           {product.isFeatured ? (
             <span className="inline-flex items-center gap-1 bg-slate-900/85 backdrop-blur-xs text-white font-bold text-[10px] tracking-wide px-2.5 py-0.5 rounded-full shadow-xs">
