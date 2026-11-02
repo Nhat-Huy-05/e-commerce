@@ -93,6 +93,9 @@ export const en: Translations = {
     featuredCategoriesSubtitle: 'Find the perfect gadgets tailored to your daily needs',
     featuredProductsTitle: 'Featured Products',
     featuredProductsSubtitle: 'Hand-picked selection of top-rated tech and accessories',
+    featuredTabAll: 'All Featured',
+    featuredTabSale: 'On Sale',
+    featuredTabTopRated: 'Top Rated',
     viewAllProducts: 'View All Products',
   },
   products: {
