@@ -22,7 +22,7 @@ export function HomeCategoriesSection({ categories }: HomeCategoriesSectionProps
   const { language, t } = useLanguage();
 
   return (
-    <section className="space-y-6">
+    <section id="categories" className="space-y-6 scroll-mt-20">
       <div className="flex items-center justify-between">
         <div>
           <h2 className="text-2xl font-extrabold text-slate-900">
