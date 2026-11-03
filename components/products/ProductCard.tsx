@@ -3,6 +3,7 @@
 import { AddToCartButton } from '@/components/cart/AddToCartButton';
 import { useLanguage } from '@/lib/i18n/store';
 import { ProductWithCategory } from '@/lib/types';
+import { formatCurrency } from '@/lib/utils';
 import { Star } from 'lucide-react';
 import Link from 'next/link';
 import React, { useMemo, useState } from 'react';
@@ -46,16 +47,10 @@ export function ProductCard({ product }: ProductCardProps) {
     ? DEFAULT_FALLBACK_IMAGE
     : cardImages[activeIdx] || cardImages[0] || DEFAULT_FALLBACK_IMAGE;
 
-  const formattedPrice = new Intl.NumberFormat('en-US', {
-    style: 'currency',
-    currency: 'USD',
-  }).format(product.price);
+  const formattedPrice = formatCurrency(product.price);
 
   const formattedDiscount = product.discountPrice
-    ? new Intl.NumberFormat('en-US', {
-        style: 'currency',
-        currency: 'USD',
-      }).format(product.discountPrice)
+    ? formatCurrency(product.discountPrice)
     : null;
 
   const discountPercent =

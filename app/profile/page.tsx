@@ -18,6 +18,7 @@ import {
   Plus
 } from 'lucide-react';
 import Link from 'next/link';
+import { formatCurrency } from '@/lib/utils';
 import { useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
 
@@ -104,7 +105,7 @@ function AdminPanel() {
   const kpis = [
     {
       label: 'Doanh thu hôm nay',
-      value: `$${stats.revenueToday.toFixed(2)}`,
+      value: formatCurrency(stats.revenueToday),
       icon: TrendingUp,
       color: 'text-emerald-600',
       bg: 'bg-emerald-50',
@@ -112,7 +113,7 @@ function AdminPanel() {
     },
     {
       label: 'Doanh thu tháng này',
-      value: `$${stats.revenueMonth.toFixed(2)}`,
+      value: formatCurrency(stats.revenueMonth),
       icon: BarChart2,
       color: 'text-indigo-600',
       bg: 'bg-indigo-50',
@@ -257,7 +258,7 @@ function AdminPanel() {
                     </div>
                     <div className="flex flex-col items-end gap-1.5 shrink-0 ml-3">
                       <span className="font-mono text-emerald-600 font-extrabold text-sm">
-                        ${ord.total.toFixed(2)}
+                        {formatCurrency(ord.total)}
                       </span>
                       <StatusBadge status={ord.status} />
                       <span className="text-[10px] text-purple-500 font-semibold">
@@ -316,11 +317,11 @@ function AdminPanel() {
                               <div className="flex-1 min-w-0">
                                 <p className="text-xs font-semibold text-slate-900 truncate">{item.product.name}</p>
                                 <p className="text-[11px] text-slate-500">
-                                  SL: {item.quantity} · Đơn giá: ${item.price.toFixed(2)}
+                                  SL: {item.quantity} · Đơn giá: {formatCurrency(item.price)}
                                 </p>
                               </div>
                               <span className="font-mono font-bold text-indigo-600 text-sm shrink-0">
-                                ${(item.price * item.quantity).toFixed(2)}
+                                {formatCurrency(item.price * item.quantity)}
                               </span>
                             </div>
                           );
@@ -389,7 +390,7 @@ function CustomerOrders({ userId }: { userId: string }) {
                   </span>
                 </div>
                 <span className="font-mono text-emerald-600 font-extrabold">
-                  ${ord.total.toFixed(2)}
+                  {formatCurrency(ord.total)}
                 </span>
               </div>
               <div className="flex items-center justify-between text-xs">

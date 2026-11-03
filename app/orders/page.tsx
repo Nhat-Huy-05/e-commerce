@@ -2,6 +2,7 @@ import React from 'react';
 import { PackageSearch, Search, ArrowRight, ShieldCheck, Clock } from 'lucide-react';
 import Link from 'next/link';
 import { db } from '@/lib/db';
+import { formatCurrency } from '@/lib/utils';
 
 export const dynamic = 'force-dynamic';
 
@@ -115,7 +116,7 @@ export default async function OrdersLookupPage({ searchParams }: OrdersPageProps
                       <div className="text-right">
                         <span className="text-xs text-slate-500">Tổng thanh toán:</span>
                         <p className="text-base font-black font-mono text-emerald-600">
-                          ${order.total.toFixed(2)}
+                          {formatCurrency(order.total)}
                         </p>
                       </div>
                     </div>
@@ -136,7 +137,7 @@ export default async function OrdersLookupPage({ searchParams }: OrdersPageProps
                             </div>
                           </div>
                           <span className="font-mono font-bold text-slate-800">
-                            ${(item.price * item.quantity).toFixed(2)}
+                            {formatCurrency(item.price * item.quantity)}
                           </span>
                         </div>
                       ))}

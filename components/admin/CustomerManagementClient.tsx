@@ -1,6 +1,7 @@
 'use client';
 
 import React, { useState, useMemo } from 'react';
+import { formatCurrency } from '@/lib/utils';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import {
@@ -385,10 +386,10 @@ export function CustomerManagementClient({ customers }: { customers: CustomerDat
           <div>
             <p className="text-xs font-semibold text-slate-500">Tổng Chi Tiêu Khách (LTV)</p>
             <p className="text-2xl font-black text-emerald-600">
-              ${stats.totalRevenue.toFixed(2)}
+              {formatCurrency(stats.totalRevenue)}
             </p>
             <p className="text-[11px] text-slate-400">
-              TB: ${stats.avgSpend.toFixed(2)}/khách mua
+              TB: {formatCurrency(stats.avgSpend)}/khách mua
             </p>
           </div>
         </div>
@@ -593,7 +594,7 @@ export function CustomerManagementClient({ customers }: { customers: CustomerDat
                       {/* Total Spent */}
                       <td className="py-3.5 px-4 text-right">
                         <p className="font-black text-emerald-600 text-sm font-mono">
-                          ${c.totalSpent.toFixed(2)}
+                          {formatCurrency(c.totalSpent)}
                         </p>
                       </td>
 
@@ -737,7 +738,7 @@ export function CustomerManagementClient({ customers }: { customers: CustomerDat
                 <div className="p-3.5 rounded-2xl bg-emerald-50 border border-emerald-100 text-center">
                   <p className="text-[11px] font-semibold text-emerald-600">Tổng Chi Tiêu</p>
                   <p className="text-xl font-black text-emerald-700 font-mono mt-0.5">
-                    ${selectedCustomer.totalSpent.toFixed(2)}
+                    {formatCurrency(selectedCustomer.totalSpent)}
                   </p>
                 </div>
                 <div className="p-3.5 rounded-2xl bg-purple-50 border border-purple-100 text-center">
@@ -886,7 +887,7 @@ export function CustomerManagementClient({ customers }: { customers: CustomerDat
                             {getStatusBadge(ord.status)}
                           </div>
                           <span className="font-mono font-black text-emerald-600">
-                            ${ord.total.toFixed(2)}
+                            {formatCurrency(ord.total)}
                           </span>
                         </div>
 

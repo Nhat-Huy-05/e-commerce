@@ -3,6 +3,7 @@
 import { useAuth } from '@/lib/auth-store';
 import { useCart } from '@/lib/store';
 import { useLanguage } from '@/lib/i18n/store';
+import { formatCurrency } from '@/lib/utils';
 import { CheckCircle2, CreditCard, ShieldCheck, Truck } from 'lucide-react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import Link from 'next/link';
@@ -60,7 +61,7 @@ export function CheckoutForm({ products }: CheckoutFormProps) {
   });
 
   const subtotal = cartItemsDetailed.reduce((acc, item) => acc + item.totalPrice, 0);
-  const shippingFee = subtotal > 0 ? (subtotal > 500 ? 0 : 15) : 0;
+  const shippingFee = subtotal > 0 ? (subtotal > 500000 ? 0 : 30000) : 0;
   const grandTotal = subtotal + shippingFee;
 
   const handleChange = (
@@ -311,7 +312,7 @@ export function CheckoutForm({ products }: CheckoutFormProps) {
                 <p className="text-slate-400 text-[11px]">x{quantity}</p>
               </div>
               <span className="font-mono text-emerald-600 font-bold">
-                ${(unitPrice * quantity).toFixed(2)}
+                {formatCurrency(unitPrice * quantity)}
               </span>
             </div>
           ))}
@@ -320,17 +321,17 @@ export function CheckoutForm({ products }: CheckoutFormProps) {
         <div className="space-y-2 pt-3 border-t border-slate-200 text-xs">
           <div className="flex justify-between text-slate-600">
             <span>{t('common.subtotal')}:</span>
-            <span className="font-mono text-slate-800 font-semibold">${subtotal.toFixed(2)}</span>
+            <span className="font-mono text-slate-800 font-semibold">{formatCurrency(subtotal)}</span>
           </div>
           <div className="flex justify-between text-slate-600">
             <span>{t('common.shipping')}:</span>
             <span className="font-mono text-slate-800 font-semibold">
-              {shippingFee === 0 ? 'FREE' : `$${shippingFee.toFixed(2)}`}
+              {shippingFee === 0 ? 'FREE' : formatCurrency(shippingFee)}
             </span>
           </div>
           <div className="flex justify-between text-sm font-extrabold text-slate-900 pt-2 border-t border-slate-200">
             <span>{t('common.total')}:</span>
-            <span className="font-mono text-emerald-600">${grandTotal.toFixed(2)}</span>
+            <span className="font-mono text-emerald-600">{formatCurrency(grandTotal)}</span>
           </div>
         </div>
 

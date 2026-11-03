@@ -1,4 +1,5 @@
 import { db } from '@/lib/db';
+import { formatCurrency } from '@/lib/utils';
 import { Package, Clock, ArrowLeft } from 'lucide-react';
 import Link from 'next/link';
 import { AdminNavBar } from '@/components/admin/AdminNavBar';
@@ -41,7 +42,7 @@ export default async function AdminOrdersPage() {
           </h1>
           <p className="text-xs text-slate-400 mt-1">
             {orders.length} đơn hàng · Tổng doanh thu:{' '}
-            <span className="text-emerald-600 font-bold">${totalRevenue.toFixed(2)}</span>
+            <span className="text-emerald-600 font-bold">{formatCurrency(totalRevenue)}</span>
           </p>
         </div>
         <Link
@@ -89,7 +90,7 @@ export default async function AdminOrdersPage() {
                     {ord.status}
                   </span>
                   <span className="font-mono font-extrabold text-emerald-600">
-                    ${ord.total.toFixed(2)}
+                    {formatCurrency(ord.total)}
                   </span>
                 </div>
               </div>
@@ -158,11 +159,11 @@ export default async function AdminOrdersPage() {
                           {item.product.name}
                         </p>
                         <p className="text-[11px] text-slate-500">
-                          Số lượng: {item.quantity} · Đơn giá: ${item.price.toFixed(2)}
+                          Số lượng: {item.quantity} · Đơn giá: {formatCurrency(item.price)}
                         </p>
                       </div>
                       <span className="font-mono font-bold text-indigo-600 text-sm shrink-0">
-                        ${(item.price * item.quantity).toFixed(2)}
+                        {formatCurrency(item.price * item.quantity)}
                       </span>
                     </div>
                   );
