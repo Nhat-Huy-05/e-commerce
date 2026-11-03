@@ -48,7 +48,7 @@ export function HomeCategoriesSection({ categories }: HomeCategoriesSectionProps
                 className="w-full h-full object-cover group-hover:scale-110 transition-transform"
               />
             </div>
-            <h4 className="text-xs font-bold text-slate-900 group-hover:text-indigo-600 line-clamp-1">
+            <h4 className="text-xs font-bold text-slate-900 group-hover:text-indigo-600 line-clamp-2 min-h-[32px] flex items-center justify-center">
               {cat.name}
             </h4>
             <span className="text-[10px] text-slate-500 font-mono font-semibold">

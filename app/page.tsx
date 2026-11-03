@@ -30,11 +30,11 @@ export default async function HomePage() {
       {/* 3 E-Commerce Store Perks & Utilities */}
       <HomePerks />
 
-      {/* Featured Products */}
-      <HomeFeaturedSection products={featuredProducts} />
-
       {/* Categories */}
       <HomeCategoriesSection categories={categories} />
+
+      {/* Featured Products */}
+      <HomeFeaturedSection products={featuredProducts} />
     </div>
   );
 }
