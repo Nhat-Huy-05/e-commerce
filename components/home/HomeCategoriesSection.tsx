@@ -1,8 +1,7 @@
 'use client';
 
-import React from 'react';
-import Link from 'next/link';
 import { useLanguage } from '@/lib/i18n/store';
+import Link from 'next/link';
 
 interface CategoryItem {
   id: string;
@@ -22,7 +21,7 @@ export function HomeCategoriesSection({ categories }: HomeCategoriesSectionProps
   const { language, t } = useLanguage();
 
   return (
-    <section className="space-y-6">
+    <section id="categories" className="space-y-6 scroll-mt-20">
       <div className="flex items-center justify-between">
         <div>
           <h2 className="text-2xl font-extrabold text-slate-900">
@@ -48,10 +47,10 @@ export function HomeCategoriesSection({ categories }: HomeCategoriesSectionProps
                 className="w-full h-full object-cover group-hover:scale-110 transition-transform"
               />
             </div>
-            <h4 className="text-xs font-bold text-slate-900 group-hover:text-indigo-600 line-clamp-1">
+            <h4 className="text-xs font-bold text-slate-900 group-hover:text-indigo-600 line-clamp-2 min-h-[32px] flex items-center justify-center">
               {cat.name}
             </h4>
-            <span className="text-[10px] text-slate-500 font-mono font-semibold">
+            <span className="text-[12px] text-slate-500 font-mono font-semibold">
               {cat._count.products} {language === 'vi' ? 'sản phẩm' : 'items'}
             </span>
           </Link>

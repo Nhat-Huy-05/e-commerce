@@ -87,6 +87,11 @@ export interface Translations {
     perk2Desc: string;
     perk3Title: string;
     perk3Desc: string;
+    perk4Title: string;
+    perk4Desc: string;
+    flashSaleTitle: string;
+    flashSaleSubtitle: string;
+    viewAllDeals: string;
     featuredCategoriesTitle: string;
     featuredCategoriesSubtitle: string;
     featuredProductsTitle: string;

@@ -1,5 +1,6 @@
 import { AdminNavBar } from '@/components/admin/AdminNavBar';
 import { db } from '@/lib/db';
+import { formatCurrency } from '@/lib/utils';
 import { AlertTriangle, DollarSign, Edit, Package, Plus, ShoppingCart } from 'lucide-react';
 import Link from 'next/link';
 import { DeleteProductButton } from './DeleteProductButton';
@@ -64,7 +65,7 @@ export default async function AdminProductsPage() {
           </div>
           <div>
             <p className="text-xs font-semibold text-slate-500">Tổng Doanh Thu</p>
-            <p className="text-xl font-black text-slate-900 font-mono">${totalRevenue.toFixed(2)}</p>
+            <p className="text-xl font-black text-slate-900 font-mono">{formatCurrency(totalRevenue)}</p>
           </div>
         </div>
 
@@ -141,10 +142,10 @@ export default async function AdminProductsPage() {
                     {product.category.name}
                   </td>
                   <td className="px-4 py-3 font-mono font-bold text-emerald-600">
-                    ${(product.discountPrice ?? product.price).toFixed(2)}
+                    {formatCurrency(product.discountPrice ?? product.price)}
                     {product.discountPrice && (
                       <span className="block text-[10px] text-slate-400 line-through">
-                        ${product.price.toFixed(2)}
+                        {formatCurrency(product.price)}
                       </span>
                     )}
                   </td>
@@ -162,7 +163,7 @@ export default async function AdminProductsPage() {
                       <span className="font-bold text-slate-900">{unitsSold} đã bán</span>
                       {productRevenue > 0 && (
                         <p className="text-[10px] text-emerald-600 font-semibold">
-                          ${productRevenue.toFixed(2)}
+                          {formatCurrency(productRevenue)}
                         </p>
                       )}
                     </div>

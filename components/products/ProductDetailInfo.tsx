@@ -4,6 +4,7 @@ import React from 'react';
 import { AddToCartButton } from '@/components/cart/AddToCartButton';
 import { useLanguage } from '@/lib/i18n/store';
 import { ProductWithDetails } from '@/lib/types';
+import { formatCurrency } from '@/lib/utils';
 import { RotateCcw, ShieldCheck, Star, Truck } from 'lucide-react';
 
 interface ProductDetailInfoProps {
@@ -13,16 +14,10 @@ interface ProductDetailInfoProps {
 export function ProductDetailInfo({ product }: ProductDetailInfoProps) {
   const { language, t } = useLanguage();
 
-  const formattedPrice = new Intl.NumberFormat('en-US', {
-    style: 'currency',
-    currency: 'USD',
-  }).format(product.price);
+  const formattedPrice = formatCurrency(product.price);
 
   const formattedDiscount = product.discountPrice
-    ? new Intl.NumberFormat('en-US', {
-        style: 'currency',
-        currency: 'USD',
-      }).format(product.discountPrice)
+    ? formatCurrency(product.discountPrice)
     : null;
 
   return (

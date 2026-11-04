@@ -3,6 +3,7 @@
 import { useCart } from '@/lib/store';
 import { ProductWithCategory } from '@/lib/types';
 import { useLanguage } from '@/lib/i18n/store';
+import { formatCurrency } from '@/lib/utils';
 import { ArrowRight, Minus, Plus, ShoppingCart, Trash2 } from 'lucide-react';
 import Link from 'next/link';
 import { useEffect, useState } from 'react';
@@ -84,7 +85,7 @@ export default function CartPage() {
   const selectedDetails = cartDetails.filter((item) => item.isSelected);
   const selectedCount = selectedDetails.reduce((sum, item) => sum + item.quantity, 0);
   const subtotal = selectedDetails.reduce((sum, item) => sum + item.totalPrice, 0);
-  const shippingFee = subtotal > 0 ? (subtotal > 500 ? 0 : 15) : 0;
+  const shippingFee = subtotal > 0 ? (subtotal > 500000 ? 0 : 30000) : 0;
   const grandTotal = subtotal + shippingFee;
 
   return (
@@ -206,11 +207,11 @@ export default function CartPage() {
                       </Link>
                       <div className="flex items-baseline gap-2 mt-1">
                         <span className="text-xs text-indigo-600 font-mono font-semibold">
-                          ${unitPrice.toFixed(2)}
+                          {formatCurrency(unitPrice)}
                         </span>
                         {product?.discountPrice && product?.price && (
                           <span className="text-[11px] text-slate-400 line-through font-mono">
-                            ${product.price.toFixed(2)}
+                            {formatCurrency(product.price)}
                           </span>
                         )}
                       </div>
@@ -247,7 +248,7 @@ export default function CartPage() {
                     {/* Subtotal */}
                     <div className="w-24 text-right">
                       <span className="text-sm font-extrabold text-red-600 font-mono">
-                        ${totalPrice.toFixed(2)}
+                        {formatCurrency(totalPrice)}
                       </span>
                     </div>
 
@@ -287,17 +288,17 @@ export default function CartPage() {
               </div>
               <div className="flex justify-between text-slate-600">
                 <span>{t('common.subtotal')}:</span>
-                <span className="font-mono font-semibold text-slate-800">${subtotal.toFixed(2)}</span>
+                <span className="font-mono font-semibold text-slate-800">{formatCurrency(subtotal)}</span>
               </div>
               <div className="flex justify-between text-slate-600">
                 <span>{t('common.shipping')}:</span>
                 <span className="font-mono font-semibold text-slate-800">
-                  {shippingFee === 0 ? 'FREE' : `$${shippingFee.toFixed(2)}`}
+                  {shippingFee === 0 ? 'FREE' : formatCurrency(shippingFee)}
                 </span>
               </div>
               <div className="flex justify-between text-sm font-extrabold text-slate-900 pt-3 border-t border-slate-200">
                 <span>{t('common.total')}:</span>
-                <span className="font-mono text-emerald-600">${grandTotal.toFixed(2)}</span>
+                <span className="font-mono text-emerald-600">{formatCurrency(grandTotal)}</span>
               </div>
             </div>
 

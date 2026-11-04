@@ -268,11 +268,11 @@ export function ProductForm({ initialData, categories }: ProductFormProps) {
 
           <div>
             <label className="block text-slate-300 font-semibold mb-1">
-              Giá niêm yết ($ USD)
+              Giá niêm yết (VNĐ)
             </label>
             <input
               type="number"
-              step="0.01"
+              step="1000" placeholder="VD: 15000000"
               name="price"
               value={formData.price}
               onChange={handleChange}
@@ -283,11 +283,11 @@ export function ProductForm({ initialData, categories }: ProductFormProps) {
 
           <div>
             <label className="block text-slate-300 font-semibold mb-1">
-              Giá khuyến mãi ($ USD) - Để trống nếu không giảm
+              Giá khuyến mãi (VNĐ) - Để trống nếu không giảm
             </label>
             <input
               type="number"
-              step="0.01"
+              step="1000" placeholder="VD: 12500000"
               name="discountPrice"
               value={formData.discountPrice}
               onChange={handleChange}

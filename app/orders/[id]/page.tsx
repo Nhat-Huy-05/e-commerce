@@ -2,6 +2,7 @@ import React from 'react';
 import { notFound } from 'next/navigation';
 import Link from 'next/link';
 import { db } from '@/lib/db';
+import { formatCurrency } from '@/lib/utils';
 import { CheckCircle2, ArrowRight, Package, MapPin, CreditCard } from 'lucide-react';
 
 // SSR Strategy: Order details are fetched in real-time for security and privacy
@@ -73,7 +74,7 @@ export default async function OrderDetailPage({ params }: OrderPageProps) {
             </div>
             <p className="font-bold text-slate-900 uppercase">{order.paymentMethod}</p>
             <p className="text-slate-500">Trạng thái: <span className="text-emerald-700 font-bold uppercase">{order.paymentStatus}</span></p>
-            <p className="text-slate-500">Tổng tiền: <span className="text-emerald-600 font-mono font-extrabold">${order.total.toFixed(2)}</span></p>
+            <p className="text-slate-500">Tổng tiền: <span className="text-emerald-600 font-mono font-extrabold">{formatCurrency(order.total)}</span></p>
           </div>
 
           <div className="p-4 rounded-2xl bg-slate-50 border border-slate-200 space-y-1">
@@ -102,11 +103,11 @@ export default async function OrderDetailPage({ params }: OrderPageProps) {
                   />
                   <div>
                     <p className="font-semibold text-slate-900">{item.product.name}</p>
-                    <p className="text-slate-500 text-[11px]">Đơn giá: ${item.price.toFixed(2)} x {item.quantity}</p>
+                    <p className="text-slate-500 text-[11px]">Đơn giá: {formatCurrency(item.price)} x {item.quantity}</p>
                   </div>
                 </div>
                 <span className="font-mono text-emerald-600 font-bold">
-                  ${(item.price * item.quantity).toFixed(2)}
+                  {formatCurrency(item.price * item.quantity)}
                 </span>
               </div>
             ))}
