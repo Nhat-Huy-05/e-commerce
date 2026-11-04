@@ -78,7 +78,7 @@ export async function POST(request: NextRequest) {
     }
 
     // 3. Create Order & OrderItems in transaction, and update stock
-    const orderNumber = `ORD-${Date.now().toString().slice(-6)}`;
+    const orderNumber = `DH${Date.now().toString().slice(-6)}`;
 
     const order = await db.$transaction(async (tx) => {
       const newOrder = await tx.order.create({

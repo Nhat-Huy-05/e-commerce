@@ -45,7 +45,7 @@ export default async function OrdersLookupPage({ searchParams }: OrdersPageProps
           Theo Dõi Tình Trạng Đơn Hàng Của Bạn
         </h1>
         <p className="text-indigo-200 text-xs sm:text-sm max-w-xl">
-          Nhập mã đơn hàng (ví dụ: <span className="font-mono text-white">ORD-</span>), số điện thoại đặt hàng hoặc email để kiểm tra lộ trình vận chuyển và trạng thái thanh toán theo thời gian thực.
+          Nhập mã đơn hàng (ví dụ: <span className="font-mono text-white">DH...</span>), số điện thoại đặt hàng hoặc email để kiểm tra lộ trình vận chuyển và trạng thái thanh toán theo thời gian thực.
         </p>
 
         {/* Search form */}
