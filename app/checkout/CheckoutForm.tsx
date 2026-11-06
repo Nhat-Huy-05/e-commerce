@@ -1,13 +1,12 @@
 'use client';
 
 import { useAuth } from '@/lib/auth-store';
-import { useCart } from '@/lib/store';
 import { useLanguage } from '@/lib/i18n/store';
+import { useCart } from '@/lib/store';
 import { formatCurrency } from '@/lib/utils';
 import { CheckCircle2, CreditCard, ShieldCheck, Truck } from 'lucide-react';
-import { useRouter, useSearchParams } from 'next/navigation';
 import Link from 'next/link';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 
 interface ProductInfo {
   id: string;
@@ -40,14 +39,28 @@ export function CheckoutForm({ products }: CheckoutFormProps) {
   const [formData, setFormData] = useState({
     shippingName: user?.name || '',
     shippingEmail: user?.email || '',
-    shippingPhone: '0987654321',
+    shippingPhone: '',
     shippingAddress: '',
     shippingCity: '',
     shippingCountry: 'Việt Nam',
     shippingZipCode: '',
-    paymentMethod: 'credit_card',
+    paymentMethod: 'bank_transfer',
     notes: '',
   });
+
+  // Client-side authentication guard: redirect to Login if not logged in
+  useEffect(() => {
+    if (!user) {
+      const target = selectedParam ? `/checkout?items=${selectedParam}` : '/checkout';
+      router.replace(`/login?redirect=${encodeURIComponent(target)}`);
+    } else {
+      setFormData((prev) => ({
+        ...prev,
+        shippingName: prev.shippingName || user.name || '',
+        shippingEmail: prev.shippingEmail || user.email || '',
+      }));
+    }
+  }, [user, router, selectedParam]);
 
   const cartItemsDetailed = activeItems.map((item) => {
     const prod = products.find((p) => p.id === item.productId);
@@ -72,6 +85,12 @@ export function CheckoutForm({ products }: CheckoutFormProps) {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    if (!user) {
+      const target = selectedParam ? `/checkout?items=${selectedParam}` : '/checkout';
+      router.push(`/login?redirect=${encodeURIComponent(target)}`);
+      return;
+    }
+
     if (activeItems.length === 0) {
       setErrorMsg(language === 'vi' ? 'Không có sản phẩm nào được chọn để thanh toán.' : 'No products selected for checkout.');
       return;
