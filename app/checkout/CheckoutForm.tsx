@@ -6,6 +6,7 @@ import { useCart } from '@/lib/store';
 import { formatCurrency } from '@/lib/utils';
 import { CheckCircle2, CreditCard, ShieldCheck, Truck } from 'lucide-react';
 import Link from 'next/link';
+import { useRouter, useSearchParams } from 'next/navigation';
 import React, { useEffect, useState } from 'react';
 
 interface ProductInfo {
@@ -48,8 +49,15 @@ export function CheckoutForm({ products }: CheckoutFormProps) {
     notes: '',
   });
 
+  const [hasHydrated, setHasHydrated] = useState(false);
+
+  useEffect(() => {
+    setHasHydrated(true);
+  }, []);
+
   // Client-side authentication guard: redirect to Login if not logged in
   useEffect(() => {
+    if (!hasHydrated) return;
     if (!user) {
       const target = selectedParam ? `/checkout?items=${selectedParam}` : '/checkout';
       router.replace(`/login?redirect=${encodeURIComponent(target)}`);
@@ -60,7 +68,7 @@ export function CheckoutForm({ products }: CheckoutFormProps) {
         shippingEmail: prev.shippingEmail || user.email || '',
       }));
     }
-  }, [user, router, selectedParam]);
+  }, [hasHydrated, user, router, selectedParam]);
 
   const cartItemsDetailed = activeItems.map((item) => {
     const prod = products.find((p) => p.id === item.productId);
@@ -120,7 +128,7 @@ export function CheckoutForm({ products }: CheckoutFormProps) {
 
       // Nếu chỉ thanh toán một số sản phẩm đã chọn thì chỉ xóa các sản phẩm đó
       if (selectedIdList && selectedIdList.length > 0 && selectedIdList.length < items.length) {
-        selectedIdList.forEach((id) => removeItem(id));
+        selectedIdList.forEach((id: string) => removeItem(id));
       } else {
         clearCart();
       }
