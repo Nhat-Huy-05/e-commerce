@@ -82,7 +82,7 @@ export function CheckoutForm({ products }: CheckoutFormProps) {
   });
 
   const subtotal = cartItemsDetailed.reduce((acc, item) => acc + item.totalPrice, 0);
-  const shippingFee = subtotal > 0 ? (subtotal > 500000 ? 0 : 30000) : 0;
+  const shippingFee = 0; // Miễn phí vận chuyển toàn quốc cho đơn hàng
   const grandTotal = subtotal + shippingFee;
 
   const handleChange = (
