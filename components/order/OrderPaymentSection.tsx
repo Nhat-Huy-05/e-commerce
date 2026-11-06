@@ -16,12 +16,19 @@ import {
   CreditCard,
 } from 'lucide-react';
 
+interface BankConfig {
+  bankName?: string;
+  bankAccount?: string;
+  accountHolder?: string;
+}
+
 interface OrderPaymentSectionProps {
   orderId: string;
   orderNumber: string;
   total: number;
   initialPaymentStatus: string;
   paymentMethod: string;
+  bankConfig?: BankConfig;
 }
 
 export function OrderPaymentSection({
@@ -30,22 +37,24 @@ export function OrderPaymentSection({
   total,
   initialPaymentStatus,
   paymentMethod,
+  bankConfig = {},
 }: OrderPaymentSectionProps) {
   const router = useRouter();
   const [paymentStatus, setPaymentStatus] = useState(initialPaymentStatus);
   const [checking, setChecking] = useState(false);
   const [copiedField, setCopiedField] = useState<string | null>(null);
 
-  // Bank transfer configuration (can be customized via environment variables)
-  const bankName = process.env.NEXT_PUBLIC_SEPAY_BANK_NAME || 'MBBank';
-  const bankAccount = process.env.NEXT_PUBLIC_SEPAY_ACCOUNT_NO || '0377514828';
-  const accountHolder = process.env.NEXT_PUBLIC_SEPAY_ACCOUNT_NAME || 'BUI NHAT HUY';
+  // Bank transfer configuration passed from Server Component / environment
+  const bankName = bankConfig.bankName || 'MBBank';
+  const bankAccount = bankConfig.bankAccount || '';
+  const accountHolder = bankConfig.accountHolder || '';
 
   // SePay dynamic QR URL
-  const qrUrl = `https://qr.sepay.vn/img?acc=${bankAccount}&bank=${bankName}&amount=${Math.round(
-    total
-  )}&des=${encodeURIComponent(orderNumber)}`;
-
+  const qrUrl = bankAccount
+    ? `https://qr.sepay.vn/img?acc=${bankAccount}&bank=${bankName}&amount=${Math.round(
+        total
+      )}&des=${encodeURIComponent(orderNumber)}`
+    : '';
   const handleCopy = (text: string, field: string) => {
     navigator.clipboard.writeText(text);
     setCopiedField(field);
@@ -146,11 +155,18 @@ export function OrderPaymentSection({
         {/* Left: Dynamic QR Code */}
         <div className="md:col-span-5 flex flex-col items-center justify-center p-4 bg-white rounded-2xl border border-slate-200 shadow-inner">
           <div className="relative group">
-            <img
-              src={qrUrl}
-              alt={`Mã QR thanh toán cho đơn hàng ${orderNumber}`}
-              className="w-56 h-56 object-contain rounded-xl"
-            />
+            {qrUrl ? (
+              <img
+                src={qrUrl}
+                alt={`Mã QR thanh toán cho đơn hàng ${orderNumber}`}
+                className="w-56 h-56 object-contain rounded-xl"
+              />
+            ) : (
+              <div className="w-56 h-56 flex flex-col items-center justify-center rounded-xl border-2 border-dashed border-slate-300 bg-slate-50 text-slate-400 gap-2">
+                <QrCode className="w-10 h-10" />
+                <p className="text-xs text-center px-4">Chưa cấu hình tài khoản ngân hàng</p>
+              </div>
+            )}
           </div>
           <p className="text-[11px] text-slate-400 mt-3 text-center">
             Mở App ngân hàng &gt; Chọn <b>Quét QR</b> để tự động điền đúng số tiền và nội dung
