@@ -32,6 +32,13 @@ export default async function OrderDetailPage({ params }: OrderPageProps) {
     notFound();
   }
 
+  // Read bank config server-side (env vars without NEXT_PUBLIC_ — never sent to client bundle)
+  const bankConfig = {
+    bankName: process.env.SEPAY_BANK_NAME || '',
+    bankAccount: process.env.SEPAY_ACCOUNT_NO || '',
+    accountHolder: process.env.SEPAY_ACCOUNT_NAME || '',
+  };
+
   const formattedDate = new Date(order.createdAt).toLocaleDateString('vi-VN', {
     year: 'numeric',
     month: 'long',
@@ -105,6 +112,7 @@ export default async function OrderDetailPage({ params }: OrderPageProps) {
           total={order.total}
           initialPaymentStatus={order.paymentStatus}
           paymentMethod={order.paymentMethod || 'bank_transfer'}
+          bankConfig={bankConfig}
         />
 
         {/* Ordered Items Table */}
