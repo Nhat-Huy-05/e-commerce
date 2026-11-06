@@ -27,15 +27,16 @@ export default async function ProductsPage({ searchParams }: ProductsPageProps) 
     where.category = { slug: category };
   }
 
-  const products = await db.product.findMany({
-    where,
-    orderBy,
-    include: {
-      category: true,
-    },
-  });
-
-  const categories = await db.category.findMany({});
+  const [products, categories] = await Promise.all([
+    db.product.findMany({
+      where,
+      orderBy,
+      include: {
+        category: true,
+      },
+    }),
+    db.category.findMany({}),
+  ]);
 
   return (
     <div className="space-y-6">

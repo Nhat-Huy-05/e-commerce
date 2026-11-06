@@ -1,4 +1,6 @@
 import { db } from '@/lib/db';
+import { cookies } from 'next/headers';
+import { redirect } from 'next/navigation';
 import { Suspense } from 'react';
 import { CheckoutForm } from './CheckoutForm';
 
@@ -6,7 +8,23 @@ import { CheckoutForm } from './CheckoutForm';
 export const revalidate = 0;
 export const dynamic = 'force-dynamic';
 
-export default async function CheckoutPage() {
+interface CheckoutPageProps {
+  searchParams: Promise<{
+    items?: string;
+  }>;
+}
+
+export default async function CheckoutPage({ searchParams }: CheckoutPageProps) {
+  const cookieStore = await cookies();
+  const userId = cookieStore.get('user_id')?.value;
+  const { items } = await searchParams;
+
+  // If not logged in, must be redirected to the login page, with a return URL included.
+  if (!userId) {
+    const returnUrl = items ? `/checkout?items=${items}` : '/checkout';
+    redirect(`/login?redirect=${encodeURIComponent(returnUrl)}`);
+  }
+
   const products = await db.product.findMany({
     select: {
       id: true,

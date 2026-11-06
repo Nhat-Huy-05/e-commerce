@@ -1,6 +1,7 @@
 'use client';
 
 import { useCart } from '@/lib/store';
+import { useAuth } from '@/lib/auth-store';
 import { ProductWithCategory } from '@/lib/types';
 import { useLanguage } from '@/lib/i18n/store';
 import { formatCurrency } from '@/lib/utils';
@@ -10,6 +11,7 @@ import { useEffect, useState } from 'react';
 
 export default function CartPage() {
   const { items, removeItem, updateQuantity, clearCart } = useCart();
+  const { user } = useAuth();
   const { language, t } = useLanguage();
   const [products, setProducts] = useState<ProductWithCategory[]>([]);
   const [loading, setLoading] = useState(true);
@@ -310,12 +312,23 @@ export default function CartPage() {
                 {language === 'vi' ? 'Vui lòng chọn sản phẩm để thanh toán' : 'Please select products to checkout'}
               </button>
             ) : (
-              <Link
-                href={`/checkout?items=${selectedIds.join(',')}`}
-                className="w-full flex items-center justify-center gap-2 py-3 px-4 rounded-xl bg-indigo-600 hover:bg-indigo-700 text-white font-semibold text-sm shadow-md transition-all cursor-pointer"
-              >
-                {t('cart.proceedToCheckout')} ({selectedDetails.length}) <ArrowRight className="w-4 h-4" />
-              </Link>
+              (() => {
+                const checkoutUrl = `/checkout?items=${selectedIds.join(',')}`;
+                const targetHref = user
+                  ? checkoutUrl
+                  : `/login?redirect=${encodeURIComponent(checkoutUrl)}`;
+                return (
+                  <Link
+                    href={targetHref}
+                    className="w-full flex items-center justify-center gap-2 py-3 px-4 rounded-xl bg-indigo-600 hover:bg-indigo-700 text-white font-semibold text-sm shadow-md transition-all cursor-pointer"
+                  >
+                    {user
+                      ? `${t('cart.proceedToCheckout')} (${selectedDetails.length})`
+                      : `${language === 'vi' ? 'Đăng nhập để thanh toán' : 'Sign in to checkout'} (${selectedDetails.length})`}{' '}
+                    <ArrowRight className="w-4 h-4" />
+                  </Link>
+                );
+              })()
             )}
           </div>
         </div>
