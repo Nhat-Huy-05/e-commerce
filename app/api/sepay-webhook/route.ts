@@ -9,18 +9,26 @@ export async function POST(request: NextRequest) {
     const { content, code, transferType, transferAmount } = data;
 
     // Only handle incoming transfers (money received)
-    if (transferType === 'in') {
+    const isIncoming = !transferType || transferType.toLowerCase() === 'in';
+    if (isIncoming) {
       let matchedOrder = null;
 
       // 1. If SePay already extracted a payment code, look up the order directly
       if (code) {
+        const cleanCode = String(code).trim();
         matchedOrder = await db.order.findFirst({
-          where: { orderNumber: code },
+          where: {
+            OR: [
+              { orderNumber: cleanCode },
+              { orderNumber: cleanCode.toUpperCase() },
+            ],
+          },
         });
       }
 
       // 2. Fallback: search the transfer content for an unpaid order number
       if (!matchedOrder && content) {
+        const cleanContent = String(content).toUpperCase();
         const unpaidOrders = await db.order.findMany({
           where: { paymentStatus: 'unpaid' },
           select: { id: true, orderNumber: true, total: true },
@@ -29,7 +37,7 @@ export async function POST(request: NextRequest) {
         });
 
         matchedOrder = unpaidOrders.find((order) =>
-          content.toUpperCase().includes(order.orderNumber.toUpperCase())
+          cleanContent.includes(order.orderNumber.toUpperCase())
         ) || null;
       }
 

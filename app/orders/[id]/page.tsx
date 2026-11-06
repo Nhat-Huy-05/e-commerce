@@ -4,6 +4,7 @@ import Link from 'next/link';
 import { db } from '@/lib/db';
 import { formatCurrency } from '@/lib/utils';
 import { CheckCircle2, ArrowRight, Package, MapPin, CreditCard } from 'lucide-react';
+import { OrderPaymentSection } from '@/components/order/OrderPaymentSection';
 
 // SSR Strategy: Order details are fetched in real-time for security and privacy
 export const revalidate = 0;
@@ -73,8 +74,19 @@ export default async function OrderDetailPage({ params }: OrderPageProps) {
               <CreditCard className="w-4 h-4" /> Thanh toán
             </div>
             <p className="font-bold text-slate-900 uppercase">{order.paymentMethod}</p>
-            <p className="text-slate-500">Trạng thái: <span className="text-emerald-700 font-bold uppercase">{order.paymentStatus}</span></p>
-            <p className="text-slate-500">Tổng tiền: <span className="text-emerald-600 font-mono font-extrabold">{formatCurrency(order.total)}</span></p>
+            <p className="text-slate-500">
+              Trạng thái:{' '}
+              <span
+                className={`font-bold uppercase ${
+                  order.paymentStatus === 'paid' ? 'text-emerald-700' : 'text-amber-600'
+                }`}
+              >
+                {order.paymentStatus}
+              </span>
+            </p>
+            <p className="text-slate-500">
+              Tổng tiền: <span className="text-emerald-600 font-mono font-extrabold">{formatCurrency(order.total)}</span>
+            </p>
           </div>
 
           <div className="p-4 rounded-2xl bg-slate-50 border border-slate-200 space-y-1">
@@ -85,6 +97,15 @@ export default async function OrderDetailPage({ params }: OrderPageProps) {
             <p className="text-slate-500">Dự kiến giao: 2-3 ngày làm việc</p>
           </div>
         </div>
+
+        {/* SePay VietQR Dynamic Payment & Status Polling Box */}
+        <OrderPaymentSection
+          orderId={order.id}
+          orderNumber={order.orderNumber}
+          total={order.total}
+          initialPaymentStatus={order.paymentStatus}
+          paymentMethod={order.paymentMethod || 'bank_transfer'}
+        />
 
         {/* Ordered Items Table */}
         <div className="text-left space-y-3 pt-4 border-t border-slate-200">
