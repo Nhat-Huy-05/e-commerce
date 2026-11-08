@@ -1,20 +1,21 @@
 'use client';
 
-import React, { useEffect, useState, useCallback } from 'react';
-import { useRouter } from 'next/navigation';
-import { toast } from 'sonner';
 import { formatCurrency } from '@/lib/utils';
 import {
-  CheckCircle2,
-  Copy,
+  AlertCircle,
+  Building2,
   Check,
+  CheckCircle2,
+  Clock,
+  Copy,
+  CreditCard,
   Loader2,
   QrCode,
-  AlertCircle,
   RefreshCw,
-  Building2,
-  CreditCard,
 } from 'lucide-react';
+import { useRouter } from 'next/navigation';
+import { useCallback, useEffect, useState } from 'react';
+import { toast } from 'sonner';
 
 interface BankConfig {
   bankName?: string;
@@ -29,6 +30,87 @@ interface OrderPaymentSectionProps {
   initialPaymentStatus: string;
   paymentMethod: string;
   bankConfig?: BankConfig;
+  formattedDate?: string;
+}
+
+export function OrderStatusHeader({
+  orderNumber,
+  formattedDate,
+  paymentMethod,
+  initialPaymentStatus,
+  orderId,
+}: {
+  orderNumber: string;
+  formattedDate: string;
+  paymentMethod: string;
+  initialPaymentStatus: string;
+  orderId: string;
+}) {
+  const router = useRouter();
+  const [paymentStatus, setPaymentStatus] = useState(initialPaymentStatus);
+
+  useEffect(() => {
+    if (paymentStatus === 'paid' || paymentMethod !== 'bank_transfer') return;
+
+    const interval = setInterval(async () => {
+      try {
+        const res = await fetch(`/api/orders/${orderId}`, { cache: 'no-store' });
+        if (res.ok) {
+          const data = await res.json();
+          if (data.paymentStatus === 'paid') {
+            setPaymentStatus('paid');
+            toast.success('Thanh toán thành công! Hệ thống đã xác nhận đơn hàng.');
+            router.refresh();
+          }
+        }
+      } catch (_) { }
+    }, 2500);
+
+    return () => clearInterval(interval);
+  }, [paymentStatus, paymentMethod, orderId, router]);
+
+  const isPendingBankTransfer =
+    paymentMethod === 'bank_transfer' && paymentStatus !== 'paid';
+
+  if (isPendingBankTransfer) {
+    return (
+      <>
+        <div className="w-16 h-16 mx-auto rounded-full bg-amber-50 text-amber-500 flex items-center justify-center border border-amber-200">
+          <Clock className="w-10 h-10" />
+        </div>
+        <div>
+          <span className="text-xs uppercase font-mono tracking-widest text-amber-700 font-extrabold bg-amber-50 px-3 py-1 rounded-full border border-amber-200">
+            Chờ xác nhận thanh toán
+          </span>
+          <h1 className="text-3xl font-extrabold text-slate-900 mt-3">
+            Mã đơn hàng: {orderNumber}
+          </h1>
+          <p className="text-xs text-slate-500 mt-1">
+            Đơn hàng được tạo vào {formattedDate}. Vui lòng hoàn tất chuyển khoản để xác nhận.
+          </p>
+        </div>
+      </>
+    );
+  }
+
+  return (
+    <>
+      <div className="w-16 h-16 mx-auto rounded-full bg-emerald-50 text-emerald-600 flex items-center justify-center border border-emerald-200">
+        <CheckCircle2 className="w-10 h-10" />
+      </div>
+      <div>
+        <span className="text-xs uppercase font-mono tracking-widest text-emerald-700 font-extrabold bg-emerald-50 px-3 py-1 rounded-full border border-emerald-200">
+          Đặt hàng Thành công!
+        </span>
+        <h1 className="text-3xl font-extrabold text-slate-900 mt-3">
+          Mã đơn hàng: {orderNumber}
+        </h1>
+        <p className="text-xs text-slate-500 mt-1">
+          Cảm ơn bạn đã trải nghiệm mua sắm. Đơn hàng được tạo vào {formattedDate}.
+        </p>
+      </div>
+    </>
+  );
 }
 
 export function OrderPaymentSection({
@@ -52,8 +134,8 @@ export function OrderPaymentSection({
   // SePay dynamic QR URL
   const qrUrl = bankAccount
     ? `https://qr.sepay.vn/img?acc=${bankAccount}&bank=${bankName}&amount=${Math.round(
-        total
-      )}&des=${encodeURIComponent(orderNumber)}`
+      total
+    )}&des=${encodeURIComponent(orderNumber)}`
     : '';
   const handleCopy = (text: string, field: string) => {
     navigator.clipboard.writeText(text);

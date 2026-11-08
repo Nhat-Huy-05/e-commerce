@@ -3,8 +3,8 @@ import { notFound } from 'next/navigation';
 import Link from 'next/link';
 import { db } from '@/lib/db';
 import { formatCurrency } from '@/lib/utils';
-import { CheckCircle2, ArrowRight, Package, MapPin, CreditCard } from 'lucide-react';
-import { OrderPaymentSection } from '@/components/order/OrderPaymentSection';
+import { ArrowRight, Package, MapPin, CreditCard } from 'lucide-react';
+import { OrderPaymentSection, OrderStatusHeader } from '@/components/order/OrderPaymentSection';
 
 // SSR Strategy: Order details are fetched in real-time for security and privacy
 export const revalidate = 0;
@@ -50,21 +50,14 @@ export default async function OrderDetailPage({ params }: OrderPageProps) {
   return (
     <div className="space-y-6 max-w-4xl mx-auto">
       <div className="p-8 rounded-3xl bg-white border border-slate-200 space-y-6 text-center shadow-xl">
-        <div className="w-16 h-16 mx-auto rounded-full bg-emerald-50 text-emerald-600 flex items-center justify-center border border-emerald-200">
-          <CheckCircle2 className="w-10 h-10" />
-        </div>
-
-        <div>
-          <span className="text-xs uppercase font-mono tracking-widest text-emerald-700 font-extrabold bg-emerald-50 px-3 py-1 rounded-full border border-emerald-200">
-            Đặt hàng Thành công!
-          </span>
-          <h1 className="text-3xl font-extrabold text-slate-900 mt-3">
-            Mã đơn hàng: {order.orderNumber}
-          </h1>
-          <p className="text-xs text-slate-500 mt-1">
-            Cảm ơn bạn đã trải nghiệm mua sắm. Đơn hàng được tạo vào {formattedDate}.
-          </p>
-        </div>
+        {/* Dynamic header: shows pending or success based on paymentStatus + paymentMethod */}
+        <OrderStatusHeader
+          orderNumber={order.orderNumber}
+          formattedDate={formattedDate}
+          paymentMethod={order.paymentMethod || 'bank_transfer'}
+          initialPaymentStatus={order.paymentStatus}
+          orderId={order.id}
+        />
 
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4 text-left text-xs pt-4 border-t border-slate-200">
           <div className="p-4 rounded-2xl bg-slate-50 border border-slate-200 space-y-1">
