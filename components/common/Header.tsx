@@ -31,9 +31,7 @@ export function Header() {
     setMounted(true);
   }, []);
 
-  const totalItems = mounted
-    ? cartItems.reduce((sum, item) => sum + item.quantity, 0)
-    : 0;
+  const totalItems = mounted ? cartItems.length : 0;
   const currentUser = mounted ? user : null;
 
   const handleLogout = () => {

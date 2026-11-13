@@ -76,7 +76,7 @@ export function ProductCard({ product }: ProductCardProps) {
         {/* 2-3 images interactive dots indicator */}
         {cardImages.length > 1 && (
           <div
-            className="absolute bottom-2.5 inset-x-0 flex items-center justify-center gap-1.5 z-20"
+            className="absolute bottom-2 inset-x-0 flex items-center justify-center gap-1 sm:gap-1.5 z-20"
             onClick={(e) => {
               e.preventDefault();
               e.stopPropagation();
@@ -95,8 +95,8 @@ export function ProductCard({ product }: ProductCardProps) {
                 }}
                 className={`transition-all duration-200 rounded-full cursor-pointer shadow-xs ${
                   activeIdx === idx
-                    ? 'w-5 h-1.5 bg-indigo-600'
-                    : 'w-1.5 h-1.5 bg-slate-300/80 hover:bg-slate-400'
+                    ? 'w-4 sm:w-5 h-1 sm:h-1.5 bg-indigo-600'
+                    : 'w-1 sm:w-1.5 h-1 sm:h-1.5 bg-slate-300/80 hover:bg-slate-400'
                 }`}
               />
             ))}
@@ -104,9 +104,9 @@ export function ProductCard({ product }: ProductCardProps) {
         )}
 
         {/* Badges: Featured & Discount */}
-        <div className="absolute top-2.5 left-2.5 right-2.5 flex items-center justify-between pointer-events-none z-10">
+        <div className="absolute top-2 left-2 right-2 flex items-center justify-between pointer-events-none z-10">
           {product.isFeatured ? (
-            <span className="inline-flex items-center gap-1 bg-slate-900/85 backdrop-blur-xs text-white font-bold text-[10px] tracking-wide px-2.5 py-0.5 rounded-full shadow-xs">
+            <span className="inline-flex items-center gap-0.5 sm:gap-1 bg-slate-900/85 backdrop-blur-xs text-white font-bold text-[9px] sm:text-[10px] tracking-wide px-1.5 sm:px-2.5 py-0.5 rounded-full shadow-xs">
               ★ {t('common.featured')}
             </span>
           ) : (
@@ -114,7 +114,7 @@ export function ProductCard({ product }: ProductCardProps) {
           )}
 
           {discountPercent ? (
-            <span className="bg-rose-600 text-white font-black text-[11px] px-2 py-0.5 rounded-full shadow-xs tracking-tight">
+            <span className="bg-rose-600 text-white font-black text-[9px] sm:text-[11px] px-1.5 sm:px-2 py-0.5 rounded-full shadow-xs tracking-tight">
               -{discountPercent}%
             </span>
           ) : null}
@@ -122,16 +122,16 @@ export function ProductCard({ product }: ProductCardProps) {
       </Link>
 
       {/* Card Content */}
-      <div className="flex flex-1 flex-col p-4 sm:p-4.5 space-y-2.5">
+      <div className="flex flex-1 flex-col p-3 sm:p-4 space-y-1.5 sm:space-y-2.5">
         {/* Category & Rating */}
-        <div className="flex items-center justify-between text-xs">
-          <span className="text-[11px] font-semibold text-slate-400 uppercase tracking-wider truncate max-w-[60%]">
+        <div className="flex items-center justify-between text-xs gap-1">
+          <span className="text-[10px] sm:text-[11px] font-semibold text-slate-400 uppercase tracking-wider truncate">
             {product.category?.name}
           </span>
-          <div className="flex items-center gap-1 text-amber-500 font-bold shrink-0">
-            <Star className="w-3.5 h-3.5 fill-current" />
+          <div className="flex items-center gap-0.5 sm:gap-1 text-amber-500 font-bold shrink-0 text-[11px] sm:text-xs">
+            <Star className="w-3 h-3 sm:w-3.5 sm:h-3.5 fill-current" />
             <span>{product.rating.toFixed(1)}</span>
-            <span className="text-slate-400 font-normal text-[10px]">
+            <span className="text-slate-400 font-normal text-[9px] sm:text-[10px]">
               ({product.reviewCount})
             </span>
           </div>
@@ -142,25 +142,25 @@ export function ProductCard({ product }: ProductCardProps) {
           href={`/products/${product.slug}`}
           className="block group-hover:text-indigo-600 transition-colors"
         >
-          <h3 className="text-sm font-bold text-slate-900 line-clamp-2 leading-snug min-h-[2.5rem]">
+          <h3 className="text-xs sm:text-sm font-bold text-slate-900 line-clamp-2 leading-snug min-h-[2rem] sm:min-h-[2.5rem]">
             {product.name}
           </h3>
         </Link>
 
         {/* Price & Add to Cart action */}
-        <div className="mt-auto pt-3 flex items-center justify-between gap-2 border-t border-slate-100">
-          <div className="flex flex-col">
+        <div className="mt-auto pt-2.5 sm:pt-3 flex items-center justify-between gap-1.5 sm:gap-2 border-t border-slate-100">
+          <div className="flex flex-col min-w-0">
             {formattedDiscount ? (
               <>
-                <span className="text-base sm:text-lg font-black text-slate-900 font-mono tracking-tight leading-tight">
+                <span className="text-xs sm:text-base md:text-lg font-black text-slate-900 font-mono tracking-tight leading-tight truncate">
                   {formattedDiscount}
                 </span>
-                <span className="text-[11px] text-slate-400 line-through font-mono">
+                <span className="text-[9px] sm:text-[11px] text-slate-400 line-through font-mono truncate">
                   {formattedPrice}
                 </span>
               </>
             ) : (
-              <span className="text-base sm:text-lg font-black text-slate-900 font-mono tracking-tight">
+              <span className="text-xs sm:text-base md:text-lg font-black text-slate-900 font-mono tracking-tight truncate">
                 {formattedPrice}
               </span>
             )}
@@ -169,7 +169,7 @@ export function ProductCard({ product }: ProductCardProps) {
           <AddToCartButton
             productId={product.id}
             variant="primary"
-            className="text-xs px-3 py-1.5 rounded-xl shadow-xs shrink-0"
+            className="text-xs px-2.5 sm:px-3 py-1.5 rounded-lg sm:rounded-xl shadow-xs shrink-0"
           />
         </div>
       </div>

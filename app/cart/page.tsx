@@ -1,9 +1,9 @@
 'use client';
 
-import { useCart } from '@/lib/store';
 import { useAuth } from '@/lib/auth-store';
-import { ProductWithCategory } from '@/lib/types';
 import { useLanguage } from '@/lib/i18n/store';
+import { useCart } from '@/lib/store';
+import { ProductWithCategory } from '@/lib/types';
 import { formatCurrency } from '@/lib/utils';
 import { ArrowRight, Minus, Plus, ShoppingCart, Trash2 } from 'lucide-react';
 import Link from 'next/link';
@@ -28,10 +28,19 @@ export default function CartPage() {
       try {
         const res = await fetch('/api/products');
         const allProds: ProductWithCategory[] = await res.json();
-        const cartProds = allProds.filter((p) =>
-          items.some((i) => i.productId === p.id)
-        );
-        setProducts(cartProds);
+        if (Array.isArray(allProds)) {
+          const prodMap = new Set(allProds.map((p) => p.id));
+          const cartProds = allProds.filter((p) =>
+            items.some((i) => i.productId === p.id)
+          );
+          setProducts(cartProds);
+
+          items.forEach((i) => {
+            if (!prodMap.has(i.productId)) {
+              removeItem(i.productId);
+            }
+          });
+        }
       } catch (err) {
         console.error('Failed to load cart products', err);
       } finally {
@@ -179,11 +188,10 @@ export default function CartPage() {
               {cartDetails.map(({ productId, quantity, product, unitPrice, totalPrice, isSelected }) => (
                 <div
                   key={productId}
-                  className={`flex flex-col sm:flex-row sm:items-center justify-between gap-4 p-4 rounded-2xl bg-white border transition-all ${
-                    isSelected
+                  className={`flex flex-col sm:flex-row sm:items-center justify-between gap-4 p-4 rounded-2xl bg-white border transition-all ${isSelected
                       ? 'border-indigo-200 shadow-sm ring-1 ring-indigo-50'
                       : 'border-slate-200 shadow-xs hover:border-slate-300 opacity-80'
-                  }`}
+                    }`}
                 >
                   <div className="flex items-center gap-3 min-w-0 flex-1">
                     <input

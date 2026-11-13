@@ -37,12 +37,17 @@ export default async function CheckoutPage({ searchParams }: CheckoutPageProps) 
   });
 
   return (
-    <div className="space-y-6">
-      <div className="pb-4 border-b border-slate-800">
-        <h1 className="text-3xl font-extrabold text-slate-900">Thanh toán Đơn hàng</h1>
+    <div className="space-y-6 max-w-7xl mx-auto">
+      <div className="pb-4 border-b border-slate-200">
+        <h1 className="text-2xl sm:text-3xl font-extrabold text-slate-900">
+          Thanh toán Đơn hàng
+        </h1>
+        <p className="text-xs sm:text-sm text-slate-500 mt-1">
+          Kiểm tra danh sách sản phẩm và điền thông tin nhận hàng để hoàn tất thanh toán.
+        </p>
       </div>
 
-      <Suspense fallback={<div className="py-12 text-center text-slate-400">Đang tải biểu mẫu...</div>}>
+      <Suspense fallback={<div className="py-16 text-center text-slate-400">Đang tải biểu mẫu thanh toán...</div>}>
         <CheckoutForm products={products} />
       </Suspense>
     </div>
