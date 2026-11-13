@@ -40,8 +40,8 @@ export default async function HomePage() {
 
   return (
     <div className="space-y-12">
-      {/* Hero Banner */}
-      <HomeHero />
+      {/* Hero Banner*/}
+      <HomeHero products={featuredProducts} />
 
       {/* 4 Core Store Perks / Value Proposition Bar */}
       <HomePerks />
