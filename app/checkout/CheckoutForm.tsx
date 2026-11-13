@@ -309,14 +309,11 @@ export function CheckoutForm({ products }: CheckoutFormProps) {
 
         {/* Khối 1: Thông tin giao hàng */}
         <div className="p-6 rounded-3xl bg-white border border-slate-200 shadow-xs space-y-4">
-          <div className="flex items-center justify-between pb-2 border-b border-slate-100">
+          <div className="pb-2 border-b border-slate-100">
             <h3 className="text-base font-extrabold text-slate-900 flex items-center gap-2">
               <Truck className="w-5 h-5 text-indigo-600" />
               <span>{t('checkout.shippingInfo')}</span>
             </h3>
-            <span className="text-[11px] text-slate-400">
-              (<span className="text-rose-500 font-bold">*</span> {language === 'vi' ? 'Bắt buộc điền' : 'Required'})
-            </span>
           </div>
 
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 text-xs">
@@ -346,7 +343,7 @@ export function CheckoutForm({ products }: CheckoutFormProps) {
                 name="shippingPhone"
                 value={formData.shippingPhone}
                 onChange={handleChange}
-                placeholder="0912 345 678"
+                placeholder="0987 654 321"
                 required
                 className="w-full bg-slate-50 border border-slate-300 rounded-xl p-2.5 text-slate-900 placeholder:text-slate-400 focus:bg-white focus:outline-none focus:border-indigo-600 transition-colors"
               />
@@ -394,7 +391,7 @@ export function CheckoutForm({ products }: CheckoutFormProps) {
                 name="shippingAddress"
                 value={formData.shippingAddress}
                 onChange={handleChange}
-                placeholder="Số 123 đường Lê Lợi, Phường Phú Nhuận..."
+                placeholder="Số 123 Hà Nội"
                 required
                 className="w-full bg-slate-50 border border-slate-300 rounded-xl p-2.5 text-slate-900 placeholder:text-slate-400 focus:bg-white focus:outline-none focus:border-indigo-600 transition-colors"
               />
@@ -403,17 +400,14 @@ export function CheckoutForm({ products }: CheckoutFormProps) {
             {/* Mã bưu điện (KHÔNG BẮT BUỘC) */}
             <div>
               <label className="block text-slate-700 font-semibold mb-1">
-                {language === 'vi' ? 'Mã bưu điện (Zip Code)' : 'Zip / Postal Code'}{' '}
-                <span className="text-slate-400 font-normal text-[11px]">
-                  ({language === 'vi' ? 'Không bắt buộc' : 'Optional'})
-                </span>
+                {language === 'vi' ? 'Mã bưu điện (Zip Code)' : 'Zip / Postal Code'}
               </label>
               <input
                 type="text"
                 name="shippingZipCode"
                 value={formData.shippingZipCode}
                 onChange={handleChange}
-                placeholder="VD: 700000 (tùy chọn)"
+                placeholder="VD: 700000"
                 className="w-full bg-slate-50 border border-slate-300 rounded-xl p-2.5 text-slate-900 placeholder:text-slate-400 focus:bg-white focus:outline-none focus:border-indigo-600 transition-colors"
               />
             </div>
