@@ -50,6 +50,14 @@ export function OrderStatusHeader({
   const [paymentStatus, setPaymentStatus] = useState(initialPaymentStatus);
 
   useEffect(() => {
+    if (initialPaymentStatus === 'paid') {
+      try {
+        localStorage.removeItem('pending_order_recovery');
+      } catch (_) {}
+    }
+  }, [initialPaymentStatus]);
+
+  useEffect(() => {
     if (paymentStatus === 'paid' || paymentMethod !== 'bank_transfer') return;
 
     const interval = setInterval(async () => {
@@ -59,6 +67,9 @@ export function OrderStatusHeader({
           const data = await res.json();
           if (data.paymentStatus === 'paid') {
             setPaymentStatus('paid');
+            try {
+              localStorage.removeItem('pending_order_recovery');
+            } catch (_) {}
             toast.success('Thanh toán thành công! Hệ thống đã xác nhận đơn hàng.');
             router.refresh();
           }

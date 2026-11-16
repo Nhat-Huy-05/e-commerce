@@ -50,7 +50,7 @@ export default function CartPage() {
     fetchCartProducts();
   }, [items]);
 
-  // Tự động tích chọn tất cả sản phẩm khi vừa vào giỏ hàng
+  // Automatically select all items upon entering the cart
   useEffect(() => {
     if (!hasInitialized && items.length > 0) {
       setSelectedIds(items.map((i) => i.productId));
@@ -96,7 +96,7 @@ export default function CartPage() {
   const selectedDetails = cartDetails.filter((item) => item.isSelected);
   const selectedCount = selectedDetails.reduce((sum, item) => sum + item.quantity, 0);
   const subtotal = selectedDetails.reduce((sum, item) => sum + item.totalPrice, 0);
-  const shippingFee = 0; // Miễn phí vận chuyển toàn quốc cho đơn hàng
+  const shippingFee = 0; // Free nationwide shipping for all orders
   const grandTotal = subtotal + shippingFee;
 
   return (

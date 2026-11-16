@@ -208,7 +208,7 @@ export function HomeHero({ products = [] }: HomeHeroProps) {
                           </h2>
                         </Link>
 
-                        {/* Đánh giá & Cam kết */}
+                        {/* Ratings & Highlights */}
                         <div className="flex items-center gap-2 text-xs">
                           <div className="flex items-center gap-1 text-amber-400 font-bold bg-white/10 backdrop-blur-xs px-2 py-0.5 rounded-lg border border-white/10">
                             <Star className="w-3 h-3 fill-current" />

@@ -61,8 +61,28 @@ export function CheckoutForm({ products }: CheckoutFormProps) {
 
   const [hasHydrated, setHasHydrated] = useState(false);
 
+  // Hydrate draft shipping details from localStorage on initialization
   useEffect(() => {
     setHasHydrated(true);
+    try {
+      const savedDraft = localStorage.getItem('checkout_shipping_draft');
+      if (savedDraft) {
+        const parsed = JSON.parse(savedDraft);
+        if (parsed && typeof parsed === 'object') {
+          setFormData((prev) => ({
+            ...prev,
+            shippingName: parsed.shippingName || prev.shippingName,
+            shippingEmail: parsed.shippingEmail || prev.shippingEmail,
+            shippingPhone: parsed.shippingPhone || prev.shippingPhone,
+            shippingAddress: parsed.shippingAddress || prev.shippingAddress,
+            shippingCity: parsed.shippingCity || prev.shippingCity,
+            shippingZipCode: parsed.shippingZipCode || prev.shippingZipCode,
+            paymentMethod: parsed.paymentMethod || prev.paymentMethod,
+            notes: parsed.notes || prev.notes,
+          }));
+        }
+      }
+    } catch (_) {}
   }, []);
 
   // Client-side authentication guard: redirect to Login if not logged in
@@ -93,13 +113,17 @@ export function CheckoutForm({ products }: CheckoutFormProps) {
 
   const totalQuantity = cartItemsDetailed.reduce((sum, item) => sum + item.quantity, 0);
   const subtotal = cartItemsDetailed.reduce((acc, item) => acc + item.totalPrice, 0);
-  const shippingFee = 0; // Miễn phí vận chuyển toàn quốc cho đơn hàng
+  const shippingFee = 0; // Free nationwide shipping for all orders
   const grandTotal = subtotal + shippingFee;
 
   const handleChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>
   ) => {
-    setFormData({ ...formData, [e.target.name]: e.target.value });
+    const updated = { ...formData, [e.target.name]: e.target.value };
+    setFormData(updated);
+    try {
+      localStorage.setItem('checkout_shipping_draft', JSON.stringify(updated));
+    } catch (_) {}
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -119,7 +143,7 @@ export function CheckoutForm({ products }: CheckoutFormProps) {
       return;
     }
 
-    // Validation các trường bắt buộc (trừ mã bưu điện và ghi chú)
+    // Validate required fields (all except zip code and order notes)
     if (!formData.shippingName.trim()) {
       setErrorMsg(language === 'vi' ? 'Vui lòng điền họ và tên người nhận.' : 'Please enter recipient name.');
       return;
@@ -171,7 +195,23 @@ export function CheckoutForm({ products }: CheckoutFormProps) {
         throw new Error(data.error || (language === 'vi' ? 'Đặt hàng thất bại' : 'Failed to place order'));
       }
 
-      // Nếu chỉ thanh toán một số sản phẩm đã chọn thì chỉ xóa các sản phẩm đó
+      // Remove draft shipping details upon successful order creation
+      try {
+        localStorage.removeItem('checkout_shipping_draft');
+        if (formData.paymentMethod === 'bank_transfer') {
+          localStorage.setItem(
+            'pending_order_recovery',
+            JSON.stringify({
+              id: data.id,
+              orderNumber: data.orderNumber,
+              total: grandTotal,
+              createdAt: new Date().toISOString(),
+            })
+          );
+        }
+      } catch (_) {}
+
+      // If checking out only selected items, remove only those items from cart
       if (selectedIdList && selectedIdList.length > 0 && selectedIdList.length < items.length) {
         selectedIdList.forEach((id: string) => removeItem(id));
       } else {
