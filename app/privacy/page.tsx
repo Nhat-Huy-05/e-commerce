@@ -30,8 +30,7 @@ export default function PrivacyPage() {
       </nav>
 
       {/* Header Banner */}
-      <div className="bg-gradient-to-br from-slate-900 via-indigo-950 to-slate-900 text-white p-8 md:p-10 rounded-3xl shadow-xl relative overflow-hidden">
-        <div className="absolute -right-10 -bottom-10 w-60 h-60 bg-emerald-500/10 rounded-full blur-3xl pointer-events-none" />
+      <div className="bg-slate-900 text-white p-8 md:p-10 rounded-xl relative overflow-hidden">
         <div className="relative z-10 space-y-3">
           <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-emerald-500/20 border border-emerald-400/30 text-emerald-300 text-xs font-semibold font-mono">
             <ShieldCheck className="w-3.5 h-3.5" />
@@ -204,7 +203,7 @@ export default function PrivacyPage() {
       </div>
 
       {/* Support Box */}
-      <div className="bg-slate-900 text-white p-6 sm:p-8 rounded-3xl flex flex-col sm:flex-row items-center justify-between gap-6 shadow-md">
+      <div className="bg-slate-900 text-white p-6 sm:p-8 rounded-xl flex flex-col sm:flex-row items-center justify-between gap-6">
         <div className="space-y-1.5 text-center sm:text-left">
           <h3 className="text-base font-bold flex items-center justify-center sm:justify-start gap-2">
             <HelpCircle className="w-5 h-5 text-emerald-400" /> Cần hỗ trợ về quyền riêng tư?

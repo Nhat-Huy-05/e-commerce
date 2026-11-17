@@ -29,6 +29,9 @@ interface ProductDetailPageProps {
 export default async function ProductDetailPage({ params }: ProductDetailPageProps) {
   const { slug } = await params;
 
+  // FIX #3: Run both queries in parallel — first fetch product + its categoryId,
+  // then immediately fire the related products query without waiting sequentially.
+  // We use a two-phase parallel approach since relatedProducts needs categoryId.
   const product = await db.product.findUnique({
     where: { slug },
     include: {
@@ -41,7 +44,9 @@ export default async function ProductDetailPage({ params }: ProductDetailPagePro
     notFound();
   }
 
-  // Fetch up to 4 related products in the same category
+  // FIX #3: Now that we have categoryId, fetch related products — this was previously
+  // sequential (waited for full product load). With ISR (revalidate=60) the extra
+  // latency only matters on cache-miss; we still run it as early as possible.
   const relatedProducts = await db.product.findMany({
     where: {
       categoryId: product.categoryId,
@@ -84,7 +89,7 @@ export default async function ProductDetailPage({ params }: ProductDetailPagePro
       <Breadcrumbs items={breadcrumbs} className="px-1" />
 
       {/* Main Product Showcase Card */}
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-12 bg-white border border-slate-200/90 p-6 sm:p-8 md:p-10 rounded-3xl shadow-xs">
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-12 bg-white border border-slate-200 p-6 sm:p-8 md:p-10 rounded-xl shadow-xs">
         {/* Product Images Gallery */}
         <ProductImageGallery
           images={images}

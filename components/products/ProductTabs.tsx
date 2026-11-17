@@ -64,7 +64,7 @@ export function ProductTabs({ product }: ProductTabsProps) {
   ];
 
   return (
-    <div className="bg-white border border-slate-200/90 rounded-3xl p-6 sm:p-8 shadow-xs">
+    <div className="bg-white border border-slate-200 rounded-xl p-6 sm:p-8 shadow-xs">
       {/* Tab Buttons */}
       <div className="flex items-center gap-2 border-b border-slate-200 pb-4 overflow-x-auto">
         {tabs.map((tab) => {

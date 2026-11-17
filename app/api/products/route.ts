@@ -1,7 +1,7 @@
-import { NextRequest, NextResponse } from 'next/server';
 import { db } from '@/lib/db';
 import { CreateProductSchema } from '@/lib/validation';
 import { revalidatePath } from 'next/cache';
+import { NextRequest, NextResponse } from 'next/server';
 
 export async function GET(request: NextRequest) {
   try {
@@ -9,6 +9,7 @@ export async function GET(request: NextRequest) {
     const category = searchParams.get('category');
     const sort = searchParams.get('sort');
     const featured = searchParams.get('featured') === 'true';
+    const idsParam = searchParams.get('ids');
 
     let orderBy: any = { createdAt: 'desc' };
     if (sort === 'price-asc') orderBy = { price: 'asc' };
@@ -16,8 +17,13 @@ export async function GET(request: NextRequest) {
     if (sort === 'rating') orderBy = { rating: 'desc' };
 
     const where: any = {};
-    if (category) where.category = { slug: category };
-    if (featured) where.isFeatured = true;
+    if (idsParam) {
+      const ids = idsParam.split(',').filter(Boolean);
+      where.id = { in: ids };
+    } else {
+      if (category) where.category = { slug: category };
+      if (featured) where.isFeatured = true;
+    }
 
     const products = await db.product.findMany({
       where,
@@ -52,9 +58,8 @@ export async function POST(request: NextRequest) {
       },
     });
 
-    // Revalidate relevant static pages (ISR / SSG)
     revalidatePath('/');
-    revalidatePath('/products');
+    revalidatePath('/products', 'layout'); // clears unstable_cache tagged 'products' tree
     revalidatePath(`/products/${product.slug}`);
 
     return NextResponse.json(product, { status: 201 });

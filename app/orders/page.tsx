@@ -37,7 +37,7 @@ export default async function OrdersLookupPage({ searchParams }: OrdersPageProps
   return (
     <div className="max-w-4xl mx-auto py-8 px-4 space-y-8">
       {/* Header Banner */}
-      <div className="rounded-3xl bg-linear-to-r from-indigo-900 via-indigo-800 to-slate-900 p-8 sm:p-10 text-white shadow-xl space-y-4">
+      <div className="rounded-xl bg-indigo-900 p-8 sm:p-10 text-white shadow-xs space-y-4">
         <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full text-xs font-semibold bg-indigo-500/30 text-indigo-200 border border-indigo-400/30">
           <PackageSearch className="w-4 h-4" /> Tra Cứu Đơn Hàng Trực Tuyến
         </div>
@@ -164,8 +164,8 @@ export default async function OrdersLookupPage({ searchParams }: OrdersPageProps
 
       {/* Helpful Info Cards */}
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 text-xs">
-        <div className="p-5 rounded-2xl bg-white border border-slate-200 shadow-xs flex items-start gap-3.5">
-          <div className="w-9 h-9 rounded-xl bg-emerald-50 text-emerald-600 flex items-center justify-center shrink-0">
+        <div className="p-5 rounded-lg bg-white border border-slate-200 shadow-xs flex items-start gap-3.5">
+          <div className="w-9 h-9 rounded-lg bg-emerald-50 text-emerald-600 flex items-center justify-center shrink-0">
             <ShieldCheck className="w-5 h-5" />
           </div>
           <div className="space-y-1">
@@ -176,8 +176,8 @@ export default async function OrdersLookupPage({ searchParams }: OrdersPageProps
           </div>
         </div>
 
-        <div className="p-5 rounded-2xl bg-white border border-slate-200 shadow-xs flex items-start gap-3.5">
-          <div className="w-9 h-9 rounded-xl bg-indigo-50 text-indigo-600 flex items-center justify-center shrink-0">
+        <div className="p-5 rounded-lg bg-white border border-slate-200 shadow-xs flex items-start gap-3.5">
+          <div className="w-9 h-9 rounded-lg bg-indigo-50 text-indigo-600 flex items-center justify-center shrink-0">
             <Clock className="w-5 h-5" />
           </div>
           <div className="space-y-1">

@@ -171,7 +171,7 @@ export function StoreListClient() {
           {filteredStores.map((store) => (
             <div
               key={store.id}
-              className={`bg-white rounded-3xl border transition-all duration-200 p-6 sm:p-7 flex flex-col justify-between shadow-sm hover:shadow-md ${
+              className={`bg-white rounded-xl border transition-all duration-200 p-6 sm:p-7 flex flex-col justify-between shadow-sm hover:shadow-md ${
                 store.isHeadquarter
                   ? 'border-indigo-300 ring-2 ring-indigo-500/10'
                   : 'border-slate-200'

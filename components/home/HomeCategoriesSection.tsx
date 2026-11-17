@@ -38,19 +38,19 @@ export function HomeCategoriesSection({ categories }: HomeCategoriesSectionProps
           <Link
             key={cat.id}
             href={`/products?category=${cat.slug}`}
-            className="group flex flex-col p-4 rounded-2xl bg-white border border-slate-200 hover:border-indigo-400 hover:shadow-md transition-all text-center space-y-2"
+            className="group flex flex-col p-3 sm:p-4 rounded-xl bg-white border border-slate-200 hover:border-slate-300 hover:shadow-xs transition-all text-center space-y-1.5"
           >
-            <div className="w-12 h-12 mx-auto rounded-full overflow-hidden bg-slate-100 relative border border-slate-200">
+            <div className="w-12 h-12 mx-auto rounded-lg overflow-hidden bg-slate-50 relative border border-slate-200 flex items-center justify-center p-1">
               <img
                 src={cat.image || 'https://images.unsplash.com/photo-1505740420928-5e560c06d30e?w=800&q=80'}
                 alt={cat.name}
-                className="w-full h-full object-cover group-hover:scale-110 transition-transform"
+                className="w-full h-full object-contain group-hover:scale-105 transition-transform"
               />
             </div>
-            <h4 className="text-xs font-bold text-slate-900 group-hover:text-indigo-600 line-clamp-2 min-h-[32px] flex items-center justify-center">
+            <h4 className="text-xs font-bold text-slate-900 group-hover:text-indigo-600 line-clamp-1">
               {cat.name}
             </h4>
-            <span className="text-[12px] text-slate-500 font-mono font-semibold">
+            <span className="text-[11px] text-slate-400 font-mono">
               {cat._count.products} {language === 'vi' ? 'sản phẩm' : 'items'}
             </span>
           </Link>

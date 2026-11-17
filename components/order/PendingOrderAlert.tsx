@@ -75,12 +75,12 @@ export function PendingOrderAlert() {
   };
 
   return (
-    <div className="bg-gradient-to-r from-amber-500 via-amber-600 to-orange-600 text-white shadow-sm border-b border-amber-600/30">
+    <div className="bg-amber-500 text-slate-950 shadow-xs border-b border-amber-600/30">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-2.5 flex flex-wrap items-center justify-between gap-3 text-xs sm:text-sm">
         <div className="flex items-center gap-2.5 min-w-0">
           <span className="relative flex h-2.5 w-2.5 shrink-0">
-            <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-white opacity-75"></span>
-            <span className="relative inline-flex rounded-full h-2.5 w-2.5 bg-white"></span>
+            <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-slate-900 opacity-75"></span>
+            <span className="relative inline-flex rounded-full h-2.5 w-2.5 bg-slate-900"></span>
           </span>
           <span className="font-semibold truncate">
             Bạn có đơn hàng <span className="font-mono font-bold underline">#{pendingOrder.orderNumber}</span> ({formatCurrency(pendingOrder.total)}) đang chờ quét mã VietQR SePay!
@@ -90,16 +90,16 @@ export function PendingOrderAlert() {
         <div className="flex items-center gap-2 shrink-0">
           <Link
             href={`/orders/${pendingOrder.id}`}
-            className="inline-flex items-center gap-1.5 px-3 py-1 rounded-lg bg-white text-amber-900 font-bold text-xs shadow-xs hover:bg-amber-50 transition-colors"
+            className="inline-flex items-center gap-1.5 px-3 py-1 rounded-md bg-slate-900 text-white font-bold text-xs shadow-xs hover:bg-black transition-colors"
           >
-            <QrCode className="w-3.5 h-3.5 text-amber-700" />
+            <QrCode className="w-3.5 h-3.5 text-amber-400" />
             <span>Quét mã thanh toán ngay</span>
             <ArrowRight className="w-3.5 h-3.5" />
           </Link>
           <button
             type="button"
             onClick={handleDismiss}
-            className="p-1 rounded-lg text-white/80 hover:text-white hover:bg-black/10 transition-colors cursor-pointer"
+            className="p-1 rounded text-slate-800 hover:text-black hover:bg-black/10 transition-colors cursor-pointer"
             title="Đóng thông báo"
           >
             <X className="w-4 h-4" />

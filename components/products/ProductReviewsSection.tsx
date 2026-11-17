@@ -21,7 +21,7 @@ export function ProductReviewsSection({ reviews }: ProductReviewsSectionProps) {
   return (
     <div
       id="product-reviews"
-      className="bg-white border border-slate-200/90 p-6 sm:p-8 rounded-3xl space-y-6 shadow-xs scroll-mt-24"
+      className="bg-white border border-slate-200 p-6 sm:p-8 rounded-xl space-y-6 shadow-xs scroll-mt-24"
     >
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-4 border-b border-slate-200">
         <div>

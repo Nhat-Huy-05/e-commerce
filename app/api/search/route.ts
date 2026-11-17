@@ -1,16 +1,10 @@
-import { NextRequest, NextResponse } from 'next/server';
 import { db } from '@/lib/db';
+import { unstable_cache } from 'next/cache';
+import { NextRequest, NextResponse } from 'next/server';
 
-export async function GET(request: NextRequest) {
-  try {
-    const { searchParams } = new URL(request.url);
-    const query = searchParams.get('q') || '';
-
-    if (!query.trim()) {
-      return NextResponse.json([]);
-    }
-
-    const products = await db.product.findMany({
+const searchProducts = unstable_cache(
+  async (query: string) => {
+    return db.product.findMany({
       where: {
         OR: [
           { name: { contains: query } },
@@ -22,8 +16,27 @@ export async function GET(request: NextRequest) {
       },
       take: 20,
     });
+  },
+  ['search-products'],
+  { revalidate: 60, tags: ['products'] }
+);
 
-    return NextResponse.json(products);
+export async function GET(request: NextRequest) {
+  try {
+    const { searchParams } = new URL(request.url);
+    const query = (searchParams.get('q') || '').trim();
+
+    if (!query) {
+      return NextResponse.json([]);
+    }
+
+    const products = await searchProducts(query);
+
+    return NextResponse.json(products, {
+      headers: {
+        'Cache-Control': 's-maxage=60, stale-while-revalidate=120',
+      },
+    });
   } catch (error) {
     console.error('Search API error:', error);
     return NextResponse.json(

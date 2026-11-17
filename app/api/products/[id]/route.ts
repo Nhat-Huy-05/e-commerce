@@ -57,7 +57,7 @@ export async function PUT(
     });
 
     revalidatePath('/');
-    revalidatePath('/products');
+    revalidatePath('/products', 'layout');
     revalidatePath(`/products/${updatedProduct.slug}`);
 
     return NextResponse.json(updatedProduct);
@@ -80,7 +80,7 @@ export async function DELETE(
     });
 
     revalidatePath('/');
-    revalidatePath('/products');
+    revalidatePath('/products', 'layout');
     revalidatePath(`/products/${product.slug}`);
 
     return NextResponse.json({ message: 'Product deleted successfully', product });
