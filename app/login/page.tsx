@@ -233,7 +233,7 @@ function LoginForm() {
 
   return (
     <div className="max-w-md mx-auto space-y-6 py-4">
-      <div className="p-8 rounded-3xl bg-white border border-slate-200 space-y-6 shadow-xl relative">
+      <div className="p-8 rounded-xl bg-white border border-slate-200 space-y-6 shadow-xs relative">
         <div className="text-center space-y-2">
           <div className="w-12 h-12 mx-auto rounded-2xl bg-indigo-50 text-indigo-600 flex items-center justify-center border border-indigo-200 shadow-xs">
             <LogIn className="w-6 h-6" />
@@ -332,7 +332,7 @@ function LoginForm() {
       {/* Forgot Password Modal */}
       {showForgotModal && (
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/50 backdrop-blur-sm animate-fadeIn">
-          <div className="w-full max-w-md bg-white border border-slate-200 rounded-3xl p-6 shadow-2xl space-y-5 relative text-xs text-slate-900">
+          <div className="w-full max-w-md bg-white border border-slate-200 rounded-xl p-6 shadow-xl space-y-5 relative text-xs text-slate-900">
             {/* Modal Header */}
             <div className="flex items-center justify-between border-b border-slate-100 pb-3">
               <div className="flex items-center gap-2">

@@ -49,7 +49,7 @@ export default async function OrderDetailPage({ params }: OrderPageProps) {
 
   return (
     <div className="space-y-6 max-w-4xl mx-auto">
-      <div className="p-8 rounded-3xl bg-white border border-slate-200 space-y-6 text-center shadow-xl">
+      <div className="p-8 rounded-xl bg-white border border-slate-200 space-y-6 text-center shadow-xs">
         {/* Dynamic header: shows pending or success based on paymentStatus + paymentMethod */}
         <OrderStatusHeader
           orderNumber={order.orderNumber}
@@ -60,7 +60,7 @@ export default async function OrderDetailPage({ params }: OrderPageProps) {
         />
 
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4 text-left text-xs pt-4 border-t border-slate-200">
-          <div className="p-4 rounded-2xl bg-slate-50 border border-slate-200 space-y-1">
+          <div className="p-4 rounded-lg bg-slate-50 border border-slate-200 space-y-1">
             <div className="flex items-center gap-1.5 text-indigo-600 font-bold mb-1">
               <MapPin className="w-4 h-4" /> Địa chỉ giao hàng
             </div>
@@ -69,7 +69,7 @@ export default async function OrderDetailPage({ params }: OrderPageProps) {
             <p className="text-slate-500">{order.shippingAddress}, {order.shippingCity}</p>
           </div>
 
-          <div className="p-4 rounded-2xl bg-slate-50 border border-slate-200 space-y-1">
+          <div className="p-4 rounded-lg bg-slate-50 border border-slate-200 space-y-1">
             <div className="flex items-center gap-1.5 text-purple-600 font-bold mb-1">
               <CreditCard className="w-4 h-4" /> Thanh toán
             </div>
@@ -89,7 +89,7 @@ export default async function OrderDetailPage({ params }: OrderPageProps) {
             </p>
           </div>
 
-          <div className="p-4 rounded-2xl bg-slate-50 border border-slate-200 space-y-1">
+          <div className="p-4 rounded-lg bg-slate-50 border border-slate-200 space-y-1">
             <div className="flex items-center gap-1.5 text-amber-600 font-bold mb-1">
               <Package className="w-4 h-4" /> Trạng thái vận chuyển
             </div>

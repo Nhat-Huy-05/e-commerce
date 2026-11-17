@@ -27,7 +27,7 @@ export function AddToCartButton({
     e.preventDefault();
     e.stopPropagation();
 
-    // Cho phép thêm vào giỏ mà không bắt buộc phải đăng nhập
+    // Allow guest users to add items to cart without mandatory login
     addItem(productId, 1);
     setAdded(true);
     setTimeout(() => setAdded(false), 2000);

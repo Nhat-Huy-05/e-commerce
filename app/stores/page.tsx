@@ -33,8 +33,7 @@ export default function StoresPage() {
       </nav>
 
       {/* Header Banner */}
-      <div className="bg-gradient-to-br from-indigo-900 via-slate-900 to-indigo-950 text-white p-8 md:p-10 rounded-3xl shadow-xl relative overflow-hidden">
-        <div className="absolute -right-10 -bottom-10 w-72 h-72 bg-indigo-500/15 rounded-full blur-3xl pointer-events-none" />
+      <div className="bg-indigo-900 text-white p-8 md:p-10 rounded-xl relative overflow-hidden">
         <div className="relative z-10 space-y-3">
           <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-indigo-500/20 border border-indigo-400/30 text-indigo-300 text-xs font-semibold font-mono">
             <StoreIcon className="w-3.5 h-3.5" />
@@ -77,7 +76,7 @@ export default function StoresPage() {
       <StoreListClient />
 
       {/* In-store Special Perks */}
-      <div className="bg-white p-6 sm:p-8 rounded-3xl border border-slate-200 shadow-sm space-y-4">
+      <div className="bg-white p-6 sm:p-8 rounded-xl border border-slate-200 shadow-xs space-y-4">
         <div className="flex items-center gap-2.5">
           <Sparkles className="w-5 h-5 text-indigo-600" />
           <h2 className="text-base sm:text-lg font-bold text-slate-900">
@@ -107,7 +106,7 @@ export default function StoresPage() {
       </div>
 
       {/* Support Box */}
-      <div className="bg-slate-900 text-white p-6 sm:p-8 rounded-3xl flex flex-col sm:flex-row items-center justify-between gap-6 shadow-md">
+      <div className="bg-slate-900 text-white p-6 sm:p-8 rounded-xl flex flex-col sm:flex-row items-center justify-between gap-6">
         <div className="space-y-1.5 text-center sm:text-left">
           <h3 className="text-base font-bold flex items-center justify-center sm:justify-start gap-2">
             <Headphones className="w-5 h-5 text-indigo-400" /> Bạn không tiện ghé cửa hàng?

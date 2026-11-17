@@ -31,25 +31,25 @@ export function HomePerks() {
   ];
 
   return (
-    <section className="bg-white rounded-2xl border border-slate-200 shadow-xs py-5 px-6 sm:px-8">
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 lg:gap-8 divide-y sm:divide-y-0 sm:divide-x divide-slate-100">
+    <section className="bg-white rounded-xl border border-slate-200 shadow-2xs py-4 px-5 sm:px-6">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 lg:gap-6 divide-y sm:divide-y-0 sm:divide-x divide-slate-100">
         {perks.map((item, index) => {
           const Icon = item.icon;
           return (
             <div
               key={index}
-              className={`flex items-start gap-4 ${
-                index > 0 ? 'pt-5 sm:pt-0 sm:pl-6 lg:pl-8' : ''
+              className={`flex items-center gap-3.5 ${
+                index > 0 ? 'pt-4 sm:pt-0 sm:pl-4 lg:pl-6' : ''
               }`}
             >
-              <div className="w-12 h-12 rounded-xl bg-indigo-50 flex items-center justify-center shrink-0 border border-indigo-100">
-                <Icon className="w-6 h-6 text-indigo-600" />
+              <div className="w-10 h-10 rounded-lg bg-slate-100 flex items-center justify-center shrink-0 border border-slate-200 text-slate-800">
+                <Icon className="w-5 h-5 text-indigo-600" />
               </div>
-              <div className="min-w-0 pt-0.5">
-                <h4 className="text-sm font-bold text-slate-900 leading-snug">
+              <div className="min-w-0">
+                <h4 className="text-xs sm:text-sm font-bold text-slate-900 leading-snug">
                   {item.title}
                 </h4>
-                <p className="text-xs text-slate-500 mt-1 leading-relaxed">
+                <p className="text-[11px] sm:text-xs text-slate-500 mt-0.5 leading-relaxed line-clamp-1">
                   {item.desc}
                 </p>
               </div>

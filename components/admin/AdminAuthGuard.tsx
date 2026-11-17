@@ -23,7 +23,7 @@ export function AdminAuthGuard({ children }: { children: React.ReactNode }) {
 
   if (!user || user.role !== 'admin') {
     return (
-      <div className="max-w-xl mx-auto py-12 text-center space-y-6 bg-slate-900/90 border border-slate-800 p-8 rounded-3xl shadow-2xl">
+      <div className="max-w-xl mx-auto py-12 text-center space-y-6 bg-slate-900/90 border border-slate-800 p-8 rounded-xl shadow-2xl">
         <div className="w-16 h-16 mx-auto rounded-full bg-red-500/10 text-red-400 flex items-center justify-center border border-red-500/20">
           <ShieldAlert className="w-8 h-8" />
         </div>

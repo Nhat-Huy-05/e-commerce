@@ -156,7 +156,7 @@ function AdminPanel() {
   return (
     <div className="space-y-6">
       {/* KPI Grid */}
-      <div className="p-6 rounded-3xl bg-white border border-slate-200 shadow-xs space-y-4">
+      <div className="p-6 rounded-xl bg-white border border-slate-200 shadow-xs space-y-4">
         <h2 className="text-lg font-extrabold text-slate-900 flex items-center gap-2">
           <BarChart2 className="w-5 h-5 text-purple-600" />
           Tổng quan hệ thống
@@ -204,7 +204,7 @@ function AdminPanel() {
       </div>
 
       {/* Recent 5 orders */}
-      <div className="p-6 rounded-3xl bg-white border border-slate-200 shadow-xs space-y-4">
+      <div className="p-6 rounded-xl bg-white border border-slate-200 shadow-xs space-y-4">
         <div className="flex items-center justify-between">
           <h2 className="text-lg font-extrabold text-slate-900 flex items-center gap-2">
             <CalendarDays className="w-5 h-5 text-purple-600" />
@@ -354,7 +354,7 @@ function CustomerOrders({ userId }: { userId: string }) {
   }, [userId]);
 
   return (
-    <div className="p-6 rounded-3xl bg-white border border-slate-200 shadow-xs space-y-4">
+    <div className="p-6 rounded-xl bg-white border border-slate-200 shadow-xs space-y-4">
       <h2 className="text-lg font-extrabold text-slate-900 flex items-center gap-2">
         <Package className="w-5 h-5 text-indigo-600" />
         {language === 'vi' ? 'Lịch sử Đơn hàng đã mua' : 'Order History'}
@@ -449,7 +449,7 @@ export default function ProfilePage() {
     <div className="space-y-6 max-w-4xl mx-auto">
       {/* ── Header Card ── */}
       <div
-        className={`p-6 rounded-3xl bg-white border shadow-xl flex flex-col sm:flex-row items-center justify-between gap-4 ${isAdmin ? 'border-purple-200 ring-1 ring-purple-100' : 'border-slate-200'
+        className={`p-6 rounded-xl bg-white border shadow-xl flex flex-col sm:flex-row items-center justify-between gap-4 ${isAdmin ? 'border-purple-200 ring-1 ring-purple-100' : 'border-slate-200'
           }`}
       >
         <div className="flex items-center gap-4 text-center sm:text-left">

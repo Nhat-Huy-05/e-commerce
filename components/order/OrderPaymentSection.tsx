@@ -14,7 +14,7 @@ import {
   RefreshCw,
 } from 'lucide-react';
 import { useRouter } from 'next/navigation';
-import { useCallback, useEffect, useState } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 import { toast } from 'sonner';
 
 interface BankConfig {
@@ -38,7 +38,7 @@ export function OrderStatusHeader({
   formattedDate,
   paymentMethod,
   initialPaymentStatus,
-  orderId,
+
 }: {
   orderNumber: string;
   formattedDate: string;
@@ -46,28 +46,16 @@ export function OrderStatusHeader({
   initialPaymentStatus: string;
   orderId: string;
 }) {
-  const router = useRouter();
   const [paymentStatus, setPaymentStatus] = useState(initialPaymentStatus);
 
   useEffect(() => {
-    if (paymentStatus === 'paid' || paymentMethod !== 'bank_transfer') return;
-
-    const interval = setInterval(async () => {
+    setPaymentStatus(initialPaymentStatus);
+    if (initialPaymentStatus === 'paid') {
       try {
-        const res = await fetch(`/api/orders/${orderId}`, { cache: 'no-store' });
-        if (res.ok) {
-          const data = await res.json();
-          if (data.paymentStatus === 'paid') {
-            setPaymentStatus('paid');
-            toast.success('Thanh toán thành công! Hệ thống đã xác nhận đơn hàng.');
-            router.refresh();
-          }
-        }
+        localStorage.removeItem('pending_order_recovery');
       } catch (_) { }
-    }, 2500);
-
-    return () => clearInterval(interval);
-  }, [paymentStatus, paymentMethod, orderId, router]);
+    }
+  }, [initialPaymentStatus]);
 
   const isPendingBankTransfer =
     paymentMethod === 'bank_transfer' && paymentStatus !== 'paid';
@@ -125,6 +113,9 @@ export function OrderPaymentSection({
   const [paymentStatus, setPaymentStatus] = useState(initialPaymentStatus);
   const [checking, setChecking] = useState(false);
   const [copiedField, setCopiedField] = useState<string | null>(null);
+  const delayRef = useRef(3000);
+  const timeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const isPaidRef = useRef(initialPaymentStatus === 'paid');
 
   // Bank transfer configuration passed from Server Component / environment
   const bankName = bankConfig.bankName || 'MBBank';
@@ -147,7 +138,7 @@ export function OrderPaymentSection({
   };
 
   const checkPaymentStatus = useCallback(async (manual = false) => {
-    if (paymentStatus === 'paid') return;
+    if (isPaidRef.current) return;
     if (manual) setChecking(true);
 
     try {
@@ -155,7 +146,9 @@ export function OrderPaymentSection({
       if (res.ok) {
         const data = await res.json();
         if (data.paymentStatus === 'paid') {
+          isPaidRef.current = true;
           setPaymentStatus('paid');
+          try { localStorage.removeItem('pending_order_recovery'); } catch (_) { }
           toast.success('Thanh toán thành công! Hệ thống đã xác nhận đơn hàng.');
           router.refresh();
         } else if (manual) {
@@ -167,18 +160,30 @@ export function OrderPaymentSection({
     } finally {
       if (manual) setChecking(false);
     }
-  }, [orderId, paymentStatus, router]);
+  }, [orderId, router]);
 
-  // Polling every 2.5s when order is unpaid and method is bank_transfer
   useEffect(() => {
     if (paymentStatus === 'paid' || paymentMethod !== 'bank_transfer') return;
 
-    const interval = setInterval(() => {
-      checkPaymentStatus(false);
-    }, 2500);
+    const MAX_DELAY = 15000;
 
-    return () => clearInterval(interval);
-  }, [paymentStatus, paymentMethod, checkPaymentStatus]);
+    const schedulePoll = () => {
+      timeoutRef.current = setTimeout(async () => {
+        await checkPaymentStatus(false);
+        if (!isPaidRef.current) {
+          delayRef.current = Math.min(delayRef.current * 1.4, MAX_DELAY);
+          schedulePoll();
+        }
+      }, delayRef.current);
+    };
+
+    schedulePoll();
+
+    return () => {
+      if (timeoutRef.current) clearTimeout(timeoutRef.current);
+    };
+
+  }, [paymentMethod]);
 
   // Case 1: Order has been successfully paid
   if (paymentStatus === 'paid') {
@@ -208,7 +213,7 @@ export function OrderPaymentSection({
 
   // Case 3: Awaiting SePay VietQR payment
   return (
-    <div className="p-6 sm:p-8 rounded-3xl bg-slate-50 border-2 border-indigo-200 text-left space-y-6 shadow-sm">
+    <div className="p-6 sm:p-8 rounded-xl bg-slate-50 border border-indigo-200 text-left space-y-6 shadow-xs">
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-4 border-b border-slate-200">
         <div className="flex items-center gap-2.5">
           <div className="p-2 rounded-xl bg-indigo-600 text-white">

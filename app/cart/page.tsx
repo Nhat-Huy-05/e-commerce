@@ -26,15 +26,15 @@ export default function CartPage() {
         return;
       }
       try {
-        const res = await fetch('/api/products');
-        const allProds: ProductWithCategory[] = await res.json();
-        if (Array.isArray(allProds)) {
-          const prodMap = new Set(allProds.map((p) => p.id));
-          const cartProds = allProds.filter((p) =>
-            items.some((i) => i.productId === p.id)
-          );
+        // FIX #1: Only fetch the specific products in the cart, not all products
+        const ids = items.map((i) => i.productId).join(',');
+        const res = await fetch(`/api/products?ids=${ids}`);
+        const cartProds: ProductWithCategory[] = await res.json();
+        if (Array.isArray(cartProds)) {
+          const prodMap = new Set(cartProds.map((p) => p.id));
           setProducts(cartProds);
 
+          // Remove cart items whose product no longer exists in DB
           items.forEach((i) => {
             if (!prodMap.has(i.productId)) {
               removeItem(i.productId);
@@ -50,7 +50,7 @@ export default function CartPage() {
     fetchCartProducts();
   }, [items]);
 
-  // Tự động tích chọn tất cả sản phẩm khi vừa vào giỏ hàng
+  // Automatically select all items upon entering the cart
   useEffect(() => {
     if (!hasInitialized && items.length > 0) {
       setSelectedIds(items.map((i) => i.productId));
@@ -96,7 +96,7 @@ export default function CartPage() {
   const selectedDetails = cartDetails.filter((item) => item.isSelected);
   const selectedCount = selectedDetails.reduce((sum, item) => sum + item.quantity, 0);
   const subtotal = selectedDetails.reduce((sum, item) => sum + item.totalPrice, 0);
-  const shippingFee = 0; // Miễn phí vận chuyển toàn quốc cho đơn hàng
+  const shippingFee = 0; // Free nationwide shipping for all orders
   const grandTotal = subtotal + shippingFee;
 
   return (
@@ -142,7 +142,7 @@ export default function CartPage() {
           {t('common.loading')}
         </div>
       ) : items.length === 0 ? (
-        <div className="py-16 text-center space-y-4 bg-white border border-slate-200 rounded-3xl shadow-xs">
+        <div className="py-16 text-center space-y-4 bg-white border border-slate-200 rounded-xl shadow-xs">
           <div className="w-16 h-16 mx-auto rounded-full bg-slate-100 flex items-center justify-center text-slate-400">
             <ShoppingCart className="w-8 h-8" />
           </div>
@@ -152,7 +152,7 @@ export default function CartPage() {
           </p>
           <Link
             href="/products"
-            className="inline-flex items-center gap-2 px-6 py-2.5 rounded-xl bg-indigo-600 hover:bg-indigo-700 text-white font-semibold text-xs shadow-md transition-colors"
+            className="inline-flex items-center gap-2 px-6 py-2.5 rounded-lg bg-indigo-600 hover:bg-indigo-700 text-white font-semibold text-xs shadow-xs transition-colors"
           >
             {t('cart.continueShopping')} <ArrowRight className="w-4 h-4" />
           </Link>
@@ -161,8 +161,8 @@ export default function CartPage() {
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
           {/* Item List */}
           <div className="lg:col-span-2 space-y-3">
-            {/* Thanh tiêu đề: Chọn tất cả, Số lượng, Thành tiền */}
-            <div className="bg-white rounded-2xl border border-slate-200 px-4 sm:px-5 py-3.5 flex items-center justify-between text-xs font-semibold shadow-xs">
+            {/* Table Header: Select All, Quantity, Subtotal */}
+            <div className="bg-white rounded-lg border border-slate-200 px-4 sm:px-5 py-3.5 flex items-center justify-between text-xs font-semibold shadow-xs">
               <label className="flex items-center gap-3 cursor-pointer select-none">
                 <input
                   type="checkbox"
@@ -183,13 +183,13 @@ export default function CartPage() {
               </div>
             </div>
 
-            {/* Danh sách các sản phẩm */}
+            {/* Cart Items List */}
             <div className="space-y-3">
               {cartDetails.map(({ productId, quantity, product, unitPrice, totalPrice, isSelected }) => (
                 <div
                   key={productId}
-                  className={`flex flex-col sm:flex-row sm:items-center justify-between gap-4 p-4 rounded-2xl bg-white border transition-all ${isSelected
-                      ? 'border-indigo-200 shadow-sm ring-1 ring-indigo-50'
+                  className={`flex flex-col sm:flex-row sm:items-center justify-between gap-4 p-4 rounded-lg bg-white border transition-colors ${isSelected
+                      ? 'border-indigo-300 shadow-xs'
                       : 'border-slate-200 shadow-xs hover:border-slate-300 opacity-80'
                     }`}
                 >
@@ -204,13 +204,13 @@ export default function CartPage() {
                       <img
                         src={product?.thumbnail || 'https://images.unsplash.com/photo-1505740420928-5e560c06d30e?w=800&q=80'}
                         alt={product?.name || 'Product'}
-                        className="w-16 h-16 sm:w-20 sm:h-20 object-cover rounded-xl bg-slate-100 border border-slate-200 hover:opacity-90 transition-opacity"
+                        className="w-16 h-16 sm:w-20 sm:h-20 object-cover rounded-md bg-slate-100 border border-slate-200 hover:opacity-90 transition-opacity"
                       />
                     </Link>
                     <div className="min-w-0 flex-1">
                       <Link
                         href={`/products/${product?.slug || ''}`}
-                        className="text-xs sm:text-sm font-bold text-slate-900 line-clamp-2 hover:text-indigo-600 transition-colors"
+                        className="text-xs sm:text-sm font-semibold text-slate-900 line-clamp-2 hover:text-indigo-600 transition-colors"
                         title={product?.name}
                       >
                         {product?.name || t('common.loading')}
@@ -232,7 +232,7 @@ export default function CartPage() {
                   <div className="flex items-center justify-between sm:justify-end gap-4 sm:gap-8 md:gap-12 shrink-0 pl-7 sm:pl-0 border-t sm:border-t-0 pt-2 sm:pt-0 border-slate-100">
                     {/* Quantity Control */}
                     <div className="w-24 flex justify-center">
-                      <div className="flex items-center gap-1.5 bg-slate-100 border border-slate-200 rounded-lg p-1">
+                      <div className="flex items-center gap-1.5 bg-slate-50 border border-slate-200 rounded-md p-1">
                         <button
                           type="button"
                           onClick={() => updateQuantity(productId, quantity - 1)}
@@ -257,7 +257,7 @@ export default function CartPage() {
 
                     {/* Subtotal */}
                     <div className="w-24 text-right">
-                      <span className="text-sm font-extrabold text-red-600 font-mono">
+                      <span className="text-sm font-bold text-red-600 font-mono">
                         {formatCurrency(totalPrice)}
                       </span>
                     </div>
@@ -270,7 +270,7 @@ export default function CartPage() {
                           removeItem(productId);
                           setSelectedIds((prev) => prev.filter((id) => id !== productId));
                         }}
-                        className="p-1 text-slate-400 hover:text-red-600 rounded-lg hover:bg-red-50 transition-colors cursor-pointer"
+                        className="p-1 text-slate-400 hover:text-red-600 rounded-md hover:bg-red-50 transition-colors cursor-pointer"
                         title={language === 'vi' ? 'Xóa sản phẩm này' : 'Remove item'}
                       >
                         <Trash2 className="w-4 h-4" />
@@ -283,8 +283,8 @@ export default function CartPage() {
           </div>
 
           {/* Cart Summary Card */}
-          <div className="p-6 rounded-3xl bg-white border border-slate-200 shadow-md h-fit space-y-4">
-            <h3 className="text-base font-extrabold text-slate-900 pb-3 border-b border-slate-200">
+          <div className="p-6 rounded-xl bg-white border border-slate-200 shadow-xs h-fit space-y-4">
+            <h3 className="text-base font-bold text-slate-900 pb-3 border-b border-slate-200">
               {t('cart.orderSummary')}
             </h3>
 
@@ -306,7 +306,7 @@ export default function CartPage() {
                   {shippingFee === 0 ? 'FREE' : formatCurrency(shippingFee)}
                 </span>
               </div>
-              <div className="flex justify-between text-sm font-extrabold text-slate-900 pt-3 border-t border-slate-200">
+              <div className="flex justify-between text-sm font-bold text-slate-900 pt-3 border-t border-slate-200">
                 <span>{t('common.total')}:</span>
                 <span className="font-mono text-emerald-600">{formatCurrency(grandTotal)}</span>
               </div>
@@ -315,7 +315,7 @@ export default function CartPage() {
             {selectedDetails.length === 0 ? (
               <button
                 disabled
-                className="w-full py-3 px-4 rounded-xl bg-slate-100 text-slate-400 font-semibold text-xs cursor-not-allowed border border-slate-200 text-center"
+                className="w-full py-3 px-4 rounded-lg bg-slate-100 text-slate-400 font-semibold text-xs cursor-not-allowed border border-slate-200 text-center"
               >
                 {language === 'vi' ? 'Vui lòng chọn sản phẩm để thanh toán' : 'Please select products to checkout'}
               </button>
@@ -328,7 +328,7 @@ export default function CartPage() {
                 return (
                   <Link
                     href={targetHref}
-                    className="w-full flex items-center justify-center gap-2 py-3 px-4 rounded-xl bg-indigo-600 hover:bg-indigo-700 text-white font-semibold text-sm shadow-md transition-all cursor-pointer"
+                    className="w-full flex items-center justify-center gap-2 py-3 px-4 rounded-lg bg-indigo-600 hover:bg-indigo-700 text-white font-semibold text-sm shadow-xs transition-colors cursor-pointer"
                   >
                     {user
                       ? `${t('cart.proceedToCheckout')} (${selectedDetails.length})`
