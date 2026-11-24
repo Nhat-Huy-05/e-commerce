@@ -1,7 +1,8 @@
-'use client';
+"use client";
 
-import { useLanguage } from '@/lib/i18n/store';
-import Link from 'next/link';
+import { useLanguage } from "@/lib/i18n/store";
+import { ArrowRight } from "lucide-react";
+import Link from "next/link";
 
 interface CategoryItem {
   id: string;
@@ -17,44 +18,74 @@ interface HomeCategoriesSectionProps {
   categories: CategoryItem[];
 }
 
-export function HomeCategoriesSection({ categories }: HomeCategoriesSectionProps) {
+export function HomeCategoriesSection({
+  categories,
+}: HomeCategoriesSectionProps) {
   const { language, t } = useLanguage();
 
   return (
-    <section id="categories" className="space-y-6 scroll-mt-20">
-      <div className="flex items-center justify-between">
+    <section id="categories" className="mb-12 scroll-mt-28">
+      {/* Editorial Header */}
+      <div className="flex flex-col md:flex-row md:items-end justify-between pb-3 mb-6 border-b border-surface-container gap-2">
         <div>
-          <h2 className="text-2xl font-extrabold text-slate-900">
-            {t('home.featuredCategoriesTitle')}
+          <span className="font-label-caps uppercase text-secondary font-semibold text-[11px]">
+            Taxonomy of Devices
+          </span>
+          <h2 className="font-headline-lg text-on-surface tracking-tight mt-1 text-2xl md:text-3xl font-bold">
+            {t("home.featuredCategoriesTitle")}
           </h2>
-          <p className="text-xs text-slate-600 mt-1 font-medium">
-            {t('home.featuredCategoriesSubtitle')}
+          <p className="font-body-sm text-on-surface-variant mt-1 text-xs sm:text-sm">
+            {language === "vi"
+              ? "Tìm kiếm thiết bị công nghệ phù hợp nhất theo từng nhu cầu sử dụng chuyên biệt"
+              : t("home.featuredCategoriesSubtitle")}
           </p>
+        </div>
+        <div>
+          <Link
+            href="/products"
+            className="font-label-caps uppercase text-on-surface hover:text-secondary inline-flex items-center gap-1.5 transition-colors text-xs font-semibold"
+          >
+            <span>
+              {language === "vi"
+                ? "Xem tất cả danh mục"
+                : "View all categories"}
+            </span>
+            <ArrowRight className="w-4 h-4" />
+          </Link>
         </div>
       </div>
 
-      <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-4">
-        {categories.map((cat) => (
-          <Link
-            key={cat.id}
-            href={`/products?category=${cat.slug}`}
-            className="group flex flex-col p-3 sm:p-4 rounded-xl bg-white border border-slate-200 hover:border-slate-300 hover:shadow-xs transition-all text-center space-y-1.5"
-          >
-            <div className="w-12 h-12 mx-auto rounded-lg overflow-hidden bg-slate-50 relative border border-slate-200 flex items-center justify-center p-1">
-              <img
-                src={cat.image || 'https://images.unsplash.com/photo-1505740420928-5e560c06d30e?w=800&q=80'}
-                alt={cat.name}
-                className="w-full h-full object-contain group-hover:scale-105 transition-transform"
-              />
-            </div>
-            <h4 className="text-xs font-bold text-slate-900 group-hover:text-indigo-600 line-clamp-1">
-              {cat.name}
-            </h4>
-            <span className="text-[11px] text-slate-400 font-mono">
-              {cat._count.products} {language === 'vi' ? 'sản phẩm' : 'items'}
-            </span>
-          </Link>
-        ))}
+      {/* Editorial Mosaic Grid (6 columns) */}
+      <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4">
+        {categories.map((cat) => {
+          const productCount = String(cat._count.products).padStart(2, "0");
+          return (
+            <Link
+              key={cat.id}
+              href={`/products?category=${cat.slug}`}
+              className="group bg-surface-container-lowest p-4 flex flex-col justify-between hover:bg-surface-container-high transition-colors border border-surface-container rounded-sm shadow-2xs"
+            >
+              <div className="w-full aspect-square bg-surface-container-low mb-4 overflow-hidden relative flex items-center justify-center p-3 border border-surface-container/60">
+                <img
+                  src={
+                    cat.image ||
+                    "https://images.unsplash.com/photo-1505740420928-5e560c06d30e?w=800&q=80"
+                  }
+                  alt={cat.name}
+                  className="w-full h-full object-contain group-hover:scale-105 transition-transform duration-300"
+                />
+              </div>
+              <div>
+                <span className="font-label-caps text-[10px] text-outline uppercase block mb-1">
+                  {productCount} {language === "vi" ? "Sản phẩm" : "Items"}
+                </span>
+                <h3 className="font-title-md text-xs sm:text-sm leading-tight text-on-surface group-hover:text-secondary transition-colors font-semibold">
+                  {cat.name}
+                </h3>
+              </div>
+            </Link>
+          );
+        })}
       </div>
     </section>
   );

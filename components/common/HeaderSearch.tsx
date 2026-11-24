@@ -1,18 +1,18 @@
-'use client';
+"use client";
 
-import { ProductWithCategory } from '@/lib/types';
-import { useLanguage } from '@/lib/i18n/store';
-import { ArrowRight, Loader2, Search, Tag, X } from 'lucide-react';
-import { useRouter } from 'next/navigation';
-import React, { useEffect, useRef, useState } from 'react';
+import { ProductWithCategory } from "@/lib/types";
+import { useLanguage } from "@/lib/i18n/store";
+import { ArrowRight, Loader2, Search, Tag, X } from "lucide-react";
+import { useRouter } from "next/navigation";
+import React, { useEffect, useRef, useState } from "react";
 
 const DEFAULT_FALLBACK_IMAGE =
-  'https://images.unsplash.com/photo-1505740420928-5e560c06d30e?w=800&q=80';
+  "https://images.unsplash.com/photo-1505740420928-5e560c06d30e?w=800&q=80";
 
 export function HeaderSearch() {
   const router = useRouter();
   const { language, t } = useLanguage();
-  const [searchQuery, setSearchQuery] = useState('');
+  const [searchQuery, setSearchQuery] = useState("");
   const [suggestions, setSuggestions] = useState<ProductWithCategory[]>([]);
   const [isLoading, setIsLoading] = useState(false);
   const [isOpen, setIsOpen] = useState(false);
@@ -47,7 +47,7 @@ export function HeaderSearch() {
           setSuggestions([]);
         }
       } catch (error) {
-        console.error('Error fetching search suggestions:', error);
+        console.error("Error fetching search suggestions:", error);
         setSuggestions([]);
       } finally {
         setIsLoading(false);
@@ -68,9 +68,9 @@ export function HeaderSearch() {
       }
     };
 
-    document.addEventListener('mousedown', handleClickOutside);
+    document.addEventListener("mousedown", handleClickOutside);
     return () => {
-      document.removeEventListener('mousedown', handleClickOutside);
+      document.removeEventListener("mousedown", handleClickOutside);
     };
   }, []);
 
@@ -100,33 +100,31 @@ export function HeaderSearch() {
 
   const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
     if (!isOpen) {
-      if (e.key === 'ArrowDown' && searchQuery.trim()) {
+      if (e.key === "ArrowDown" && searchQuery.trim()) {
         setIsOpen(true);
       }
       return;
     }
 
     // Arrow down
-    if (e.key === 'ArrowDown') {
+    if (e.key === "ArrowDown") {
       e.preventDefault();
-      setSelectedIndex((prev) =>
-        prev < suggestions.length ? prev + 1 : prev
-      );
+      setSelectedIndex((prev) => (prev < suggestions.length ? prev + 1 : prev));
     }
     // Arrow up
-    else if (e.key === 'ArrowUp') {
+    else if (e.key === "ArrowUp") {
       e.preventDefault();
       setSelectedIndex((prev) => (prev > -1 ? prev - 1 : -1));
     }
     // Escape
-    else if (e.key === 'Escape') {
+    else if (e.key === "Escape") {
       setIsOpen(false);
       inputRef.current?.blur();
     }
   };
 
   const clearSearch = () => {
-    setSearchQuery('');
+    setSearchQuery("");
     setSuggestions([]);
     setIsOpen(false);
     setSelectedIndex(-1);
@@ -134,27 +132,17 @@ export function HeaderSearch() {
   };
 
   const formatPrice = (price: number) => {
-    return new Intl.NumberFormat('vi-VN', {
-      style: 'currency',
-      currency: 'VND',
+    return new Intl.NumberFormat("vi-VN", {
+      style: "currency",
+      currency: "VND",
     }).format(price);
   };
 
   return (
-    <div
-      ref={containerRef}
-      className="flex-1 max-w-lg lg:max-w-xl hidden sm:block relative z-50"
-    >
+    <div ref={containerRef} className="w-full relative z-50">
       <form onSubmit={handleFormSubmit} className="relative flex items-center">
-        {/* Search Icon that smoothly collapses and fades out on focus or when typing */}
-        <div
-          className={`absolute left-4 flex items-center pointer-events-none transition-all duration-300 ease-out origin-left ${
-            isFocused || searchQuery
-              ? 'opacity-0 scale-50 -translate-x-3 pointer-events-none'
-              : 'opacity-100 scale-100 translate-x-0'
-          }`}
-        >
-          <Search className="w-4.5 h-4.5 text-slate-400" />
+        <div className="absolute left-3.5 flex items-center pointer-events-none text-outline">
+          <Search className="w-4 h-4 text-outline" />
         </div>
 
         <input
@@ -162,10 +150,12 @@ export function HeaderSearch() {
           type="text"
           placeholder={
             isFocused
-              ? language === 'vi'
-                ? 'Nhập tên sản phẩm để tìm...'
-                : 'Type product name to search...'
-              : t('common.searchPlaceholder')
+              ? language === "vi"
+                ? "Nhập tên sản phẩm để tìm..."
+                : "Type product name to search..."
+              : language === "vi"
+                ? "Tìm kiếm sản phẩm, thương hiệu hoặc phụ kiện công nghệ..."
+                : "Search products, brands or tech gear..."
           }
           value={searchQuery}
           onChange={(e) => {
@@ -182,58 +172,56 @@ export function HeaderSearch() {
             setIsFocused(false);
           }}
           onKeyDown={handleKeyDown}
-          className={`w-full bg-slate-100/90 border rounded-full py-2.5 pr-10 text-sm text-slate-900 placeholder:text-slate-400 transition-all duration-300 ease-out outline-none focus:outline-none focus-visible:outline-none focus:ring-0 focus-visible:ring-0 focus-visible:ring-offset-0 dark:focus-visible:ring-0 dark:focus-visible:ring-offset-0 ${
-            isFocused || searchQuery
-              ? 'pl-4 bg-white border-indigo-500 shadow-[0_0_0_3px_rgba(99,102,241,0.15)]'
-              : 'pl-11 border-slate-200 hover:bg-slate-100 hover:border-slate-300'
+          className={`w-full bg-surface-container-low border border-transparent rounded-lg py-2.5 pl-10 pr-10 font-body-sm text-sm text-on-surface placeholder:text-outline transition-all outline-none focus:outline-none focus:border-secondary focus:bg-surface-container-lowest ${
+            isFocused
+              ? "shadow-xs border-secondary"
+              : "hover:bg-surface-container"
           }`}
-          style={{ outline: 'none' }}
         />
 
         {/* Right side loading spinner or clear button */}
-        <div className="absolute right-3.5 flex items-center gap-1">
+        <div className="absolute right-3 flex items-center gap-1">
           {isLoading ? (
-            <Loader2 className="w-4 h-4 text-indigo-600 animate-spin" />
+            <Loader2 className="w-4 h-4 text-secondary animate-spin" />
           ) : searchQuery ? (
             <button
               type="button"
               onClick={clearSearch}
-              className="p-1 rounded-full text-slate-400 hover:text-slate-700 hover:bg-slate-200 transition-colors"
-              title={language === 'vi' ? 'Xóa tìm kiếm' : 'Clear search'}
+              className="p-1 rounded text-outline hover:text-on-surface hover:bg-surface-container transition-colors"
+              title={language === "vi" ? "Xóa tìm kiếm" : "Clear search"}
             >
-              <X className="w-4 h-4" />
+              <X className="w-3.5 h-3.5" />
             </button>
           ) : null}
         </div>
       </form>
 
       {/* Live Suggestions Dropdown */}
-      {isOpen && searchQuery.trim() !== '' && (
-        <div className="absolute left-0 right-0 top-full mt-2.5 bg-white/95 backdrop-blur-xl border border-slate-200 rounded-2xl shadow-xl overflow-hidden z-50 divide-y divide-slate-100 animate-in fade-in slide-in-from-top-2 duration-150">
+      {isOpen && searchQuery.trim() !== "" && (
+        <div className="absolute left-0 right-0 top-full mt-2 bg-surface-container-lowest border border-surface-container rounded-xl shadow-xl overflow-hidden z-50 divide-y divide-surface-container animate-in fade-in duration-150">
           {/* Header info */}
-          <div className="px-4 py-2.5 bg-slate-50 flex items-center justify-between text-xs text-slate-500 font-medium border-b border-slate-200">
-            <span className="flex items-center gap-1.5 font-semibold text-slate-700">
-              <Tag className="w-3.5 h-3.5 text-indigo-600" />{' '}
-              {language === 'vi' ? 'Gợi ý tìm kiếm' : 'Search suggestions'}
+          <div className="px-3.5 py-2 bg-surface-container-low flex items-center justify-between text-xs text-outline font-medium">
+            <span className="flex items-center gap-1.5 font-label-caps text-on-surface">
+              <Tag className="w-3.5 h-3.5 text-secondary" />{" "}
+              {language === "vi" ? "GỢI Ý TÌM KIẾM" : "SEARCH SUGGESTIONS"}
             </span>
-            <span>
-              {suggestions.length}{' '}
-              {language === 'vi' ? 'sản phẩm' : 'products'}
+            <span className="font-mono text-[11px]">
+              {suggestions.length} {language === "vi" ? "sản phẩm" : "products"}
             </span>
           </div>
 
           {/* Product Items List */}
           {isLoading && suggestions.length === 0 ? (
-            <div className="p-8 text-center text-sm text-slate-500 flex items-center justify-center gap-2.5">
-              <Loader2 className="w-4.5 h-4.5 text-indigo-600 animate-spin" />
+            <div className="p-6 text-center text-sm text-outline flex items-center justify-center gap-2">
+              <Loader2 className="w-4 h-4 text-secondary animate-spin" />
               <span>
-                {language === 'vi'
-                  ? 'Đang tìm kiếm sản phẩm...'
-                  : 'Searching products...'}
+                {language === "vi"
+                  ? "Đang tìm kiếm sản phẩm..."
+                  : "Searching products..."}
               </span>
             </div>
           ) : suggestions.length > 0 ? (
-            <div className="max-h-96 overflow-y-auto divide-y divide-slate-100 custom-scrollbar">
+            <div className="max-h-80 overflow-y-auto divide-y divide-surface-container">
               {suggestions.map((product, idx) => {
                 const isSelected = selectedIndex === idx;
                 return (
@@ -242,13 +230,14 @@ export function HeaderSearch() {
                     type="button"
                     onClick={() => handleSelectProduct(product.slug)}
                     onMouseEnter={() => setSelectedIndex(idx)}
-                    className={`w-full text-left p-3.5 flex items-center gap-3.5 transition-colors cursor-pointer ${isSelected
-                      ? 'bg-indigo-50 border-l-2 border-indigo-600 text-indigo-950'
-                      : 'hover:bg-slate-50 text-slate-800'
-                      }`}
+                    className={`w-full text-left p-3 flex items-center gap-3 transition-colors cursor-pointer ${
+                      isSelected
+                        ? "bg-surface-container-low text-secondary"
+                        : "hover:bg-surface-container-low/60 text-on-surface"
+                    }`}
                   >
                     {/* Thumbnail Image */}
-                    <div className="w-12 h-12 rounded-xl overflow-hidden bg-slate-100 shrink-0 border border-slate-200">
+                    <div className="w-11 h-11 rounded-lg overflow-hidden bg-surface-container-low shrink-0 border border-surface-container p-1 flex items-center justify-center">
                       <img
                         src={product.thumbnail || DEFAULT_FALLBACK_IMAGE}
                         alt={product.name}
@@ -256,32 +245,32 @@ export function HeaderSearch() {
                           (e.target as HTMLImageElement).src =
                             DEFAULT_FALLBACK_IMAGE;
                         }}
-                        className="w-full h-full object-cover"
+                        className="w-full h-full object-contain"
                       />
                     </div>
 
                     {/* Info */}
                     <div className="flex-1 min-w-0">
                       <div className="flex items-center justify-between gap-2">
-                        <h4 className="text-sm font-semibold text-slate-900 truncate group-hover:text-indigo-600">
+                        <h4 className="font-title-md text-xs sm:text-sm text-on-surface truncate">
                           {product.name}
                         </h4>
                         {product.discountPrice ? (
-                          <span className="text-sm font-bold text-emerald-600 shrink-0">
+                          <span className="font-price-md text-xs sm:text-sm text-error shrink-0 font-bold">
                             {formatPrice(product.discountPrice)}
                           </span>
                         ) : (
-                          <span className="text-sm font-semibold text-slate-800 shrink-0">
+                          <span className="font-price-md text-xs sm:text-sm text-on-surface shrink-0 font-bold">
                             {formatPrice(product.price)}
                           </span>
                         )}
                       </div>
-                      <div className="flex items-center gap-2 mt-1">
-                        <span className="text-[11px] font-medium text-indigo-700 bg-indigo-50 px-2 py-0.5 rounded-md border border-indigo-200">
-                          {product.category?.name || 'Category'}
+                      <div className="flex items-center gap-2 mt-0.5">
+                        <span className="font-label-caps text-[10px] text-outline">
+                          {product.category?.name || "Category"}
                         </span>
                         {product.discountPrice && (
-                          <span className="text-xs text-slate-400 line-through">
+                          <span className="font-mono text-[11px] text-outline line-through">
                             {formatPrice(product.price)}
                           </span>
                         )}
@@ -292,12 +281,14 @@ export function HeaderSearch() {
               })}
             </div>
           ) : (
-            <div className="p-8 text-center text-sm text-slate-500">
-              {language === 'vi'
-                ? 'Không tìm thấy sản phẩm nào khớp với '
-                : 'No products matched for '}
+            <div className="p-6 text-center text-sm text-outline">
+              {language === "vi"
+                ? "Không tìm thấy sản phẩm nào khớp với "
+                : "No products matched for "}
               &quot;
-              <span className="text-slate-800 font-semibold">{searchQuery}</span>
+              <span className="text-on-surface font-semibold">
+                {searchQuery}
+              </span>
               &quot;
             </div>
           )}
@@ -307,19 +298,19 @@ export function HeaderSearch() {
             type="button"
             onClick={() => handleFormSubmit()}
             onMouseEnter={() => setSelectedIndex(suggestions.length)}
-            className={`w-full p-3.5 bg-slate-50 flex items-center justify-between text-xs font-semibold transition-colors cursor-pointer ${
+            className={`w-full p-3 bg-surface-container-low flex items-center justify-between text-xs font-label-caps transition-colors cursor-pointer ${
               selectedIndex === suggestions.length
-                ? 'bg-indigo-100 text-indigo-800'
-                : 'text-indigo-600 hover:bg-slate-100 hover:text-indigo-700'
+                ? "text-secondary font-bold"
+                : "text-on-surface hover:text-secondary"
             }`}
           >
             <span>
-              {language === 'vi'
-                ? 'Xem tất cả kết quả cho '
-                : 'View all results for '}
+              {language === "vi"
+                ? "Xem tất cả kết quả cho "
+                : "View all results for "}
               &quot;<span className="font-bold">{searchQuery}</span>&quot;
             </span>
-            <ArrowRight className="w-4 h-4 ml-1" />
+            <ArrowRight className="w-3.5 h-3.5 ml-1" />
           </button>
         </div>
       )}

@@ -3,29 +3,176 @@
 @plugin "@tailwindcss/container-queries";
 @plugin "@tailwindcss/typography";
 
+@theme {
+  --font-sans:
+    var(--font-plus-jakarta), -apple-system, BlinkMacSystemFont, "Segoe UI",
+    Roboto, sans-serif;
+  --font-mono: var(--font-jetbrains-mono), monospace;
+
+  --color-surface: #faf8ff;
+  --color-surface-dim: #d4d9ee;
+  --color-surface-bright: #faf8ff;
+  --color-surface-container-lowest: #ffffff;
+  --color-surface-container-low: #f1f3ff;
+  --color-surface-container: #e9edff;
+  --color-surface-container-high: #e2e8fd;
+  --color-surface-container-highest: #dce2f7;
+  --color-on-surface: #151b2a;
+  --color-on-surface-variant: #46464c;
+  --color-inverse-surface: #2a3040;
+  --color-inverse-on-surface: #edf0ff;
+  --color-outline: #77767d;
+  --color-outline-variant: #c7c6cc;
+  --color-surface-tint: #5a5e6e;
+  --color-primary: #000000;
+  --color-on-primary: #ffffff;
+  --color-primary-container: #171b29;
+  --color-on-primary-container: #808395;
+  --color-inverse-primary: #c3c5d9;
+  --color-secondary: #4b39e6;
+  --color-on-secondary: #ffffff;
+  --color-secondary-container: #6557ff;
+  --color-on-secondary-container: #fbf7ff;
+  --color-tertiary: #000000;
+  --color-on-tertiary: #ffffff;
+  --color-tertiary-container: #410006;
+  --color-on-tertiary-container: #e94b50;
+  --color-error: #ba1a1a;
+  --color-on-error: #ffffff;
+  --color-error-container: #ffdad6;
+  --color-on-error-container: #93000a;
+  --color-primary-fixed: #dfe1f6;
+  --color-primary-fixed-dim: #c3c5d9;
+  --color-on-primary-fixed: #171b29;
+  --color-on-primary-fixed-variant: #424656;
+  --color-secondary-fixed: #e3dfff;
+  --color-secondary-fixed-dim: #c4c0ff;
+  --color-on-secondary-fixed: #120068;
+  --color-on-secondary-fixed-variant: #3619d4;
+  --color-tertiary-fixed: #ffdad8;
+  --color-tertiary-fixed-dim: #ffb3b0;
+  --color-on-tertiary-fixed: #410006;
+  --color-on-tertiary-fixed-variant: #92011a;
+  --color-background: #faf8ff;
+  --color-on-background: #151b2a;
+  --color-surface-variant: #dce2f7;
+}
+
+@utility font-display-xl {
+  font-family: var(--font-plus-jakarta), sans-serif;
+  font-size: 4rem;
+  line-height: 4.5rem;
+  letter-spacing: -0.03em;
+  font-weight: 800;
+}
+
+@utility font-display-lg {
+  font-family: var(--font-plus-jakarta), sans-serif;
+  font-size: 3rem;
+  line-height: 3.5rem;
+  letter-spacing: -0.025em;
+  font-weight: 700;
+}
+
+@utility font-headline-lg {
+  font-family: var(--font-plus-jakarta), sans-serif;
+  font-size: 2rem;
+  line-height: 2.5rem;
+  letter-spacing: -0.02em;
+  font-weight: 700;
+}
+
+@utility font-headline-md {
+  font-family: var(--font-plus-jakarta), sans-serif;
+  font-size: 1.5rem;
+  line-height: 2rem;
+  letter-spacing: -0.015em;
+  font-weight: 600;
+}
+
+@utility font-headline-sm {
+  font-family: var(--font-plus-jakarta), sans-serif;
+  font-size: 1.25rem;
+  line-height: 1.75rem;
+  letter-spacing: -0.01em;
+  font-weight: 600;
+}
+
+@utility font-title-md {
+  font-family: var(--font-plus-jakarta), sans-serif;
+  font-size: 1rem;
+  line-height: 1.5rem;
+  letter-spacing: -0.005em;
+  font-weight: 600;
+}
+
+@utility font-body-lg {
+  font-family: var(--font-plus-jakarta), sans-serif;
+  font-size: 1.125rem;
+  line-height: 1.75rem;
+}
+
+@utility font-body-md {
+  font-family: var(--font-plus-jakarta), sans-serif;
+  font-size: 0.9375rem;
+  line-height: 1.5rem;
+}
+
+@utility font-body-sm {
+  font-family: var(--font-plus-jakarta), sans-serif;
+  font-size: 0.8125rem;
+  line-height: 1.25rem;
+}
+
+@utility font-price-lg {
+  font-family: var(--font-jetbrains-mono), monospace;
+  font-size: 1.375rem;
+  line-height: 1.75rem;
+  letter-spacing: -0.02em;
+  font-weight: 700;
+}
+
+@utility font-price-md {
+  font-family: var(--font-jetbrains-mono), monospace;
+  font-size: 1rem;
+  line-height: 1.375rem;
+  letter-spacing: -0.01em;
+  font-weight: 600;
+}
+
+@utility font-label-caps {
+  font-family: var(--font-jetbrains-mono), monospace;
+  font-size: 0.6875rem;
+  line-height: 0.875rem;
+  letter-spacing: 0.08em;
+  font-weight: 600;
+  text-transform: uppercase;
+}
+
+@utility font-label-sm {
+  font-family: var(--font-plus-jakarta), sans-serif;
+  font-size: 0.75rem;
+  line-height: 1rem;
+  font-weight: 500;
+}
+
 @layer base {
   *,
   ::after,
   ::before,
   ::backdrop,
   ::file-selector-button {
-    border-color: var(--color-gray-200, currentColor);
+    border-color: var(--color-surface-container, currentColor);
   }
-}
 
-@media (prefers-color-scheme: dark) {
-  html {
-    color-scheme: dark;
-  }
-}
-
-@supports (font: -apple-system-body) and (-webkit-appearance: none) {
-  img[loading="lazy"] {
-    clip-path: inset(0.6px);
+  body {
+    background-color: var(--color-surface);
+    color: var(--color-on-surface);
+    font-family: var(--font-plus-jakarta), sans-serif;
   }
 }
 
 a,
 button {
-  @apply focus-visible:outline-hidden focus-visible:ring-2 focus-visible:ring-neutral-400 focus-visible:ring-offset-2 focus-visible:ring-offset-neutral-50 dark:focus-visible:ring-neutral-600 dark:focus-visible:ring-offset-neutral-900;
+  @apply focus-visible:outline-hidden focus-visible:ring-2 focus-visible:ring-secondary focus-visible:ring-offset-2;
 }
