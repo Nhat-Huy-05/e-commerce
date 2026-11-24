@@ -1,9 +1,10 @@
-import { HomeCategoriesSection } from '@/components/home/HomeCategoriesSection';
-import { HomeFeaturedSection } from '@/components/home/HomeFeaturedSection';
-import { HomeFlashDealsSection } from '@/components/home/HomeFlashDealsSection';
-import { HomeHero } from '@/components/home/HomeHero';
-import { HomePerks } from '@/components/home/HomePerks';
-import { db } from '@/lib/db';
+import { HomeCategoriesSection } from "@/components/home/HomeCategoriesSection";
+import { HomeFeaturedSection } from "@/components/home/HomeFeaturedSection";
+import { HomeFlashDealsSection } from "@/components/home/HomeFlashDealsSection";
+import { HomeHero } from "@/components/home/HomeHero";
+import { HomeJournalBanner } from "@/components/home/HomeJournalBanner";
+import { HomePerks } from "@/components/home/HomePerks";
+import { db } from "@/lib/db";
 
 // SSG + ISR: revalidate every 60s
 export const revalidate = 60;
@@ -24,7 +25,7 @@ export default async function HomePage() {
     db.product.findMany({
       where: { isFeatured: true },
       include: { category: true },
-      orderBy: { rating: 'desc' },
+      orderBy: { rating: "desc" },
       take: 8,
     }),
 
@@ -39,21 +40,24 @@ export default async function HomePage() {
   ]);
 
   return (
-    <div className="space-y-12">
-      {/* Hero Banner*/}
+    <div className="flex flex-col w-full">
+      {/* 1. Hero Editorial Monograph */}
       <HomeHero products={featuredProducts} />
 
-      {/* 4 Core Store Perks / Value Proposition Bar */}
+      {/* 2. Service Pledge Strip */}
       <HomePerks />
 
-      {/* Categories Grid */}
+      {/* 3. Category Discovery Mosaic */}
       <HomeCategoriesSection categories={categories} />
 
-      {/* Dedicated Flash Sale / Hot Deals Section */}
+      {/* 4. Deal Hot Giá Tốt (Countdown & Asymmetric Grid) */}
       <HomeFlashDealsSection products={saleProducts} />
 
-      {/* Featured & Top-Rated Products Section */}
+      {/* 5. Curated Featured Products Matrix */}
       <HomeFeaturedSection products={featuredProducts} />
+
+      {/* 6. Editorial Tech Journal Monograph */}
+      <HomeJournalBanner />
     </div>
   );
 }
